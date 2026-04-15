@@ -8,96 +8,80 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif}
         .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);transition:all 0.3s}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 25px -5px rgba(79,70,229,0.4)}
-        .tab-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;transition:all 0.2s;cursor:pointer;border:none;outline:none;white-space:nowrap}
+        .tab-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;border:none;outline:none;transition:all 0.2s;white-space:nowrap}
         .tab-btn.active{background:linear-gradient(135deg,#4F46E5,#7C3AED);color:white;box-shadow:0 4px 15px rgba(79,70,229,0.3)}
         .tab-btn:not(.active){background:#F1F5F9;color:#64748B}.tab-btn:not(.active):hover{background:#E2E8F0}
         .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700}
-        .input-field{width:100%;padding:10px 14px;border-radius:10px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;outline:none;color:#0F172A}
-        .input-field:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1);background:#fff}
-        select.input-field{cursor:pointer}
-        .card{background:white;border-radius:16px;border:1px solid #E2E8F0;padding:20px;transition:all 0.2s}
-        .card:hover{border-color:#C7D2FE;box-shadow:0 4px 20px -4px rgba(79,70,229,0.1)}
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s}
-        .modal-overlay.active{opacity:1;pointer-events:all}
-        .modal-box{background:white;border-radius:20px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:scale(0.95) translateY(10px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
-        .modal-overlay.active .modal-box{transform:scale(1) translateY(0)}
+        .input-sm{padding:8px 12px;border-radius:8px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:all 0.2s}
+        .input-sm:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
+        .card{background:white;border-radius:16px;border:1px solid #E2E8F0;padding:16px;transition:all 0.2s}
+        .card:hover{border-color:#C7D2FE;box-shadow:0 4px 20px -4px rgba(0,0,0,0.08)}
+        .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+        .modal-bg.show{display:flex}
+        .modal-box{background:white;border-radius:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
         @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}.animate-fade-up{animation:fadeUp 0.4s ease forwards}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4,0,.6,1) infinite}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}.fade-up{animation:fadeUp 0.4s ease forwards}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:white;padding:12px 24px;border-radius:16px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.2);transition:opacity 0.3s}
     </style>
 </head>
 <body class="bg-[#F1F5F9] text-gray-900 antialiased">
 
 <!-- Loading -->
-<div id="loadingScreen" class="fixed inset-0 bg-dark z-[9999] flex items-center justify-center">
+<div id="loadingScreen" class="fixed inset-0 bg-dark z-[9999] flex items-center justify-center transition-opacity duration-300">
     <div class="text-center">
         <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-3">
             <span class="text-white font-black text-xl">X</span>
         </div>
-        <div class="flex items-center gap-2 justify-center">
-            <svg class="w-4 h-4 text-white/50 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            <p class="text-white/50 text-sm">Yetki kontrol ediliyor...</p>
-        </div>
+        <p class="text-white/50 text-sm">Yetki kontrol ediliyor...</p>
     </div>
 </div>
 
-<!-- HEADER -->
+<!-- Header -->
 <header class="fixed top-0 left-0 right-0 z-50 bg-dark/95 backdrop-blur-xl border-b border-white/5 py-3">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-12">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                    <span class="text-white font-black text-sm">X</span>
-                </div>
-                <div>
-                    <span class="text-white font-bold text-sm">XXX Yazılım</span>
-                    <span class="bg-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full ml-2">ADMİN</span>
-                </div>
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-12">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                <span class="text-white font-black text-sm">X</span>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="text-white/40 text-xs hidden sm:block" id="adminName">Admin</span>
-                <a href="../index.html" class="text-white/40 text-xs hover:text-white/70 transition-colors">Siteye Git</a>
-                <button onclick="adminLogout()" class="bg-red-500/10 text-red-400 hover:bg-red-500/20 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors">Çıkış</button>
-            </div>
+            <span class="text-white font-bold text-sm">Admin Panel</span>
+            <span class="bg-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full">YÖNETİCİ</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="../index.html" class="text-white/40 text-xs hover:text-white/70">Siteye Git</a>
+            <button onclick="doLogout()" class="bg-red-500/10 text-red-400 hover:bg-red-500/20 px-3 py-1.5 rounded-lg text-xs font-semibold">Çıkış</button>
         </div>
     </div>
 </header>
 
 
-<!-- MAIN -->
+<!-- Main -->
 <main class="pt-24 pb-10 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4">
 
-        <!-- Başlık -->
-        <div class="mb-8 animate-fade-up">
-            <h1 class="text-2xl font-extrabold text-gray-900">🎛️ Yönetim Paneli</h1>
-            <p class="text-gray-500 text-sm mt-1">Siparişleri yönetin, siteleri güncelleyin, ödemeleri takip edin.</p>
-        </div>
-
-        <!-- İstatistikler -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 animate-fade-up" style="animation-delay:0.05s">
-            <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 fade-up">
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
                 <div class="text-3xl font-black text-indigo-600" id="statOrders">-</div>
                 <div class="text-xs text-gray-500 font-semibold mt-1">Toplam Sipariş</div>
             </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
+                <div class="text-3xl font-black text-amber-600" id="statPending">-</div>
+                <div class="text-xs text-gray-500 font-semibold mt-1">Bekleyen</div>
+            </div>
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
                 <div class="text-3xl font-black text-green-600" id="statSites">-</div>
                 <div class="text-xs text-gray-500 font-semibold mt-1">Aktif Site</div>
             </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
-                <div class="text-3xl font-black text-amber-600" id="statPending">-</div>
-                <div class="text-xs text-gray-500 font-semibold mt-1">Bekleyen Sipariş</div>
-            </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm">
+            <div class="bg-white rounded-2xl border border-gray-100 p-5">
                 <div class="text-3xl font-black text-purple-600" id="statUsers">-</div>
-                <div class="text-xs text-gray-500 font-semibold mt-1">Toplam Müşteri</div>
+                <div class="text-xs text-gray-500 font-semibold mt-1">Müşteri</div>
             </div>
         </div>
 
         <!-- Tabs -->
-        <div class="flex gap-2 mb-6 overflow-x-auto pb-2 animate-fade-up" style="animation-delay:0.1s">
+        <div class="flex gap-2 mb-6 overflow-x-auto pb-2 fade-up">
             <button onclick="switchTab('orders')" class="tab-btn active" id="tabOrders">📦 Siparişler</button>
             <button onclick="switchTab('sites')" class="tab-btn" id="tabSites">🌐 Siteler</button>
             <button onclick="switchTab('payments')" class="tab-btn" id="tabPayments">💳 Ödemeler</button>
@@ -105,373 +89,233 @@
         </div>
 
 
-        <!-- ======= SİPARİŞLER ======= -->
-        <div id="sectionOrders" class="animate-fade-up" style="animation-delay:0.15s">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="font-bold text-gray-800">Tüm Siparişler</h2>
-                <select id="orderFilter" onchange="filterOrders(this.value)" class="input-field w-auto text-xs">
-                    <option value="all">Tümü</option>
-                    <option value="pending">⏳ Bekleyenler</option>
-                    <option value="processing">⚙️ Hazırlananlar</option>
-                    <option value="delivered">✅ Teslim Edilenler</option>
-                    <option value="cancelled">❌ İptal Edilenler</option>
-                </select>
-            </div>
-            <div id="ordersLoading" class="space-y-3">
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-20"></div>
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-20"></div>
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-20"></div>
-            </div>
-            <div id="ordersList" class="space-y-3 hidden"></div>
+        <!-- SİPARİŞLER -->
+        <div id="sectionOrders">
+            <div id="ordersContent" class="space-y-3"></div>
         </div>
 
-
-        <!-- ======= SİTELER ======= -->
-        <div id="sectionSites" class="hidden animate-fade-up">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="font-bold text-gray-800">Aktif Siteler</h2>
-            </div>
-            <div id="sitesLoading" class="space-y-3">
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-20"></div>
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-20"></div>
-            </div>
-            <div id="sitesList" class="space-y-3 hidden"></div>
+        <!-- SİTELER -->
+        <div id="sectionSites" class="hidden">
+            <div id="sitesContent" class="space-y-3"></div>
         </div>
 
-
-        <!-- ======= ÖDEMELER ======= -->
-        <div id="sectionPayments" class="hidden animate-fade-up">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="font-bold text-gray-800">Ödeme Takibi</h2>
-            </div>
-            <div id="paymentsLoading" class="space-y-3">
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-20"></div>
-            </div>
-            <div id="paymentsList" class="space-y-3 hidden"></div>
+        <!-- ÖDEMELER -->
+        <div id="sectionPayments" class="hidden">
+            <div id="paymentsContent" class="space-y-3"></div>
         </div>
 
-
-        <!-- ======= MÜŞTERİLER ======= -->
-        <div id="sectionCustomers" class="hidden animate-fade-up">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="font-bold text-gray-800">Müşteri Listesi</h2>
-            </div>
-            <div id="customersLoading" class="space-y-3">
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-16"></div>
-                <div class="bg-white rounded-2xl p-5 animate-pulse h-16"></div>
-            </div>
-            <div id="customersList" class="space-y-3 hidden"></div>
+        <!-- MÜŞTERİLER -->
+        <div id="sectionCustomers" class="hidden">
+            <div id="customersContent" class="space-y-3"></div>
         </div>
 
     </div>
 </main>
 
 
-<!-- ======= TESLİM ET MODAL ======= -->
-<div id="deliverModal" class="modal-overlay" onclick="closeDeliverOutside(event)">
+<!-- TESLİM MODAL -->
+<div id="deliverModal" class="modal-bg" onclick="if(event.target===this)closeDeliver()">
     <div class="modal-box">
-        <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-5 rounded-t-2xl flex items-center justify-between sticky top-0">
-            <div>
-                <h3 class="text-white font-bold text-lg">✅ Siparişi Teslim Et</h3>
-                <p id="deliverOrderName" class="text-white/70 text-xs mt-0.5"></p>
-            </div>
-            <button onclick="closeDeliver()" class="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
-                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+        <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-5 rounded-t-2xl">
+            <h3 class="text-white font-bold text-lg">✅ Siparişi Teslim Et</h3>
+            <p id="deliverInfo" class="text-white/70 text-xs mt-1"></p>
         </div>
         <div class="p-6 space-y-4">
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <p class="text-amber-700 text-sm font-semibold">⚠️ Bu işlem geri alınamaz!</p>
-                <p class="text-amber-600 text-xs mt-1">Teslim edildiğinde müşteri panelinde site otomatik görünecek ve 14 günlük trial başlayacaktır.</p>
-            </div>
-
-            <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Site Adı <span class="text-red-500">*</span></label>
-                <input type="text" id="deliverSiteName" placeholder="Ahmet'in Berber Salonu" class="input-field">
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Site URL <span class="text-red-500">*</span></label>
-                <input type="url" id="deliverSiteUrl" placeholder="https://ahmet-berber.vercel.app" class="input-field">
+                <p class="text-amber-700 text-sm font-semibold">⚠️ Teslim edildikten sonra:</p>
+                <ul class="text-amber-600 text-xs mt-1 space-y-1">
+                    <li>• Müşteri panelinde site görünecek</li>
+                    <li>• 14 günlük trial başlayacak</li>
+                    <li>• Ödeme kaydı oluşturulacak</li>
+                </ul>
             </div>
             <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Site İkonu</label>
-                <select id="deliverSiteIcon" class="input-field">
-                    <option value="💈">💈 Berber</option>
-                    <option value="🍽️">🍽️ Restoran</option>
-                    <option value="💅">💅 Güzellik</option>
-                    <option value="🚗">🚗 Oto Servis</option>
-                    <option value="🏋️">🏋️ Spor Salonu</option>
-                    <option value="⚖️">⚖️ Avukat</option>
-                    <option value="🏗️">🏗️ Mimar</option>
-                    <option value="📸">📸 Fotoğrafçı</option>
-                    <option value="🔧">🔧 Usta</option>
-                    <option value="🧠">🧠 Danışman</option>
-                    <option value="🎨">🎨 Özel</option>
-                    <option value="🌐">🌐 Diğer</option>
-                </select>
+                <label class="text-xs font-bold text-gray-500 uppercase block mb-1">Site Adı *</label>
+                <input type="text" id="dSiteName" placeholder="Ahmet'in Berber Salonu" class="input-sm w-full">
             </div>
-
-            <div id="deliverError" class="hidden p-3 bg-red-50 border border-red-200 rounded-xl">
-                <p id="deliverErrorText" class="text-red-600 text-sm font-semibold"></p>
+            <div>
+                <label class="text-xs font-bold text-gray-500 uppercase block mb-1">Site URL *</label>
+                <input type="url" id="dSiteUrl" placeholder="https://ahmet-berber.vercel.app" class="input-sm w-full">
             </div>
-
-            <button onclick="confirmDeliver()" id="deliverBtn" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2">
-                <span id="deliverBtnText">Teslim Et & Trial Başlat</span>
-                <svg id="deliverLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <div id="deliverErr" class="hidden p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-semibold"></div>
+            <button onclick="doDeliver()" id="deliverBtn" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition-colors">
+                Teslim Et & Trial Başlat
             </button>
         </div>
     </div>
 </div>
 
 
-<!-- ======= DURUM GÜNCELLE MODAL ======= -->
-<div id="statusModal" class="modal-overlay" onclick="closeStatusOutside(event)">
-    <div class="modal-box">
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-5 rounded-t-2xl flex items-center justify-between sticky top-0">
-            <h3 class="text-white font-bold">Durum Güncelle</h3>
-            <button onclick="closeStatus()" class="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center">
-                <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-        <div class="p-6 space-y-4">
-            <div>
-                <p class="text-sm text-gray-500 mb-1">Güncellenen kayıt:</p>
-                <p id="statusItemName" class="font-bold text-gray-900"></p>
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Yeni Durum</label>
-                <select id="statusSelect" class="input-field"></select>
-            </div>
-            <button onclick="confirmStatus()" id="statusBtn" class="w-full btn-primary text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2">
-                <span id="statusBtnText">Güncelle</span>
-                <svg id="statusLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            </button>
-        </div>
-    </div>
-</div>
-
-
-<!-- ===== FIREBASE ===== -->
+<!-- FIREBASE -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, getDocs, updateDoc, addDoc, collection, query, where, orderBy, serverTimestamp, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+        getFirestore, doc, getDoc, getDocs, updateDoc, addDoc,
+        collection, query, where, serverTimestamp, Timestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const firebaseConfig = {
+    const app = initializeApp({
         apiKey: "AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",
         authDomain: "dijital-pazar-3cc34.firebaseapp.com",
         projectId: "dijital-pazar-3cc34",
         storageBucket: "dijital-pazar-3cc34.firebasestorage.app",
         messagingSenderId: "519713206128",
         appId: "1:519713206128:web:4d1f541d1b469eeb8069b5"
-    };
+    });
 
-    const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db   = getFirestore(app);
 
-    // Global state
-    window._currentDeliverId  = null;
-    window._currentDeliverData = null;
-    window._currentStatusId   = null;
-    window._currentStatusType = null;
-
-    // Status maps
-    const ORDER_STATUS_MAP = {
-        pending:    {label:'⏳ Talep Alındı',   color:'bg-yellow-100 text-yellow-700', dot:'bg-yellow-500'},
-        processing: {label:'⚙️ Hazırlanıyor',   color:'bg-blue-100 text-blue-700',    dot:'bg-blue-500'},
-        delivered:  {label:'✅ Teslim Edildi',  color:'bg-green-100 text-green-700',  dot:'bg-green-500'},
-        cancelled:  {label:'❌ İptal Edildi',   color:'bg-gray-100 text-gray-600',    dot:'bg-gray-400'},
-    };
-    const SITE_STATUS_MAP = {
-        trial:       {label:'🎯 Deneme Sürümü',        color:'bg-indigo-100 text-indigo-700'},
-        active:      {label:'🟢 Aktif',                color:'bg-green-100 text-green-700'},
-        maintenance: {label:'🔧 Bakımda',              color:'bg-amber-100 text-amber-700'},
-        suspended:   {label:'⛔ Askıda',              color:'bg-red-100 text-red-700'},
-        cancelled:   {label:'❌ Kapatıldı',           color:'bg-gray-100 text-gray-600'},
-    };
-    const PAYMENT_STATUS_MAP = {
-        trial:  {label:'🎁 Deneme',              color:'bg-indigo-100 text-indigo-700'},
-        unpaid: {label:'❌ Ödenmedi',            color:'bg-red-100 text-red-700'},
-        paid:   {label:'✅ Ödendi',              color:'bg-green-100 text-green-700'},
-        overdue:{label:'⚠️ Gecikmiş',           color:'bg-orange-100 text-orange-700'},
-    };
+    // Global data
+    let allOrders = [], allSites = [], allPayments = [], allCustomers = [];
+    let deliverOrderId = null, deliverOrderData = null;
 
     // Admin kontrolü
     onAuthStateChanged(auth, async (user) => {
-        if (!user) { window.location.href = 'giris.html'; return; }
-
+        if (!user) { location.href = 'giris.html'; return; }
         const snap = await getDoc(doc(db, "users", user.uid));
         if (!snap.exists() || snap.data().role !== 'admin') {
-            await signOut(auth);
-            window.location.href = 'giris.html';
-            return;
+            await signOut(auth); location.href = 'giris.html'; return;
         }
-
-        document.getElementById('adminName').textContent = snap.data().fullName || 'Admin';
-
-        // Verileri yükle
-        await Promise.all([
-            loadOrders(),
-            loadSites(),
-            loadPayments(),
-            loadCustomers()
-        ]);
-
-        // Loading kaldır
-        const loading = document.getElementById('loadingScreen');
-        loading.style.opacity = '0';
-        setTimeout(() => loading.style.display = 'none', 300);
+        await loadAll();
+        document.getElementById('loadingScreen').style.opacity = '0';
+        setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 300);
     });
 
-    // ===== SİPARİŞLERİ YÜKLE =====
-    async function loadOrders() {
-        const snap = await getDocs(query(collection(db,"orders")));
-        document.getElementById('ordersLoading').classList.add('hidden');
-        document.getElementById('ordersList').classList.remove('hidden');
-
-        const orders = [];
-        snap.forEach(d => orders.push({id:d.id,...d.data()}));
-        orders.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
-
-        // İstatistikler
-        document.getElementById('statOrders').textContent  = orders.length;
-        document.getElementById('statPending').textContent = orders.filter(o=>o.status==='pending'||o.status==='processing').length;
-
-        window._allOrders = orders;
-        renderOrders(orders);
+    async function loadAll() {
+        await Promise.all([loadOrders(), loadSites(), loadPayments(), loadCustomers()]);
     }
 
-    function renderOrders(orders) {
-        if (orders.length === 0) {
-            document.getElementById('ordersList').innerHTML = '<div class="bg-white rounded-2xl p-8 text-center text-gray-400">Sipariş bulunamadı.</div>';
-            return;
-        }
+    // ===== SİPARİŞLER =====
+    async function loadOrders() {
+        const snap = await getDocs(collection(db, "orders"));
+        allOrders = [];
+        snap.forEach(d => allOrders.push({ id: d.id, ...d.data() }));
+        allOrders.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+        document.getElementById('statOrders').textContent = allOrders.length;
+        document.getElementById('statPending').textContent = allOrders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+
+        renderOrders();
+    }
+
+    function renderOrders() {
+        const el = document.getElementById('ordersContent');
+        if (allOrders.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Sipariş yok</div>'; return; }
+
+        const statusOpts = {
+            pending:    { label: '⏳ Talep Alındı',  bg: 'bg-yellow-100 text-yellow-700' },
+            processing: { label: '⚙️ Hazırlanıyor',  bg: 'bg-blue-100 text-blue-700' },
+            delivered:  { label: '✅ Teslim Edildi', bg: 'bg-green-100 text-green-700' },
+            cancelled:  { label: '❌ İptal Edildi',  bg: 'bg-gray-100 text-gray-600' }
+        };
 
         let html = '';
-        orders.forEach(o => {
-            const s    = ORDER_STATUS_MAP[o.status] || ORDER_STATUS_MAP.pending;
-            const date = o.createdAt ? new Date(o.createdAt.seconds*1000).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '-';
-            const canDeliver = o.status === 'processing';
-            const canCancel  = o.status !== 'cancelled' && o.status !== 'delivered';
+        allOrders.forEach(o => {
+            const s = statusOpts[o.status] || statusOpts.pending;
+            const date = o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }) : '';
 
             html += `
             <div class="card">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
+                    <!-- Bilgi -->
                     <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <div class="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">${o.productIcon||'📦'}</div>
+                        <div class="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">${o.productIcon || '📦'}</div>
                         <div class="min-w-0">
-                            <div class="font-bold text-gray-900 text-sm truncate">${o.productName||'Ürün'}</div>
-                            <div class="text-gray-400 text-xs mt-0.5">${o.packageName||''} · ${o.businessName||''}${o.userEmail ? ` · ${o.userEmail}` : ''}</div>
-                            <div class="text-gray-300 text-xs">${date}</div>
+                            <div class="font-bold text-sm text-gray-900 truncate">${o.productName || 'Ürün'}</div>
+                            <div class="text-xs text-gray-400 truncate">🏢 ${o.businessName || '-'} · ${o.userEmail || ''} · ${date}</div>
+                            <div class="text-xs text-gray-400">${o.packageName || ''} Paketi · <strong>${parseInt(o.price || 0).toLocaleString('tr-TR')}₺${o.isCustom ? '' : '/ay'}</strong></div>
+                            ${o.note ? `<div class="text-xs text-gray-300 mt-1">📝 ${o.note}</div>` : ''}
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-badge ${s.color}">${s.label}</span>
-                        <span class="font-bold text-gray-900 text-sm">${parseInt(o.price||0).toLocaleString('tr-TR')}₺</span>
 
-                        ${o.status === 'pending' ? `
-                        <button onclick="changeOrderStatus('${o.id}','processing')"
-                            class="bg-blue-50 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors">
-                            ⚙️ Hazırlanıyor
-                        </button>` : ''}
+                    <!-- Durum + Aksiyonlar -->
+                    <div class="flex items-center gap-2 flex-wrap flex-shrink-0">
+                        <!-- Durum Seçici -->
+                        <select onchange="changeOrderStatus('${o.id}', this.value)" class="input-sm text-xs font-bold ${s.bg}" style="min-width:140px">
+                            <option value="pending"    ${o.status === 'pending' ? 'selected' : ''}>⏳ Talep Alındı</option>
+                            <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>⚙️ Hazırlanıyor</option>
+                            <option value="delivered"  ${o.status === 'delivered' ? 'selected' : ''} disabled>✅ Teslim Edildi</option>
+                            <option value="cancelled"  ${o.status === 'cancelled' ? 'selected' : ''}>❌ İptal</option>
+                        </select>
 
-                        ${canDeliver ? `
-                        <button onclick="openDeliver('${o.id}',${JSON.stringify(o).replace(/'/g,"\\'")})"
-                            class="bg-green-50 border border-green-200 text-green-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-green-100 transition-colors">
+                        ${o.status === 'processing' ? `
+                        <button onclick='openDeliverModal("${o.id}")' class="bg-green-500 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 transition-colors flex items-center gap-1">
                             ✅ Teslim Et
-                        </button>` : ''}
-
-                        ${canCancel ? `
-                        <button onclick="changeOrderStatus('${o.id}','cancelled')"
-                            class="bg-red-50 border border-red-200 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition-colors">
-                            ❌ İptal
                         </button>` : ''}
                     </div>
                 </div>
-                ${o.note ? `<div class="mt-3 pt-3 border-t border-gray-50 text-xs text-gray-400">📝 ${o.note}</div>` : ''}
             </div>`;
         });
-        document.getElementById('ordersList').innerHTML = html;
+        el.innerHTML = html;
     }
 
     // Sipariş durumu değiştir (teslim hariç)
-    window.changeOrderStatus = async function(orderId, newStatus) {
-        if (!confirm(`Durumu "${newStatus}" olarak değiştirmek istediğinize emin misiniz?`)) return;
+    window.changeOrderStatus = async function(id, newStatus) {
+        if (newStatus === 'delivered') return; // Teslim modaldan yapılır
         try {
-            await updateDoc(doc(db,"orders",orderId), { status: newStatus });
+            await updateDoc(doc(db, "orders", id), { status: newStatus, updatedAt: serverTimestamp() });
+            toast('✅ Sipariş durumu güncellendi');
             await loadOrders();
-        } catch(err) {
-            alert('Hata: ' + err.message);
-        }
+        } catch (e) { alert('Hata: ' + e.message); }
     };
 
-    // Teslim et modal
-    window.openDeliver = function(orderId, orderData) {
-        window._currentDeliverId   = orderId;
-        window._currentDeliverData = orderData;
+    // Teslim modal aç
+    window.openDeliverModal = function(orderId) {
+        const order = allOrders.find(o => o.id === orderId);
+        if (!order) return;
+        deliverOrderId   = orderId;
+        deliverOrderData = order;
 
-        document.getElementById('deliverOrderName').textContent = orderData.productName + ' · ' + orderData.businessName;
-        document.getElementById('deliverSiteName').value = orderData.businessName || '';
-        document.getElementById('deliverSiteUrl').value  = '';
-        document.getElementById('deliverError').classList.add('hidden');
+        document.getElementById('deliverInfo').textContent = `${order.productName} · ${order.businessName || ''} · ${order.userEmail || ''}`;
+        document.getElementById('dSiteName').value = order.businessName || '';
+        document.getElementById('dSiteUrl').value  = '';
+        document.getElementById('deliverErr').classList.add('hidden');
 
-        // İkonu otomatik seç
-        const iconMap = {'💈':'💈','🍽️':'🍽️','💅':'💅','🚗':'🚗','🏋️':'🏋️','⚖️':'⚖️','🏗️':'🏗️','📸':'📸','🔧':'🔧','🧠':'🧠','🎨':'🎨'};
-        const icon = orderData.productIcon || '🌐';
-        document.getElementById('deliverSiteIcon').value = iconMap[icon] || '🌐';
-
-        document.getElementById('deliverModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
+        document.getElementById('deliverModal').classList.add('show');
     };
 
     window.closeDeliver = function() {
-        document.getElementById('deliverModal').classList.remove('active');
-        document.body.style.overflow = '';
-    };
-    window.closeDeliverOutside = function(e) {
-        if (e.target === document.getElementById('deliverModal')) closeDeliver();
+        document.getElementById('deliverModal').classList.remove('show');
     };
 
-    // Teslimi onayla
-    window.confirmDeliver = async function() {
-        const siteName = document.getElementById('deliverSiteName').value.trim();
-        const siteUrl  = document.getElementById('deliverSiteUrl').value.trim();
-        const siteIcon = document.getElementById('deliverSiteIcon').value;
-        const errEl    = document.getElementById('deliverError');
-        const errTxt   = document.getElementById('deliverErrorText');
+    // Teslim et
+    window.doDeliver = async function() {
+        const siteName = document.getElementById('dSiteName').value.trim();
+        const siteUrl  = document.getElementById('dSiteUrl').value.trim();
+        const errEl    = document.getElementById('deliverErr');
 
-        if (!siteName) { errEl.classList.remove('hidden'); errTxt.textContent = 'Site adı zorunludur.'; return; }
-        if (!siteUrl)  { errEl.classList.remove('hidden'); errTxt.textContent = 'Site URL zorunludur.'; return; }
+        if (!siteName || !siteUrl) {
+            errEl.textContent = '❌ Site adı ve URL zorunludur!';
+            errEl.classList.remove('hidden');
+            return;
+        }
 
-        const btn  = document.getElementById('deliverBtn');
-        const text = document.getElementById('deliverBtnText');
-        const load = document.getElementById('deliverLoader');
-
+        const btn = document.getElementById('deliverBtn');
         btn.disabled = true;
-        text.textContent = 'İşleniyor...';
-        load.classList.remove('hidden');
+        btn.textContent = 'İşleniyor...';
         errEl.classList.add('hidden');
 
-        const order = window._currentDeliverData;
-        const now   = new Date();
+        const order    = deliverOrderData;
+        const now      = new Date();
         const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
 
         try {
-            // 1. Sipariş durumunu güncelle
-            await updateDoc(doc(db,"orders",window._currentDeliverId), {
+            // 1. Sipariş → delivered
+            await updateDoc(doc(db, "orders", deliverOrderId), {
                 status: 'delivered',
                 deliveredAt: serverTimestamp()
             });
 
-            // 2. Sites koleksiyonuna ekle
-            await addDoc(collection(db,"sites"), {
+            // 2. Sites → oluştur
+            await addDoc(collection(db, "sites"), {
                 userId:      order.userId,
                 userEmail:   order.userEmail,
-                orderId:     window._currentDeliverId,
+                orderId:     deliverOrderId,
                 siteName:    siteName,
                 siteUrl:     siteUrl,
-                icon:        siteIcon,
+                icon:        order.productIcon || '🌐',
                 productName: order.productName,
                 packageName: order.packageName,
                 price:       order.price,
@@ -482,252 +326,220 @@
                 createdAt:   serverTimestamp()
             });
 
-            // 3. Payments koleksiyonuna trial kaydı ekle
-            await addDoc(collection(db,"payments"), {
+            // 3. Payments → trial kaydı
+            await addDoc(collection(db, "payments"), {
                 userId:      order.userId,
                 userEmail:   order.userEmail,
-                orderId:     window._currentDeliverId,
+                orderId:     deliverOrderId,
                 amount:      order.price,
-                description: `14 Gün Ücretsiz Deneme - ${order.productName}`,
+                description: '14 Gün Ücretsiz Deneme - ' + order.productName,
                 status:      'trial',
                 dueDate:     Timestamp.fromDate(trialEnd),
                 createdAt:   serverTimestamp()
             });
 
             closeDeliver();
-            await loadOrders();
-            await loadSites();
-            await loadPayments();
+            toast('✅ Sipariş teslim edildi! Trial başlatıldı.');
+            await loadAll();
 
-            // Başarı bildirimi
-            showToast('✅ Sipariş teslim edildi! Trial başlatıldı.');
-
-        } catch(err) {
-            console.error(err);
+        } catch (e) {
+            console.error(e);
+            errEl.textContent = '❌ Hata: ' + e.message;
             errEl.classList.remove('hidden');
-            errTxt.textContent = 'Hata: ' + err.message;
         } finally {
             btn.disabled = false;
-            text.textContent = 'Teslim Et & Trial Başlat';
-            load.classList.add('hidden');
+            btn.textContent = 'Teslim Et & Trial Başlat';
         }
     };
 
-    // ===== SİTELERİ YÜKLE =====
+
+    // ===== SİTELER =====
     async function loadSites() {
-        const snap = await getDocs(collection(db,"sites"));
-        document.getElementById('sitesLoading').classList.add('hidden');
-        document.getElementById('sitesList').classList.remove('hidden');
+        const snap = await getDocs(collection(db, "sites"));
+        allSites = [];
+        snap.forEach(d => allSites.push({ id: d.id, ...d.data() }));
+        allSites.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
-        const sites = [];
-        snap.forEach(d => sites.push({id:d.id,...d.data()}));
-        sites.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+        document.getElementById('statSites').textContent = allSites.filter(s => s.status === 'active' || s.status === 'trial').length;
 
-        document.getElementById('statSites').textContent = sites.filter(s=>s.status==='active'||s.status==='trial').length;
+        const el = document.getElementById('sitesContent');
+        if (allSites.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Site yok</div>'; return; }
 
-        if (sites.length === 0) {
-            document.getElementById('sitesList').innerHTML = '<div class="bg-white rounded-2xl p-8 text-center text-gray-400">Henüz site yok.</div>';
-            return;
-        }
+        const statusOpts = {
+            trial:       { label: '🎯 Deneme',  bg: 'bg-indigo-100 text-indigo-700' },
+            active:      { label: '🟢 Aktif',   bg: 'bg-green-100 text-green-700' },
+            maintenance: { label: '🔧 Bakımda', bg: 'bg-amber-100 text-amber-700' },
+            suspended:   { label: '⛔ Askıda',  bg: 'bg-red-100 text-red-700' },
+            cancelled:   { label: '❌ Kapalı',  bg: 'bg-gray-100 text-gray-600' }
+        };
 
         let html = '';
-        sites.forEach(s => {
-            const st = SITE_STATUS_MAP[s.status] || SITE_STATUS_MAP.trial;
+        allSites.forEach(s => {
+            const st = statusOpts[s.status] || statusOpts.trial;
             html += `
             <div class="card">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
                     <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <div class="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">${s.icon||'🌐'}</div>
+                        <div class="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">${s.icon || '🌐'}</div>
                         <div class="min-w-0">
-                            <div class="font-bold text-gray-900 text-sm">${s.siteName||'Site'}</div>
-                            <div class="text-gray-400 text-xs mt-0.5">${s.productName||''} · ${s.packageName||''} · ${s.userEmail||''}</div>
-                            ${s.siteUrl ? `<a href="${s.siteUrl}" target="_blank" class="text-indigo-500 text-xs hover:underline break-all">${s.siteUrl}</a>` : '<span class="text-gray-300 text-xs">URL yok</span>'}
+                            <div class="font-bold text-sm text-gray-900">${s.siteName || 'Site'}</div>
+                            <div class="text-xs text-gray-400">${s.productName || ''} · ${s.userEmail || ''}</div>
+                            ${s.siteUrl ? `<a href="${s.siteUrl}" target="_blank" class="text-indigo-500 text-xs hover:underline break-all">${s.siteUrl}</a>` : ''}
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-badge ${st.color}">${st.label}</span>
-                        <span class="font-bold text-gray-900 text-sm">${parseInt(s.price||0).toLocaleString('tr-TR')}₺</span>
-                        <button onclick="openStatus('${s.id}','site','${s.status}','${s.siteName||'Site'}')"
-                            class="bg-indigo-50 border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-colors">
-                            ✏️ Durum
-                        </button>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="font-bold text-sm">${parseInt(s.price || 0).toLocaleString('tr-TR')}₺</span>
+                        <select onchange="changeSiteStatus('${s.id}', this.value)" class="input-sm text-xs font-bold ${st.bg}" style="min-width:130px">
+                            <option value="trial"       ${s.status === 'trial' ? 'selected' : ''}>🎯 Deneme</option>
+                            <option value="active"      ${s.status === 'active' ? 'selected' : ''}>🟢 Aktif</option>
+                            <option value="maintenance" ${s.status === 'maintenance' ? 'selected' : ''}>🔧 Bakımda</option>
+                            <option value="suspended"   ${s.status === 'suspended' ? 'selected' : ''}>⛔ Askıda</option>
+                            <option value="cancelled"   ${s.status === 'cancelled' ? 'selected' : ''}>❌ Kapalı</option>
+                        </select>
                     </div>
                 </div>
             </div>`;
         });
-        document.getElementById('sitesList').innerHTML = html;
+        el.innerHTML = html;
     }
 
-    // ===== ÖDEMELERİ YÜKLE =====
+    window.changeSiteStatus = async function(id, newStatus) {
+        try {
+            await updateDoc(doc(db, "sites", id), { status: newStatus, updatedAt: serverTimestamp() });
+            toast('✅ Site durumu güncellendi');
+            await loadSites();
+        } catch (e) { alert('Hata: ' + e.message); }
+    };
+
+
+    // ===== ÖDEMELER =====
     async function loadPayments() {
-        const snap = await getDocs(collection(db,"payments"));
-        document.getElementById('paymentsLoading').classList.add('hidden');
-        document.getElementById('paymentsList').classList.remove('hidden');
+        const snap = await getDocs(collection(db, "payments"));
+        allPayments = [];
+        snap.forEach(d => allPayments.push({ id: d.id, ...d.data() }));
+        allPayments.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
 
-        const payments = [];
-        snap.forEach(d => payments.push({id:d.id,...d.data()}));
-        payments.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+        const el = document.getElementById('paymentsContent');
+        if (allPayments.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Ödeme kaydı yok</div>'; return; }
 
-        if (payments.length === 0) {
-            document.getElementById('paymentsList').innerHTML = '<div class="bg-white rounded-2xl p-8 text-center text-gray-400">Ödeme kaydı yok.</div>';
-            return;
-        }
+        const statusOpts = {
+            trial:  { label: '🎁 Deneme',   bg: 'bg-indigo-100 text-indigo-700' },
+            unpaid: { label: '❌ Ödenmedi', bg: 'bg-red-100 text-red-700' },
+            paid:   { label: '✅ Ödendi',   bg: 'bg-green-100 text-green-700' },
+            overdue:{ label: '⚠️ Gecikmiş', bg: 'bg-orange-100 text-orange-700' }
+        };
 
         let html = '';
-        payments.forEach(p => {
-            const ps = PAYMENT_STATUS_MAP[p.status] || PAYMENT_STATUS_MAP.unpaid;
-            const due = p.dueDate ? p.dueDate.toDate().toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '-';
+        allPayments.forEach(p => {
+            const ps  = statusOpts[p.status] || statusOpts.unpaid;
+            const due = p.dueDate ? p.dueDate.toDate().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
 
             html += `
             <div class="card">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
                     <div class="flex-1 min-w-0">
-                        <div class="font-bold text-gray-900 text-sm">${p.description||'Ödeme'}</div>
-                        <div class="text-gray-400 text-xs mt-0.5">${p.userEmail||''} · Son tarih: ${due}</div>
+                        <div class="font-bold text-sm text-gray-900">${p.description || 'Ödeme'}</div>
+                        <div class="text-xs text-gray-400">${p.userEmail || ''} · Son tarih: ${due}</div>
                     </div>
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="status-badge ${ps.color}">${ps.label}</span>
-                        <span class="font-bold text-gray-900 text-sm">${parseInt(p.amount||0).toLocaleString('tr-TR')}₺</span>
-                        <button onclick="openStatus('${p.id}','payment','${p.status}','${(p.description||'Ödeme').replace(/'/g,"\\'")}'")"
-                            class="bg-indigo-50 border border-indigo-200 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-colors">
-                            ✏️ Durum
-                        </button>
+                    <div class="flex items-center gap-2 flex-shrink-0">
+                        <span class="font-bold text-sm">${parseInt(p.amount || 0).toLocaleString('tr-TR')}₺</span>
+                        <select onchange="changePaymentStatus('${p.id}', this.value)" class="input-sm text-xs font-bold ${ps.bg}" style="min-width:130px">
+                            <option value="trial"  ${p.status === 'trial' ? 'selected' : ''}>🎁 Deneme</option>
+                            <option value="unpaid" ${p.status === 'unpaid' ? 'selected' : ''}>❌ Ödenmedi</option>
+                            <option value="paid"   ${p.status === 'paid' ? 'selected' : ''}>✅ Ödendi</option>
+                            <option value="overdue" ${p.status === 'overdue' ? 'selected' : ''}>⚠️ Gecikmiş</option>
+                        </select>
                     </div>
                 </div>
             </div>`;
         });
-        document.getElementById('paymentsList').innerHTML = html;
+        el.innerHTML = html;
     }
 
-    // ===== MÜŞTERİLERİ YÜKLE =====
+    window.changePaymentStatus = async function(id, newStatus) {
+        try {
+            await updateDoc(doc(db, "payments", id), { status: newStatus, updatedAt: serverTimestamp() });
+            toast('✅ Ödeme durumu güncellendi');
+            await loadPayments();
+        } catch (e) { alert('Hata: ' + e.message); }
+    };
+
+
+    // ===== MÜŞTERİLER =====
     async function loadCustomers() {
-        const snap = await getDocs(query(collection(db,"users"), where("role","==","customer")));
-        document.getElementById('customersLoading').classList.add('hidden');
-        document.getElementById('customersList').classList.remove('hidden');
+        const snap = await getDocs(query(collection(db, "users"), where("role", "==", "customer")));
+        allCustomers = [];
+        snap.forEach(d => allCustomers.push({ id: d.id, ...d.data() }));
 
-        const customers = [];
-        snap.forEach(d => customers.push({id:d.id,...d.data()}));
+        document.getElementById('statUsers').textContent = allCustomers.length;
 
-        document.getElementById('statUsers').textContent = customers.length;
-
-        if (customers.length === 0) {
-            document.getElementById('customersList').innerHTML = '<div class="bg-white rounded-2xl p-8 text-center text-gray-400">Müşteri yok.</div>';
-            return;
-        }
+        const el = document.getElementById('customersContent');
+        if (allCustomers.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Müşteri yok</div>'; return; }
 
         let html = '';
-        customers.forEach(c => {
-            const date = c.createdAt ? c.createdAt.toDate().toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}) : '-';
+        allCustomers.forEach(c => {
+            const date = c.createdAt ? c.createdAt.toDate().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
+            const orderCount = allOrders.filter(o => o.userId === c.id).length;
+            const siteCount  = allSites.filter(s => s.userId === c.id).length;
+
             html += `
             <div class="card">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <span class="text-white font-bold text-sm">${(c.firstName||'?').charAt(0).toUpperCase()}</span>
+                        <span class="text-white font-bold text-sm">${(c.firstName || '?').charAt(0).toUpperCase()}</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="font-bold text-gray-900 text-sm">${c.fullName||'-'}</div>
-                        <div class="text-gray-400 text-xs mt-0.5">${c.email||''} · ${c.phone||''}</div>
-                        <div class="text-gray-300 text-xs">Kayıt: ${date}</div>
+                        <div class="font-bold text-sm text-gray-900">${c.fullName || '-'}</div>
+                        <div class="text-xs text-gray-400">${c.email || ''} · ${c.phone || ''}</div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0 text-xs">
+                        <div class="text-center">
+                            <div class="font-bold text-gray-900">${orderCount}</div>
+                            <div class="text-gray-400">sipariş</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-bold text-gray-900">${siteCount}</div>
+                            <div class="text-gray-400">site</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="font-bold text-gray-400">${date}</div>
+                            <div class="text-gray-400">kayıt</div>
+                        </div>
                     </div>
                 </div>
             </div>`;
         });
-        document.getElementById('customersList').innerHTML = html;
+        el.innerHTML = html;
     }
 
-    // ===== DURUM MODAL =====
-    const ORDER_STATUS_OPTIONS  = ['pending','processing','delivered','cancelled'];
-    const SITE_STATUS_OPTIONS   = ['trial','active','maintenance','suspended','cancelled'];
-    const PAYMENT_STATUS_OPTIONS = ['trial','unpaid','paid','overdue'];
 
-    window.openStatus = function(id, type, currentStatus, name) {
-        window._currentStatusId   = id;
-        window._currentStatusType = type;
-
-        document.getElementById('statusItemName').textContent = name;
-
-        const options = type === 'site' ? SITE_STATUS_OPTIONS : type === 'payment' ? PAYMENT_STATUS_OPTIONS : ORDER_STATUS_OPTIONS;
-        const labelMap = type === 'site' ? SITE_STATUS_MAP : type === 'payment' ? PAYMENT_STATUS_MAP : ORDER_STATUS_MAP;
-
-        let optHtml = '';
-        options.forEach(opt => {
-            const label = (labelMap[opt]?.label || opt);
-            optHtml += `<option value="${opt}" ${opt===currentStatus?'selected':''}>${label}</option>`;
-        });
-        document.getElementById('statusSelect').innerHTML = optHtml;
-
-        document.getElementById('statusModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    };
-
-    window.closeStatus = function() {
-        document.getElementById('statusModal').classList.remove('active');
-        document.body.style.overflow = '';
-    };
-    window.closeStatusOutside = function(e) {
-        if (e.target === document.getElementById('statusModal')) closeStatus();
-    };
-
-    window.confirmStatus = async function() {
-        const newStatus = document.getElementById('statusSelect').value;
-        const btn  = document.getElementById('statusBtn');
-        const text = document.getElementById('statusBtnText');
-        const load = document.getElementById('statusLoader');
-
-        btn.disabled = true; text.textContent = 'Güncelleniyor...'; load.classList.remove('hidden');
-
-        try {
-            const collName = window._currentStatusType === 'site' ? 'sites' : window._currentStatusType === 'payment' ? 'payments' : 'orders';
-            await updateDoc(doc(db, collName, window._currentStatusId), { status: newStatus, updatedAt: serverTimestamp() });
-
-            closeStatus();
-            if (window._currentStatusType === 'site')    await loadSites();
-            if (window._currentStatusType === 'payment') await loadPayments();
-            if (window._currentStatusType === 'order')   await loadOrders();
-
-            showToast('✅ Durum güncellendi!');
-        } catch(err) {
-            alert('Hata: ' + err.message);
-        } finally {
-            btn.disabled = false; text.textContent = 'Güncelle'; load.classList.add('hidden');
-        }
-    };
-
-    // ===== LOGOUT =====
-    window.adminLogout = async function() {
+    // Logout
+    window.doLogout = async function() {
         await signOut(auth);
-        window.location.href = 'giris.html';
+        location.href = 'giris.html';
     };
 
-    // ===== TOAST =====
-    window.showToast = function(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-2xl text-sm font-semibold shadow-2xl z-[9999] transition-all';
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
-    };
+    // Toast
+    function toast(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2500);
+    }
+    window.toast = toast;
 </script>
 
 <script>
-    // Tab Switch
     function switchTab(tab) {
-        ['orders','sites','payments','customers'].forEach(t => {
-            document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
-            document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.remove('active');
+        ['orders', 'sites', 'payments', 'customers'].forEach(t => {
+            const sec = document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1));
+            const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+            if (sec) sec.classList.add('hidden');
+            if (btn) btn.classList.remove('active');
         });
         document.getElementById('section' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
         document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-    }
-
-    // Sipariş Filtrele
-    function filterOrders(status) {
-        const orders = window._allOrders || [];
-        const filtered = status === 'all' ? orders : orders.filter(o => o.status === status);
-        // renderOrders global değil, module içinde — workaround:
-        document.getElementById('orderFilter').dataset.filter = status;
-        // Sayfayı yenile
-        window.location.reload();
     }
 </script>
 </body>
