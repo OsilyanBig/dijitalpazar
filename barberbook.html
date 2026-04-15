@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarberBook - Berber Randevu Sistemi | XXX Yazılım</title>
+    <meta name="description" content="Berber dükkanınız için profesyonel online randevu sistemi. SMS hatırlatma, personel yönetimi ve daha fazlası.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+        .gradient-text{background:linear-gradient(135deg,#4F46E5,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);position:relative;overflow:hidden;transition:all 0.3s ease}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px -5px rgba(79,70,229,0.4)}
+        .pkg-card{border:2px solid #E2E8F0;border-radius:20px;padding:28px;cursor:pointer;transition:all 0.3s ease;background:white}
+        .pkg-card:hover{border-color:#4F46E5;transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(79,70,229,0.15)}
+        .pkg-card.recommended{border-color:#4F46E5;background:linear-gradient(135deg,#F5F3FF,#EDE9FE)}
+        .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}.reveal.active{opacity:1;transform:translateY(0)}
+        .feature-check{width:20px;height:20px;background:#DCFCE7;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#16A34A;font-size:11px;font-weight:700}
+        .feature-x{width:20px;height:20px;background:#F1F5F9;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#94A3B8;font-size:11px}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+        .modal-overlay.active{opacity:1;pointer-events:all}
+        .modal-box{background:white;border-radius:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;transform:scale(0.9) translateY(20px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
+        .modal-overlay.active .modal-box{transform:scale(1) translateY(0)}
+        .input-field{width:100%;padding:12px 16px;border-radius:12px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;outline:none;color:#0F172A}
+        .input-field:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1);background:#fff}
+        .input-field::placeholder{color:#94A3B8}
+        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
+        @media(max-width:1023px){body{padding-bottom:64px}}
+    </style>
+</head>
+<body class="bg-[#FAFBFF] text-gray-900 antialiased">
+
+<!-- ===== HEADER ===== -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl shadow-[0_2px_20px_rgba(0,0,0,0.06)] py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-14">
+            <a href="../index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
+                    <span class="text-white font-black text-lg">X</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold leading-tight text-gray-900">XXX Yazılım</span>
+                    <span class="text-[10px] font-medium leading-tight text-indigo-600">Dijital Çözümler</span>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-1">
+                <a href="../index.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Ana Sayfa</a>
+                <a href="../urunler.html" class="px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 bg-indigo-50">Ürünler</a>
+                <a href="../iletisim.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">İletişim</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-3" id="headerAuth">
+                <div class="flex gap-2">
+                    <div class="w-20 h-9 bg-gray-100 rounded-xl animate-pulse"></div>
+                    <div class="w-24 h-9 bg-gray-100 rounded-xl animate-pulse"></div>
+                </div>
+            </div>
+
+            <button id="mobileToggle" class="lg:hidden p-2.5 rounded-xl text-gray-900 hover:bg-gray-100">
+                <svg id="menuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
+                <svg id="menuClose" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div id="mobileMenu" class="lg:hidden hidden mt-3">
+            <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-3">
+                <a href="../index.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 font-medium">Ana Sayfa</a>
+                <a href="../urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-indigo-600 bg-indigo-50 font-medium">Ürünler</a>
+                <a href="../iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 font-medium">İletişim</a>
+                <div id="mobileAuthButtons" class="mt-2 pt-2 border-t border-gray-100 space-y-2"></div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<!-- ===== HERO ===== -->
+<section class="pt-28 pb-16 bg-dark relative overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]"></div>
+    <div class="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-cyan-600/10 rounded-full blur-[100px]"></div>
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:60px 60px"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-white/40 text-sm mb-8">
+            <a href="../index.html" class="hover:text-white/70 transition-colors">Ana Sayfa</a>
+            <span>/</span>
+            <a href="../urunler.html" class="hover:text-white/70 transition-colors">Ürünler</a>
+            <span>/</span>
+            <span class="text-white/70">BarberBook</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-1.5 mb-6">
+                    <span class="text-xl">💈</span>
+                    <span class="text-sm font-bold text-blue-400">BarberBook</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-6 leading-tight">
+                    Berber Randevu <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Sistemi</span>
+                </h1>
+                <p class="text-lg text-white/50 mb-8 leading-relaxed">
+                    Müşterileriniz artık telefon açmak zorunda değil. 7/24 online randevu alabilirler. Siz de takvimini kolayca yönetirsin.
+                </p>
+
+                <div class="flex flex-wrap gap-3 mb-10">
+                    <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span class="text-white/70 text-sm">24 Saatte Kurulum</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span class="text-white/70 text-sm">14 Gün Ücretsiz</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2">
+                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <span class="text-white/70 text-sm">İptal Garantisi</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="openOrder('Başlangıç','300')"
+                        class="btn-primary text-white px-8 py-4 rounded-2xl text-lg font-bold inline-flex items-center justify-center gap-2">
+                        Hemen Sipariş Ver →
+                    </button>
+                    <a href="../iletisim.html"
+                        class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all inline-flex items-center justify-center gap-2">
+                        🤝 Bilgi Al
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sağ - Önizleme Kartı -->
+            <div class="hidden lg:block">
+                <div class="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8">
+                    <div class="bg-white rounded-2xl p-6 shadow-2xl">
+                        <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                            <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-xl">💈</div>
+                            <div>
+                                <div class="font-bold text-gray-900 text-sm">Ahmet'in Berber Salonu</div>
+                                <div class="text-xs text-gray-400">Online Randevu Sistemi</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Bugünkü Randevular</div>
+                            <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-xl">
+                                <div class="text-xs font-bold text-blue-600 w-12">10:00</div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-semibold text-gray-900">Mehmet K.</div>
+                                    <div class="text-xs text-gray-400">Saç + Sakal</div>
+                                </div>
+                                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">Onaylı</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                <div class="text-xs font-bold text-gray-600 w-12">11:30</div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-semibold text-gray-900">Ali Y.</div>
+                                    <div class="text-xs text-gray-400">Saç Kesim</div>
+                                </div>
+                                <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-semibold">Bekliyor</span>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                <div class="text-xs font-bold text-gray-600 w-12">13:00</div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-semibold text-gray-900">Hasan T.</div>
+                                    <div class="text-xs text-gray-400">Sakal Düzeltme</div>
+                                </div>
+                                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">Onaylı</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-xs text-gray-400">Toplam randevu: <strong class="text-gray-700">8</strong></span>
+                            <span class="text-xs text-gray-400">Bugünkü ciro: <strong class="text-gray-700">₺640</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===== ÖZELLİKLER ===== -->
+<section class="py-20 bg-[#FAFBFF]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 reveal">
+            <div class="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-4 py-1.5 mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                <span class="text-sm font-semibold text-blue-600">Özellikler</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+                BarberBook ile Neler <span class="gradient-text">Yapabilirsiniz?</span>
+            </h2>
+            <p class="text-gray-500 max-w-xl mx-auto">Müşterilerinize profesyonel bir deneyim sunarken işinizi kolaylaştıran tüm araçlar bir arada.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all reveal">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">📅</div>
+                <h3 class="font-bold text-gray-900 mb-2">Online Randevu</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Müşterileriniz 7/24 telefon açmadan online randevu alabilir. Sizin için boş saatler otomatik görünür.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all reveal">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">✂️</div>
+                <h3 class="font-bold text-gray-900 mb-2">Personel Seçimi</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Müşteriler tercih ettikleri berberi seçebilir. Her berberin ayrı takvimi ve çalışma saatleri tanımlanabilir.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all reveal">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">📱</div>
+                <h3 class="font-bold text-gray-900 mb-2">SMS & WhatsApp Hatırlatma</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Randevu öncesi otomatik SMS ve WhatsApp mesajı gönderilir. "Unutma" bahanesi ortadan kalkar.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all reveal">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">👥</div>
+                <h3 class="font-bold text-gray-900 mb-2">Müşteri Geçmişi</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Her müşterinin geçmiş randevularını, tercihlerini ve notlarını kayıt altında tutun.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all reveal">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">💰</div>
+                <h3 class="font-bold text-gray-900 mb-2">Hizmet & Fiyat Listesi</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Tüm hizmetlerinizi ve fiyatlarınızı kolayca yönetin. Müşteriler randevu alırken hizmet seçebilir.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all reveal">
+                <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4">📊</div>
+                <h3 class="font-bold text-gray-900 mb-2">Günlük Rapor</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Günlük, haftalık ve aylık randevu ve ciro raporlarını tek tıkla görün. (İleri Paket)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===== FİYATLANDIRMA ===== -->
+<section class="py-20 bg-white relative">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-16 reveal">
+            <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-4">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                <span class="text-sm font-semibold text-indigo-600">Fiyatlandırma</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+                Size Uygun <span class="gradient-text">Paketi Seçin</span>
+            </h2>
+            <p class="text-gray-500 max-w-xl mx-auto">14 gün ücretsiz deneyin. Memnun kalmazsanız iade garantisi.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+            <!-- Başlangıç -->
+            <div class="pkg-card reveal">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                    <span class="font-bold text-gray-700">Başlangıç</span>
+                </div>
+                <div class="mb-6">
+                    <span class="text-4xl font-extrabold text-gray-900">300₺</span>
+                    <span class="text-gray-400 text-sm">/ay</span>
+                </div>
+                <p class="text-gray-500 text-sm mb-6">Yeni başlayan küçük berber dükkanları için ideal başlangıç paketi.</p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Online Randevu Alma</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Hizmet Listesi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">İletişim Sayfası</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Mobil Uyumlu Tasarım</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-x">✗</span><span class="text-gray-400">Personel Seçimi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-x">✗</span><span class="text-gray-400">SMS Hatırlatma</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-x">✗</span><span class="text-gray-400">Müşteri Geçmişi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-x">✗</span><span class="text-gray-400">Raporlar</span></li>
+                </ul>
+                <button onclick="openOrder('Başlangıç','300')"
+                    class="w-full border-2 border-indigo-600 text-indigo-600 px-6 py-3 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition-all">
+                    Başlangıç Seç
+                </button>
+            </div>
+
+            <!-- Orta - Önerilen -->
+            <div class="pkg-card recommended reveal" style="animation-delay:0.1s">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                        <span class="font-bold text-gray-700">Orta</span>
+                    </div>
+                    <span class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full">⭐ Önerilen</span>
+                </div>
+                <div class="mb-6">
+                    <span class="text-4xl font-extrabold text-gray-900">750₺</span>
+                    <span class="text-gray-400 text-sm">/ay</span>
+                </div>
+                <p class="text-gray-500 text-sm mb-6">Büyümek isteyen, birden fazla berberi olan salonlar için.</p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Online Randevu Alma</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Hizmet Listesi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Personel Seçimi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">SMS & WhatsApp Hatırlatma</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Müşteri Geçmişi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Özel Subdomain</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-x">✗</span><span class="text-gray-400">Online Ödeme</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-x">✗</span><span class="text-gray-400">Gelişmiş Raporlar</span></li>
+                </ul>
+                <button onclick="openOrder('Orta','750')"
+                    class="w-full btn-primary text-white px-6 py-3 rounded-xl font-bold">
+                    Orta Paketi Seç
+                </button>
+            </div>
+
+            <!-- İleri -->
+            <div class="pkg-card reveal" style="animation-delay:0.2s">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="w-3 h-3 rounded-full bg-purple-500"></span>
+                    <span class="font-bold text-gray-700">İleri</span>
+                </div>
+                <div class="mb-6">
+                    <span class="text-4xl font-extrabold text-gray-900">1.300₺</span>
+                    <span class="text-gray-400 text-sm">/ay</span>
+                </div>
+                <p class="text-gray-500 text-sm mb-6">Profesyonel salonlar ve çok şubeli işletmeler için tam paket.</p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Tüm Orta Özellikler</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Online Ödeme</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Özel Domain Bağlama</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Sadakat / Puan Sistemi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Gelir & Rapor Analizi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Google Harita Entegrasyonu</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Çoklu Şube Desteği</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-check">✓</span><span class="text-gray-700">Öncelikli Destek</span></li>
+                </ul>
+                <button onclick="openOrder('İleri','1300')"
+                    class="w-full border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-xl font-bold hover:bg-purple-600 hover:text-white transition-all">
+                    İleri Paketi Seç
+                </button>
+            </div>
+        </div>
+
+        <!-- Güven -->
+        <div class="mt-12 text-center reveal">
+            <div class="inline-flex flex-wrap items-center justify-center gap-6 bg-gray-50 rounded-2xl px-8 py-4">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>14 Gün Ücretsiz Deneme</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>İade Garantisi</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>Sözleşmeli Çalışma</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>7/24 Destek</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===== SSS ===== -->
+<section class="py-20 bg-[#FAFBFF]">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center mb-12 reveal">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Sıkça Sorulan <span class="gradient-text">Sorular</span></h2>
+        </div>
+
+        <div class="space-y-4" id="faqContainer">
+            <div class="faq-item bg-white rounded-2xl border border-gray-100 overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">Sistemin kurulumu ne kadar sürer?</span>
+                    <div class="faq-icon w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0 transition-all">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5">
+                    <p class="text-gray-500 text-sm leading-relaxed">Siparişinizi aldıktan sonra 24-48 saat içinde sisteminiz hazır olur ve size teslim edilir. İşletme bilgilerinizi bizimle paylaşmanız yeterli, gerisini biz hallederiz.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-2xl border border-gray-100 overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">Müşterilerim nasıl randevu alacak?</span>
+                    <div class="faq-icon w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0 transition-all">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5">
+                    <p class="text-gray-500 text-sm leading-relaxed">Size özel bir web sitesi adresi (örn: ahmetberber.xxxxx.com) oluşturulur. Bu adresi WhatsApp biyografinize veya Instagram profilinize eklersiniz. Müşterileriniz oradan kolayca randevu alabilir.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-2xl border border-gray-100 overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">Sistemi kullanmak için teknik bilgi gerekiyor mu?</span>
+                    <div class="faq-icon w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0 transition-all">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5">
+                    <p class="text-gray-500 text-sm leading-relaxed">Hayır! Siteyi biz kuruyoruz ve hazırlıyoruz. Siz sadece gelen randevuları takip edersiniz. Herhangi bir teknik bilgiye ihtiyacınız yok.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-2xl border border-gray-100 overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">İstediğim zaman iptal edebilir miyim?</span>
+                    <div class="faq-icon w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0 transition-all">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5">
+                    <p class="text-gray-500 text-sm leading-relaxed">Evet, herhangi bir zamanda iptal edebilirsiniz. Cayma bedeli yoktur. Ayrıca 14 gün içinde memnun kalmazsanız ödemenizi iade ediyoruz.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-2xl border border-gray-100 overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">İstanbul dışındaysam sipariş verebilir miyim?</span>
+                    <div class="faq-icon w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-shrink-0 transition-all">
+                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5">
+                    <p class="text-gray-500 text-sm leading-relaxed">Evet! Türkiye'nin her yerinden sipariş alıyoruz. Kurulum tamamen online yapılır. İstanbul içindeyseniz ayrıca yüz yüze görüşme imkanı da sunuyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===== CTA ===== -->
+<section class="py-20 bg-dark relative overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-6">
+            Berberinizi Dijitale Taşımaya <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Hazır mısınız?</span>
+        </h2>
+        <p class="text-white/40 mb-10 max-w-xl mx-auto">14 gün ücretsiz deneyin, fark görün. Sonra karar verin.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onclick="openOrder('Orta','750')" class="btn-primary text-white px-8 py-4 rounded-2xl text-lg font-bold">
+                Hemen Başla →
+            </button>
+            <a href="../iletisim.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all">
+                🤝 Önce Görüşelim
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ===== SİPARİŞ MODAL ===== -->
+<div id="orderModal" class="modal-overlay" onclick="closeOrderOutside(event)">
+    <div class="modal-box">
+        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 p-6 flex items-center justify-between rounded-t-3xl sticky top-0">
+            <div>
+                <h3 class="text-xl font-bold text-white">💈 BarberBook Sipariş</h3>
+                <p id="modalPkgName" class="text-white/70 text-sm mt-0.5">Orta Paket - 750₺/ay</p>
+            </div>
+            <button onclick="closeOrder()" class="w-9 h-9 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <!-- Giriş Gerekli -->
+            <div id="loginRequired" class="hidden text-center py-6">
+                <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🔐</div>
+                <h4 class="text-lg font-bold text-gray-900 mb-2">Giriş Yapmanız Gerekiyor</h4>
+                <p class="text-gray-500 text-sm mb-6">Sipariş vermek için lütfen giriş yapın veya kayıt olun.</p>
+                <div class="flex gap-3 justify-center">
+                    <a href="../giris.html" class="border-2 border-gray-200 text-gray-700 px-6 py-3 rounded-xl text-sm font-semibold hover:border-indigo-300 transition-all">Giriş Yap</a>
+                    <a href="../giris.html?tab=register" class="btn-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">Kayıt Ol →</a>
+                </div>
+            </div>
+
+            <!-- Başarı -->
+            <div id="orderSuccess" class="hidden text-center py-6">
+                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🎉</div>
+                <h4 class="text-lg font-bold text-gray-900 mb-2">Siparişiniz Alındı!</h4>
+                <p class="text-gray-500 text-sm mb-6">En kısa sürede sizi arayarak süreci başlatacağız.</p>
+                <div class="flex gap-3 justify-center">
+                    <a href="../panel.html" class="btn-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">Panelime Git →</a>
+                    <a href="https://wa.me/905523845336" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-green-600 transition-colors">💬 WhatsApp</a>
+                </div>
+            </div>
+
+            <!-- Hata -->
+            <div id="orderError" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                <p class="text-red-700 text-sm font-semibold">❌ Hata oluştu. <a href="https://wa.me/905523845336" class="underline">WhatsApp</a>'tan ulaşın.</p>
+            </div>
+
+            <!-- Form -->
+            <div id="orderFormSection">
+                <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 mb-5 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-indigo-500 font-bold uppercase tracking-wide">Seçilen Paket</div>
+                        <div id="selectedPkgDisplay" class="font-bold text-gray-900 text-sm mt-0.5">Orta Paket</div>
+                    </div>
+                    <div class="text-right">
+                        <div id="selectedPriceDisplay" class="text-2xl font-extrabold text-indigo-600">750₺</div>
+                        <div class="text-xs text-gray-400">/ay</div>
+                    </div>
+                </div>
+
+                <form id="orderForm" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">İşletme Adı</label>
+                        <input type="text" id="orderBusiness" placeholder="Ahmet'in Berber Salonu" class="input-field">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Notunuz</label>
+                        <textarea id="orderNote" rows="3" placeholder="Özel istekleriniz, eklemek istedikleriniz..." class="input-field" style="resize:none"></textarea>
+                    </div>
+                    <button type="submit" id="orderSubmitBtn" class="w-full btn-primary text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2">
+                        <span id="orderBtnText">Siparişi Gönder 🚀</span>
+                        <svg id="orderBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    </button>
+                    <p class="text-center text-gray-400 text-xs">Ödeme sipariş onayından sonra alınır.</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ===== FOOTER ===== -->
+<footer class="bg-dark text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center"><span class="text-white font-black text-sm">X</span></div>
+                <span class="font-bold">XXX Yazılım</span>
+            </div>
+            <p class="text-white/20 text-xs">© 2024 XXX Yazılım Ltd. Şti.</p>
+            <div class="flex gap-4 text-white/30 text-sm">
+                <a href="../index.html" class="hover:text-white/70 transition-colors">Ana Sayfa</a>
+                <a href="../urunler.html" class="hover:text-white/70 transition-colors">Ürünler</a>
+                <a href="../iletisim.html" class="hover:text-white/70 transition-colors">İletişim</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- WhatsApp -->
+<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 items-center gap-3 bg-green-500 text-white pl-5 pr-6 py-3.5 rounded-full shadow-2xl hover:bg-green-600 hover:scale-105 transition-all">
+    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="font-semibold text-sm">WhatsApp ile Yazın</span>
+</a>
+<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/90 backdrop-blur-xl border-t border-gray-200/50">
+    <div class="grid grid-cols-3">
+        <a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-green-600"><span class="text-lg">💬</span><span class="text-[10px] font-bold">WhatsApp</span></a>
+        <a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-blue-600 border-x border-gray-100"><span class="text-lg">📞</span><span class="text-[10px] font-bold">Ara</span></a>
+        <button onclick="openOrder('Orta','750')" class="flex flex-col items-center justify-center gap-1 py-3 text-purple-600"><span class="text-lg">🛒</span><span class="text-[10px] font-bold">Sipariş</span></button>
+    </div>
+</div>
+
+
+<!-- ===== FIREBASE ===== -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",
+        authDomain: "dijital-pazar-3cc34.firebaseapp.com",
+        projectId: "dijital-pazar-3cc34",
+        storageBucket: "dijital-pazar-3cc34.firebasestorage.app",
+        messagingSenderId: "519713206128",
+        appId: "1:519713206128:web:4d1f541d1b469eeb8069b5"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    onAuthStateChanged(auth, (user) => {
+        window._currentUser = user;
+
+        const headerAuth = document.getElementById('headerAuth');
+        const mobileAuth = document.getElementById('mobileAuthButtons');
+
+        if (user) {
+            headerAuth.innerHTML = `
+                <a href="../panel.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Sitelerim</a>
+                <a href="../panel.html" class="btn-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">Panelim</a>
+            `;
+            if (mobileAuth) mobileAuth.innerHTML = `<a href="../panel.html" class="mobile-link block text-center bg-indigo-50 text-indigo-600 px-5 py-3 rounded-xl font-semibold">Panelime Git</a>`;
+        } else {
+            headerAuth.innerHTML = `
+                <a href="../giris.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Giriş Yap</a>
+                <a href="../giris.html?tab=register" class="btn-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">Kayıt Ol</a>
+            `;
+            if (mobileAuth) mobileAuth.innerHTML = `
+                <a href="../giris.html" class="mobile-link block text-center border border-gray-200 text-gray-700 px-5 py-3 rounded-xl font-semibold">Giriş Yap</a>
+                <a href="../giris.html?tab=register" class="mobile-link block text-center btn-primary text-white px-5 py-3 rounded-xl font-semibold">Kayıt Ol</a>
+            `;
+        }
+    });
+
+    window._submitOrder = async function() {
+        const user = window._currentUser;
+        if (!user) return;
+
+        const btn     = document.getElementById('orderSubmitBtn');
+        const btnText = document.getElementById('orderBtnText');
+        const loader  = document.getElementById('orderBtnLoader');
+
+        btn.disabled = true;
+        btnText.textContent = 'Gönderiliyor...';
+        loader.classList.remove('hidden');
+
+        try {
+            await addDoc(collection(db, "orders"), {
+                userId      : user.uid,
+                userEmail   : user.email,
+                productName : 'BarberBook - Berber Randevu Sistemi',
+                productIcon : '💈',
+                packageName : window._selectedPackage,
+                price       : window._selectedPrice,
+                isCustom    : false,
+                businessName: document.getElementById('orderBusiness').value || '',
+                note        : document.getElementById('orderNote').value || '',
+                status      : 'pending',
+                createdAt   : serverTimestamp()
+            });
+
+            document.getElementById('orderFormSection').classList.add('hidden');
+            document.getElementById('orderSuccess').classList.remove('hidden');
+
+        } catch(err) {
+            console.error(err);
+            document.getElementById('orderError').classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btnText.textContent = 'Siparişi Gönder 🚀';
+            loader.classList.add('hidden');
+        }
+    };
+</script>
+
+<!-- ===== NORMAL JS ===== -->
+<script>
+    window._selectedPackage = 'Orta';
+    window._selectedPrice   = '750';
+
+    function openOrder(pkg, price) {
+        window._selectedPackage = pkg;
+        window._selectedPrice   = price;
+
+        const formatted = parseInt(price).toLocaleString('tr-TR');
+        document.getElementById('modalPkgName').textContent      = pkg + ' Paket - ' + formatted + '₺/ay';
+        document.getElementById('selectedPkgDisplay').textContent = pkg + ' Paketi';
+        document.getElementById('selectedPriceDisplay').textContent = formatted + '₺';
+
+        document.getElementById('orderSuccess').classList.add('hidden');
+        document.getElementById('orderError').classList.add('hidden');
+        document.getElementById('orderForm').reset();
+
+        if (!window._currentUser) {
+            document.getElementById('loginRequired').classList.remove('hidden');
+            document.getElementById('orderFormSection').classList.add('hidden');
+        } else {
+            document.getElementById('loginRequired').classList.add('hidden');
+            document.getElementById('orderFormSection').classList.remove('hidden');
+        }
+
+        document.getElementById('orderModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeOrder() {
+        document.getElementById('orderModal').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function closeOrderOutside(e) {
+        if (e.target === document.getElementById('orderModal')) closeOrder();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOrder(); });
+
+    document.getElementById('orderForm').addEventListener('submit', e => {
+        e.preventDefault();
+        window._submitOrder();
+    });
+
+    function toggleFaq(btn) {
+        const item   = btn.parentElement;
+        const answer = item.querySelector('.faq-answer');
+        const icon   = item.querySelector('.faq-icon');
+        const allItems = document.querySelectorAll('.faq-item');
+
+        allItems.forEach(other => {
+            if (other !== item) {
+                other.querySelector('.faq-answer').classList.add('hidden');
+                other.querySelector('.faq-icon').classList.remove('bg-indigo-100','rotate-180');
+                other.querySelector('.faq-icon').classList.add('bg-gray-50');
+                other.classList.remove('border-indigo-200');
+                other.classList.add('border-gray-100');
+            }
+        });
+
+        answer.classList.toggle('hidden');
+        if (!answer.classList.contains('hidden')) {
+            icon.classList.add('bg-indigo-100','rotate-180');
+            icon.classList.remove('bg-gray-50');
+            item.classList.add('border-indigo-200');
+            item.classList.remove('border-gray-100');
+        } else {
+            icon.classList.remove('bg-indigo-100','rotate-180');
+            icon.classList.add('bg-gray-50');
+            item.classList.remove('border-indigo-200');
+            item.classList.add('border-gray-100');
+        }
+    }
+
+    document.getElementById('mobileToggle').addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.toggle('hidden');
+        document.getElementById('menuOpen').classList.toggle('hidden');
+        document.getElementById('menuClose').classList.toggle('hidden');
+    });
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.add('hidden');
+        document.getElementById('menuOpen').classList.remove('hidden');
+        document.getElementById('menuClose').classList.add('hidden');
+    }));
+
+    const obs = new IntersectionObserver(
+        entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }),
+        {threshold:0.1, rootMargin:'0px 0px -50px 0px'}
+    );
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
