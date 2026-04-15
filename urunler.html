@@ -920,7 +920,7 @@
                             İşletme Adı 
                             <span class="text-gray-400 font-normal normal-case tracking-normal">(opsiyonel)</span>
                         </label>
-                        <input type="text" id="orderBusiness" placeholder="İşletmenizin adı (zorunlu değil)" class="input-field">
+                        <input type="text" id="orderBusiness" required placeholder="İşletmenizin adı" class="input-field">
                     </div>
                     <div>
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Notunuz</label>
@@ -1022,6 +1022,16 @@
         btn.disabled = true;
         btnText.textContent = 'Gönderiliyor...';
         loader.classList.remove('hidden');
+
+        const business = document.getElementById('orderBusiness').value.trim();
+        if (!business) {
+            document.getElementById('orderError').classList.remove('hidden');
+            document.getElementById('orderError').querySelector('p').textContent = '❌ Lütfen işletme adını girin.';
+            btn.disabled = false;
+            btnText.textContent = 'Siparişi Gönder 🚀';
+            loader.classList.add('hidden');
+            return;
+        }
 
         try {
             await addDoc(collection(db, "orders"), {
