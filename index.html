@@ -4,49 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XXX Yazılım | İşletmenizi Dijitale Taşıyoruz</title>
-    <meta name="description" content="Berber, restoran, avukat, güzellik salonu ve daha birçok sektör için profesyonel web sistemleri.">
+    <meta name="description" content="Berber, restoran, avukat, güzellik salonu ve daha birçok sektör için profesyonel web sistemleri. İstanbul içi yüz yüze görüşme imkanı.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: { dark: '#0A0E27' }
-                }
-            }
-        }
-    </script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
-
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-        @keyframes blob { 0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%} 25%{border-radius:30% 60% 70% 40%/50% 60% 30% 60%} 50%{border-radius:50% 60% 30% 60%/30% 60% 70% 40%} 75%{border-radius:60% 40% 60% 30%/60% 30% 40% 70%} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-        @keyframes pingSlow { 0%{transform:scale(1);opacity:1} 75%,100%{transform:scale(1.5);opacity:0} }
-
-        .animate-float { animation: float 6s ease-in-out infinite; }
-        .animate-blob { animation: blob 8s ease-in-out infinite; }
-        .animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards; }
-        .animate-gradient { animation: gradientShift 5s ease infinite; background-size: 200% 200%; }
-        .animate-ping-slow { animation: pingSlow 2s cubic-bezier(0,0,0.2,1) infinite; }
-
-        .gradient-text { background: linear-gradient(135deg,#4F46E5,#7C3AED,#EC4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        .btn-primary { background: linear-gradient(135deg,#4F46E5,#7C3AED); position:relative; overflow:hidden; transition:all 0.3s ease; }
-        .btn-primary::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent); transition:left 0.5s ease; }
-        .btn-primary:hover::before { left:100%; }
-        .btn-primary:hover { transform:translateY(-2px); box-shadow:0 15px 35px -5px rgba(79,70,229,0.4); }
-        .card-hover { transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
-        .card-hover:hover { transform:translateY(-6px); box-shadow:0 25px 60px -12px rgba(0,0,0,0.12); }
-        .reveal { opacity:0; transform:translateY(30px); transition:all 0.8s cubic-bezier(0.16,1,0.3,1); }
-        .reveal.active { opacity:1; transform:translateY(0); }
-
-        @media (max-width:1023px) { body { padding-bottom: 64px; } }
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+        .gradient-text{background:linear-gradient(135deg,#4F46E5,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);position:relative;overflow:hidden;transition:all 0.3s ease}
+        .btn-primary::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);transition:left 0.5s ease}
+        .btn-primary:hover::before{left:100%}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px -5px rgba(79,70,229,0.4)}
+        .card-hover{transition:all 0.4s cubic-bezier(0.16,1,0.3,1)}.card-hover:hover{transform:translateY(-6px);box-shadow:0 25px 60px -12px rgba(0,0,0,0.12)}
+        .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}.reveal.active{opacity:1;transform:translateY(0)}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}.animate-float{animation:float 6s ease-in-out infinite}
+        @keyframes blob{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}25%{border-radius:30% 60% 70% 40%/50% 60% 30% 60%}50%{border-radius:50% 60% 30% 60%/30% 60% 70% 40%}75%{border-radius:60% 40% 60% 30%/60% 30% 40% 70%}}.animate-blob{animation:blob 8s ease-in-out infinite}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}.animate-fade-up{animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
+        @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}.animate-gradient{animation:gradientShift 5s ease infinite;background-size:200% 200%}
+        @keyframes pingSlow{0%{transform:scale(1);opacity:1}75%,100%{transform:scale(1.5);opacity:0}}.animate-ping-slow{animation:pingSlow 2s cubic-bezier(0,0,0.2,1) infinite}
+        @media(max-width:1023px){body{padding-bottom:64px}}
     </style>
 </head>
 <body class="bg-[#FAFBFF] text-gray-900 antialiased">
@@ -55,27 +32,31 @@
 <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-14">
+
             <a href="index.html" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
                     <span class="text-white font-black text-lg">X</span>
                 </div>
                 <div class="flex flex-col">
-                    <span class="header-text-main text-lg font-bold leading-tight text-white">XXX Yazılım</span>
-                    <span class="header-text-sub text-[10px] font-medium leading-tight text-indigo-300">Dijital Çözümler</span>
+                    <span class="header-text-main text-lg font-bold leading-tight text-white transition-colors">XXX Yazılım</span>
+                    <span class="header-text-sub text-[10px] font-medium leading-tight text-indigo-300 transition-colors">Dijital Çözümler</span>
                 </div>
             </a>
 
             <nav class="hidden lg:flex items-center gap-1">
                 <a href="index.html" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Ana Sayfa</a>
                 <a href="urunler.html" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Ürünler</a>
-                <a href="index.html#how-it-works" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Nasıl Çalışır</a>
-                <a href="index.html#why-us" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Neden Biz</a>
+                <a href="#how-it-works" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Nasıl Çalışır</a>
+                <a href="#why-us" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">Neden Biz</a>
                 <a href="iletisim.html" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all">İletişim</a>
             </nav>
 
-            <div class="hidden lg:flex items-center gap-3">
-                <a href="tel:+905523845336" class="header-phone text-sm font-semibold text-white/90">📞 0552 384 53 36</a>
-                <a href="iletisim.html" class="btn-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">Görüşme Ayarla</a>
+            <!-- Auth Buttons -->
+            <div class="hidden lg:flex items-center gap-3" id="headerAuth">
+                <div class="flex gap-2">
+                    <div class="w-20 h-9 bg-white/10 rounded-xl animate-pulse"></div>
+                    <div class="w-24 h-9 bg-white/10 rounded-xl animate-pulse"></div>
+                </div>
             </div>
 
             <button id="mobileToggle" class="lg:hidden p-2.5 rounded-xl text-white hover:bg-white/10 transition-colors">
@@ -84,15 +65,16 @@
             </button>
         </div>
 
+        <!-- Mobile Menu -->
         <div id="mobileMenu" class="lg:hidden hidden mt-3">
             <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-3">
                 <a href="index.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Ana Sayfa</a>
                 <a href="urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Ürünler</a>
-                <a href="index.html#how-it-works" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Nasıl Çalışır</a>
-                <a href="index.html#why-us" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Neden Biz</a>
+                <a href="#how-it-works" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Nasıl Çalışır</a>
+                <a href="#why-us" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Neden Biz</a>
                 <a href="iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">İletişim</a>
-                <div class="mt-2 pt-2 border-t border-gray-100">
-                    <a href="iletisim.html" class="mobile-link block text-center btn-primary text-white px-5 py-3 rounded-xl font-semibold">Görüşme Ayarla</a>
+                <div id="mobileAuthButtons" class="mt-2 pt-2 border-t border-gray-100 space-y-2">
+                    <!-- Firebase ile doldurulacak -->
                 </div>
             </div>
         </div>
@@ -105,10 +87,12 @@
     <div class="absolute inset-0 bg-dark"></div>
     <div class="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] animate-blob"></div>
     <div class="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[120px] animate-blob" style="animation-delay:2s"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] animate-blob" style="animation-delay:4s"></div>
     <div class="absolute inset-0 opacity-[0.03]" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:60px 60px"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
         <div class="max-w-4xl mx-auto text-center">
+
             <div class="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-5 py-2 mb-8 animate-fade-up">
                 <span class="relative flex h-2 w-2">
                     <span class="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -129,7 +113,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-up" style="animation-delay:0.3s">
-                <a href="urunler.html" class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-2xl text-lg font-bold hover:bg-gray-100 transition-all shadow-2xl hover:scale-105">
+                <a href="urunler.html" class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-2xl text-lg font-bold hover:bg-gray-100 transition-all shadow-2xl shadow-white/10 hover:scale-105">
                     Ürünleri İncele
                     <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
@@ -141,52 +125,59 @@
             <div class="grid grid-cols-3 gap-8 max-w-lg mx-auto animate-fade-up" style="animation-delay:0.4s">
                 <div class="text-center">
                     <div class="text-3xl sm:text-4xl font-extrabold text-white mb-1">14</div>
-                    <div class="text-xs sm:text-sm text-white/30">Gün Ücretsiz</div>
+                    <div class="text-xs sm:text-sm text-white/30 font-medium">Gün Ücretsiz</div>
                 </div>
                 <div class="text-center border-x border-white/10">
                     <div class="text-3xl sm:text-4xl font-extrabold text-white mb-1">11</div>
-                    <div class="text-xs sm:text-sm text-white/30">Farklı Ürün</div>
+                    <div class="text-xs sm:text-sm text-white/30 font-medium">Farklı Ürün</div>
                 </div>
                 <div class="text-center">
                     <div class="text-3xl sm:text-4xl font-extrabold text-white mb-1">7/24</div>
-                    <div class="text-xs sm:text-sm text-white/30">Destek</div>
+                    <div class="text-xs sm:text-sm text-white/30 font-medium">Destek</div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#FAFBFF] to-transparent"></div>
 </section>
 
 
 <!-- ===== TRUST BAR ===== -->
-<section class="py-6 bg-[#FAFBFF]">
+<section class="py-8 bg-[#FAFBFF]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-wrap items-center justify-center gap-3">
             <div class="flex items-center gap-2 bg-white border border-gray-100 rounded-full px-4 py-2 shadow-sm"><span>🏢</span><span class="text-sm font-semibold text-gray-700">Tescilli Şirket</span></div>
             <div class="flex items-center gap-2 bg-white border border-gray-100 rounded-full px-4 py-2 shadow-sm"><span>📍</span><span class="text-sm font-semibold text-gray-700">İstanbul - Yüz Yüze</span></div>
             <div class="flex items-center gap-2 bg-white border border-gray-100 rounded-full px-4 py-2 shadow-sm"><span>📝</span><span class="text-sm font-semibold text-gray-700">Sözleşmeli Çalışma</span></div>
             <div class="flex items-center gap-2 bg-white border border-gray-100 rounded-full px-4 py-2 shadow-sm"><span>🔒</span><span class="text-sm font-semibold text-gray-700">KVKK Uyumlu</span></div>
-            <div class="flex items-center gap-2 bg-white border border-gray-100 rounded-full px-4 py-2 shadow-sm"><span>💸</span><span class="text-sm font-semibold text-gray-700">İade Garantisi</span></div>
+            <div class="flex items-center gap-2 bg-white border border-gray-100 rounded-full px-4 py-2 shadow-sm"><span>💸</span><span class="text-sm font-semibold text-gray-700">14 Gün İade</span></div>
             <div class="flex items-center gap-2 bg-white border border-gray-100 rounded-full px-4 py-2 shadow-sm"><span>📞</span><span class="text-sm font-semibold text-gray-700">7/24 Destek</span></div>
         </div>
     </div>
 </section>
 
 
-<!-- ===== ÖNE ÇIKAN ÜRÜNLER (Ana Sayfada Sadece 4 Ürün) ===== -->
+<!-- ===== ÖNE ÇIKAN ÜRÜNLER ===== -->
 <section class="py-24 bg-[#FAFBFF] relative">
     <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
         <div class="text-center mb-16 reveal">
             <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-6">
                 <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
                 <span class="text-sm font-semibold text-indigo-600">Öne Çıkan Ürünler</span>
             </div>
-            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6">Sektörünüze Özel<br><span class="gradient-text">Web Sistemleri</span></h2>
-            <p class="text-lg text-gray-500 max-w-2xl mx-auto font-light">İşletmenizin sektörüne uygun hazır ve profesyonel web sistemleri.</p>
+            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6">
+                Sektörünüze Özel<br><span class="gradient-text">Web Sistemleri</span>
+            </h2>
+            <p class="text-lg text-gray-500 max-w-2xl mx-auto font-light">
+                İşletmenizin sektörüne uygun hazır ve profesyonel web sistemleri.
+            </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+
             <!-- BarberBook -->
             <a href="urunler/barberbook.html" class="group bg-white rounded-3xl border border-gray-100 overflow-hidden card-hover reveal block">
                 <div class="h-1 bg-gradient-to-r from-blue-600 to-cyan-500"></div>
@@ -248,7 +239,6 @@
             </a>
         </div>
 
-        <!-- Tümünü Gör Butonu -->
         <div class="text-center reveal">
             <a href="urunler.html" class="inline-flex items-center gap-3 btn-primary text-white px-10 py-4 rounded-2xl text-lg font-bold">
                 Tüm Ürünleri İncele
@@ -271,7 +261,9 @@
                 <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
                 <span class="text-sm font-semibold text-green-600">Süreç</span>
             </div>
-            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6"><span class="gradient-text">4 Adımda</span> Başlayın</h2>
+            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6">
+                <span class="gradient-text">4 Adımda</span> Başlayın
+            </h2>
             <p class="text-lg text-gray-500 max-w-xl mx-auto font-light">Karmaşık süreçler yok. Her şey basit, hızlı ve şeffaf.</p>
         </div>
 
@@ -280,7 +272,7 @@
                 <div class="hidden lg:block absolute top-12 left-[60%] w-[80%] border-t-2 border-dashed border-indigo-200"></div>
                 <div class="relative inline-flex mb-6">
                     <div class="w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform border border-indigo-100">📦</div>
-                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center"><span class="text-white text-xs font-bold">01</span></div>
+                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"><span class="text-white text-xs font-bold">01</span></div>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Ürün Seçin</h3>
                 <p class="text-gray-500 text-sm">Sektörünüze uygun ürünü ve paket seviyesini belirleyin.</p>
@@ -289,16 +281,16 @@
                 <div class="hidden lg:block absolute top-12 left-[60%] w-[80%] border-t-2 border-dashed border-indigo-200"></div>
                 <div class="relative inline-flex mb-6">
                     <div class="w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform border border-indigo-100">🤝</div>
-                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center"><span class="text-white text-xs font-bold">02</span></div>
+                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"><span class="text-white text-xs font-bold">02</span></div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Bize Ulaşın</h3>
-                <p class="text-gray-500 text-sm">İstanbul'da yüz yüze veya online görüşme yapalım.</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Sipariş Verin</h3>
+                <p class="text-gray-500 text-sm">Kayıt olun, paketinizi seçin ve talebinizi oluşturun.</p>
             </div>
             <div class="relative text-center group reveal">
                 <div class="hidden lg:block absolute top-12 left-[60%] w-[80%] border-t-2 border-dashed border-indigo-200"></div>
                 <div class="relative inline-flex mb-6">
                     <div class="w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform border border-indigo-100">⚡</div>
-                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center"><span class="text-white text-xs font-bold">03</span></div>
+                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"><span class="text-white text-xs font-bold">03</span></div>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Biz Kuralım</h3>
                 <p class="text-gray-500 text-sm">24-48 saat içinde sitenizi hazırlayıp teslim edelim.</p>
@@ -306,7 +298,7 @@
             <div class="relative text-center group reveal">
                 <div class="relative inline-flex mb-6">
                     <div class="w-24 h-24 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-3xl flex items-center justify-center text-4xl group-hover:scale-110 transition-transform border border-indigo-100">🚀</div>
-                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center"><span class="text-white text-xs font-bold">04</span></div>
+                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"><span class="text-white text-xs font-bold">04</span></div>
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Yayına Alın</h3>
                 <p class="text-gray-500 text-sm">Siteniz yayında! Dijital dünyada yerinizi alın.</p>
@@ -328,8 +320,12 @@
                 <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
                 <span class="text-sm font-semibold text-white/70">Neden Biz?</span>
             </div>
-            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6">Güven Bizim İçin <span class="text-yellow-400">Öncelik</span></h2>
-            <p class="text-lg text-white/40 max-w-2xl mx-auto font-light">İnternet üzerinden satış yapan firmalardan farklıyız. Çünkü biz gerçek bir şirketiz.</p>
+            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6">
+                Güven Bizim İçin <span class="text-yellow-400">Öncelik</span>
+            </h2>
+            <p class="text-lg text-white/40 max-w-2xl mx-auto font-light">
+                İnternet üzerinden satış yapan firmalardan farklıyız. Çünkü biz gerçek bir şirketiz.
+            </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -407,7 +403,9 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
             <div class="col-span-2 md:col-span-1">
                 <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center"><span class="text-white font-black text-lg">X</span></div>
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                        <span class="text-white font-black text-lg">X</span>
+                    </div>
                     <span class="text-lg font-bold">XXX Yazılım</span>
                 </div>
                 <p class="text-white/30 text-sm leading-relaxed mb-6">İşletmelere profesyonel web sistemleri sunarak dijital dünyada büyümelerine yardımcı oluyoruz.</p>
@@ -415,34 +413,41 @@
             <div>
                 <h3 class="font-bold text-sm mb-5 text-white/80">Ürünler</h3>
                 <ul class="space-y-2.5 text-white/30 text-sm">
-                    <li><a href="urunler/barberbook.html" class="hover:text-white/70 transition-colors">BarberBook</a></li>
-                    <li><a href="urunler/menuqr.html" class="hover:text-white/70 transition-colors">MenuQR</a></li>
-                    <li><a href="urunler/legalsite.html" class="hover:text-white/70 transition-colors">LegalSite</a></li>
-                    <li><a href="urunler/beautybook.html" class="hover:text-white/70 transition-colors">BeautyBook</a></li>
-                    <li><a href="urunler/autobook.html" class="hover:text-white/70 transition-colors">AutoBook</a></li>
-                    <li><a href="urunler/customsite.html" class="hover:text-white/70 transition-colors">CustomSite</a></li>
+                    <li><a href="urunler/barberbook.html" class="hover:text-white/70 transition-colors">💈 BarberBook</a></li>
+                    <li><a href="urunler/menuqr.html" class="hover:text-white/70 transition-colors">🍽️ MenuQR</a></li>
+                    <li><a href="urunler/beautybook.html" class="hover:text-white/70 transition-colors">💅 BeautyBook</a></li>
+                    <li><a href="urunler/autobook.html" class="hover:text-white/70 transition-colors">🚗 AutoBook</a></li>
+                    <li><a href="urunler/gymbook.html" class="hover:text-white/70 transition-colors">🏋️ GymBook</a></li>
+                    <li><a href="urunler/customsite.html" class="hover:text-white/70 transition-colors">🎨 CustomSite</a></li>
                 </ul>
             </div>
             <div>
                 <h3 class="font-bold text-sm mb-5 text-white/80">Bilgi</h3>
                 <ul class="space-y-2.5 text-white/30 text-sm">
-                    <li><a href="index.html#why-us" class="hover:text-white/70 transition-colors">Neden Biz?</a></li>
-                    <li><a href="index.html#how-it-works" class="hover:text-white/70 transition-colors">Nasıl Çalışır?</a></li>
+                    <li><a href="#why-us" class="hover:text-white/70 transition-colors">Neden Biz?</a></li>
+                    <li><a href="#how-it-works" class="hover:text-white/70 transition-colors">Nasıl Çalışır?</a></li>
                     <li><a href="iletisim.html" class="hover:text-white/70 transition-colors">İletişim</a></li>
+                    <li><a href="giris.html" class="hover:text-white/70 transition-colors">Giriş Yap</a></li>
+                    <li><a href="giris.html?tab=register" class="hover:text-white/70 transition-colors">Kayıt Ol</a></li>
+                    <li><a href="panel.html" class="hover:text-white/70 transition-colors">Panelim</a></li>
                 </ul>
             </div>
             <div>
                 <h3 class="font-bold text-sm mb-5 text-white/80">İletişim</h3>
                 <ul class="space-y-3 text-white/30 text-sm">
-                    <li>📱 0552 384 53 36</li>
-                    <li>📧 aliguney2819@gmail.com</li>
-                    <li>📍 İstanbul</li>
+                    <li><a href="tel:+905523845336" class="hover:text-white/70 transition-colors">📱 0552 384 53 36</a></li>
+                    <li><a href="mailto:aliguney2819@gmail.com" class="hover:text-white/70 transition-colors">📧 aliguney2819@gmail.com</a></li>
+                    <li><a href="https://wa.me/905523845336" class="hover:text-white/70 transition-colors">💬 WhatsApp</a></li>
+                    <li>📍 İstanbul, Türkiye</li>
                 </ul>
-                <div class="mt-4 bg-white/5 rounded-xl p-3"><p class="text-green-400/70 text-xs font-semibold">🤝 İstanbul içi yüz yüze görüşme!</p></div>
+                <div class="mt-4 bg-white/5 rounded-xl p-3">
+                    <p class="text-green-400/70 text-xs font-semibold">🤝 İstanbul içi yüz yüze görüşme!</p>
+                </div>
             </div>
         </div>
         <div class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-white/20 text-xs">© 2024 XXX Yazılım Ltd. Şti. Tüm Hakları Saklıdır.</p>
+            <p class="text-white/10 text-xs">Vergi No: XXXXXXXXXX | Mersis: XXXXXXXXXXXXXX</p>
         </div>
     </div>
 </footer>
@@ -456,32 +461,93 @@
 </a>
 
 <!-- Mobile Bottom Bar -->
-<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/90 backdrop-blur-xl border-t border-gray-200/50">
+<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/90 backdrop-blur-xl border-t border-gray-200/50 shadow-[0_-4px_30px_rgba(0,0,0,0.05)]">
     <div class="grid grid-cols-3">
-        <a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-green-600"><span class="text-lg">💬</span><span class="text-[10px] font-bold">WhatsApp</span></a>
-        <a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-blue-600 border-x border-gray-100"><span class="text-lg">📞</span><span class="text-[10px] font-bold">Ara</span></a>
-        <a href="iletisim.html" class="flex flex-col items-center justify-center gap-1 py-3 text-purple-600"><span class="text-lg">📅</span><span class="text-[10px] font-bold">Randevu</span></a>
+        <a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-green-600 hover:bg-green-50 transition-colors">
+            <span class="text-lg">💬</span><span class="text-[10px] font-bold">WhatsApp</span>
+        </a>
+        <a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-blue-600 hover:bg-blue-50 transition-colors border-x border-gray-100">
+            <span class="text-lg">📞</span><span class="text-[10px] font-bold">Ara</span>
+        </a>
+        <a href="giris.html" id="mobileBottomAuth" class="flex flex-col items-center justify-center gap-1 py-3 text-purple-600 hover:bg-purple-50 transition-colors">
+            <span class="text-lg">👤</span><span class="text-[10px] font-bold">Giriş</span>
+        </a>
     </div>
 </div>
 
+
+<!-- ===== FIREBASE AUTH ===== -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",
+        authDomain: "dijital-pazar-3cc34.firebaseapp.com",
+        projectId: "dijital-pazar-3cc34",
+        storageBucket: "dijital-pazar-3cc34.firebasestorage.app",
+        messagingSenderId: "519713206128",
+        appId: "1:519713206128:web:4d1f541d1b469eeb8069b5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        const headerAuth = document.getElementById('headerAuth');
+        const mobileAuth = document.getElementById('mobileAuthButtons');
+        const mobileBottom = document.getElementById('mobileBottomAuth');
+
+        if (user) {
+            headerAuth.innerHTML = `
+                <a href="panel.html" class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-all">Sitelerim</a>
+                <a href="panel.html" class="bg-white text-indigo-700 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-50 transition-all shadow-lg">Panelim</a>
+            `;
+            mobileAuth.innerHTML = `
+                <a href="panel.html" class="mobile-link block text-center bg-indigo-50 text-indigo-600 px-5 py-3 rounded-xl font-semibold">Panelime Git →</a>
+            `;
+            if (mobileBottom) {
+                mobileBottom.href = 'panel.html';
+                mobileBottom.querySelector('span:last-child').textContent = 'Panelim';
+            }
+        } else {
+            headerAuth.innerHTML = `
+                <a href="giris.html" class="nav-link px-4 py-2 rounded-lg text-sm font-medium transition-all">Giriş Yap</a>
+                <a href="giris.html?tab=register" class="bg-white text-indigo-700 px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-50 transition-all shadow-lg">Kayıt Ol</a>
+            `;
+            mobileAuth.innerHTML = `
+                <a href="giris.html" class="mobile-link block text-center border border-gray-200 text-gray-700 px-5 py-3 rounded-xl font-semibold">Giriş Yap</a>
+                <a href="giris.html?tab=register" class="mobile-link block text-center btn-primary text-white px-5 py-3 rounded-xl font-semibold">Kayıt Ol</a>
+            `;
+        }
+    });
+</script>
+
+<!-- ===== NORMAL JS ===== -->
 <script>
-    // Header Scroll
+    // Header Scroll Effect
     const header = document.getElementById('header');
+    const navLinks = document.querySelectorAll('.nav-link');
+
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
             header.classList.add('bg-white/80','backdrop-blur-xl','shadow-[0_2px_30px_rgba(0,0,0,0.06)]','py-2');
             header.classList.remove('py-4');
-            document.querySelector('.header-text-main').classList.replace('text-white','text-gray-900');
-            document.querySelector('.header-text-sub').classList.replace('text-indigo-300','text-indigo-600');
-            document.querySelector('.header-phone')?.classList.replace('text-white/90','text-gray-700');
-            document.querySelectorAll('.nav-link').forEach(l => { l.classList.add('text-gray-600','hover:text-indigo-600','hover:bg-indigo-50'); l.classList.remove('text-white/80','hover:text-white','hover:bg-white/10'); });
+            document.querySelector('.header-text-main')?.classList.replace('text-white','text-gray-900');
+            document.querySelector('.header-text-sub')?.classList.replace('text-indigo-300','text-indigo-600');
+            navLinks.forEach(l => {
+                l.classList.add('text-gray-600','hover:text-indigo-600','hover:bg-indigo-50');
+                l.classList.remove('text-white/80','hover:text-white','hover:bg-white/10');
+            });
         } else {
             header.classList.remove('bg-white/80','backdrop-blur-xl','shadow-[0_2px_30px_rgba(0,0,0,0.06)]','py-2');
             header.classList.add('py-4');
-            document.querySelector('.header-text-main').classList.replace('text-gray-900','text-white');
-            document.querySelector('.header-text-sub').classList.replace('text-indigo-600','text-indigo-300');
-            document.querySelector('.header-phone')?.classList.replace('text-gray-700','text-white/90');
-            document.querySelectorAll('.nav-link').forEach(l => { l.classList.remove('text-gray-600','hover:text-indigo-600','hover:bg-indigo-50'); l.classList.add('text-white/80','hover:text-white','hover:bg-white/10'); });
+            document.querySelector('.header-text-main')?.classList.replace('text-gray-900','text-white');
+            document.querySelector('.header-text-sub')?.classList.replace('text-indigo-600','text-indigo-300');
+            navLinks.forEach(l => {
+                l.classList.remove('text-gray-600','hover:text-indigo-600','hover:bg-indigo-50');
+                l.classList.add('text-white/80','hover:text-white','hover:bg-white/10');
+            });
         }
     });
 
@@ -497,9 +563,13 @@
         document.getElementById('menuClose').classList.add('hidden');
     }));
 
-    // Reveal
-    const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }), {threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+    // Reveal Animation
+    const obs = new IntersectionObserver(
+        entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }),
+        {threshold:0.1, rootMargin:'0px 0px -50px 0px'}
+    );
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
+
 </body>
 </html>
