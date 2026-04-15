@@ -278,7 +278,7 @@
 
 <script>
     // EmailJS Init - BURAYA KENDİ BİLGİLERİNİ GİR
-    emailjs.init("YOUR_PUBLIC_KEY"); // EmailJS Public Key
+    emailjs.init(0A5ullxFfIzpla5vd); // EmailJS Public Key
 
     document.getElementById('contactForm').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -303,8 +303,8 @@
 
         try {
             await emailjs.send(
-                'YOUR_SERVICE_ID',   // EmailJS Service ID
-                'YOUR_TEMPLATE_ID',  // EmailJS Template ID
+                service_t65vpam,   // EmailJS Service ID
+                template_m8fygpm,  // EmailJS Template ID
                 templateParams
             );
 
