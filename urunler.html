@@ -5,42 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ürünler | XXX Yazılım</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
         ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+
         .gradient-text{background:linear-gradient(135deg,#4F46E5,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);position:relative;overflow:hidden;transition:all 0.3s ease}
+        .btn-primary::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);transition:left 0.5s}
+        .btn-primary:hover::before{left:100%}
         .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px -5px rgba(79,70,229,0.4)}
-        .card-hover{transition:all 0.4s cubic-bezier(0.16,1,0.3,1)}.card-hover:hover{transform:translateY(-6px);box-shadow:0 25px 60px -12px rgba(0,0,0,0.12)}
-        .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}.reveal.active{opacity:1;transform:translateY(0)}
+
         .input-field{width:100%;padding:12px 16px;border-radius:12px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;outline:none;color:#0F172A}
         .input-field:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1);background:#fff}
         .input-field::placeholder{color:#94A3B8}
+        .input-field.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
+
+        /* Modal */
         .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
         .modal-overlay.active{opacity:1;pointer-events:all}
         .modal-box{background:white;border-radius:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;transform:scale(0.9) translateY(20px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
         .modal-overlay.active .modal-box{transform:scale(1) translateY(0)}
-        .pkg-card{border:2px solid #E2E8F0;border-radius:16px;padding:16px;cursor:pointer;transition:all 0.2s;text-align:center}
-        .pkg-card:hover{border-color:#4F46E5;background:#F5F3FF}
-        .pkg-card.selected{border-color:#4F46E5;background:#F5F3FF;box-shadow:0 0 0 4px rgba(79,70,229,0.1)}
-        .feature-yes{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#DCFCE7;border-radius:50%;color:#16A34A;font-size:11px;font-weight:700;flex-shrink:0}
-        .feature-no{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#F1F5F9;border-radius:50%;color:#94A3B8;font-size:11px;flex-shrink:0}
-        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
-        @media(max-width:1023px){body{padding-bottom:64px}}
 
-        /* Accordion */
-        .product-section{border:1px solid #E2E8F0;border-radius:20px;overflow:hidden;background:white;transition:all 0.3s ease}
-        .product-section:hover{border-color:#C7D2FE}
-        .product-header{padding:20px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px}
-        .product-body{display:none;padding:0 24px 24px}
-        .product-body.open{display:block}
-        .pkg-table th{background:#F8FAFF;padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:#6366F1;text-transform:uppercase;letter-spacing:0.05em}
-        .pkg-table td{padding:10px 16px;font-size:13px;border-bottom:1px solid #F1F5F9}
+        /* Feature badges */
+        .feature-yes{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#DCFCE7;border-radius:50%;color:#16A34A;font-size:12px;font-weight:700;flex-shrink:0}
+        .feature-no{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;background:#F1F5F9;border-radius:50%;color:#94A3B8;font-size:12px;flex-shrink:0}
+
+        /* Product Accordion */
+        .product-card{background:white;border-radius:24px;border:1.5px solid #E2E8F0;overflow:hidden;transition:all 0.4s cubic-bezier(0.16,1,0.3,1)}
+        .product-card:hover{border-color:#C7D2FE;box-shadow:0 8px 30px -8px rgba(79,70,229,0.12)}
+        .product-card.open{border-color:#4F46E5;box-shadow:0 20px 50px -12px rgba(79,70,229,0.15)}
+
+        .product-header{padding:20px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;user-select:none}
+
+        .accordion-body{max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1)}
+        .accordion-body.open{max-height:2000px}
+
+        .accordion-icon{width:34px;height:34px;background:#F1F5F9;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.3s ease}
+        .product-card.open .accordion-icon{background:#EEF2FF;transform:rotate(180deg)}
+
+        /* Table */
+        .pkg-table{width:100%;border-collapse:collapse}
+        .pkg-table th{background:#F8FAFF;padding:11px 14px;text-align:left;font-size:11px;font-weight:700;color:#6366F1;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+        .pkg-table td{padding:9px 14px;font-size:13px;border-bottom:1px solid #F1F5F9;transition:background 0.15s}
         .pkg-table tr:last-child td{border-bottom:none}
-        .pkg-table tr:hover td{background:#FAFBFF}
+        .pkg-table tbody tr:hover td{background:#FAFBFF}
+
+        /* Shimmer animation */
+        @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        @keyframes bounceIn{0%{transform:scale(0.8);opacity:0}60%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+        @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+        .animate-spin{animation:spin 1s linear infinite}
+        .animate-pulse{animation:pulse 2s cubic-bezier(0.4,0,.6,1) infinite}
+        .animate-bounce-in{animation:bounceIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards}
+        .animate-slide-down{animation:slideDown 0.3s ease forwards}
+
+        .reveal{opacity:0;transform:translateY(30px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+        .reveal.active{opacity:1;transform:translateY(0)}
+
+        /* Filter buttons */
+        .filter-btn{padding:8px 20px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.25s ease;border:none;outline:none}
+        .filter-btn.active-filter{background:white;color:#4F46E5;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+        .filter-btn:not(.active-filter){background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}
+        .filter-btn:not(.active-filter):hover{background:rgba(255,255,255,0.2);color:white}
+
+        /* Order buttons */
+        .order-btn-start{background:#F0FDF4;border:2px solid #BBF7D0;color:#15803D;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%}
+        .order-btn-start:hover{background:#DCFCE7;border-color:#86EFAC;transform:translateY(-1px)}
+        .order-btn-middle{padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;width:100%;color:white;border:none}
+        .order-btn-advance{background:#FAF5FF;border:2px solid #DDD6FE;color:#7C3AED;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%}
+        .order-btn-advance:hover{background:#EDE9FE;border-color:#C4B5FD;transform:translateY(-1px)}
+
+        @media(max-width:1023px){body{padding-bottom:64px}}
     </style>
 </head>
 <body class="bg-[#FAFBFF] text-gray-900 antialiased">
@@ -90,27 +131,29 @@
 
 <!-- ===== HERO ===== -->
 <section class="pt-32 pb-16 bg-dark relative overflow-hidden">
-    <div class="absolute top-0 left-1/4 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px]"></div>
-    <div class="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[100px]"></div>
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px]"></div>
+    <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px]"></div>
     <div class="absolute inset-0 opacity-[0.03]" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:60px 60px"></div>
+
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
-            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-            <span class="text-sm font-semibold text-white/70">Tüm Ürünler</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span class="text-sm font-semibold text-white/70">11 Farklı Ürün</span>
         </div>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4">
             Sektörünüze Özel <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Web Sistemleri</span>
         </h1>
-        <p class="text-lg text-white/40 max-w-2xl mx-auto font-light mb-8">
+        <p class="text-lg text-white/40 max-w-2xl mx-auto font-light mb-10">
             Her ürün 3 farklı pakette sunulmaktadır. Detayları görmek için ürüne tıklayın.
         </p>
+
         <!-- Filtreler -->
-        <div class="flex flex-wrap gap-3 justify-center">
-            <button onclick="filterProducts('all',this)" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold bg-white text-indigo-700 transition-all">Tümü</button>
-            <button onclick="filterProducts('randevu',this)" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white/70 hover:bg-white/20 transition-all">📅 Randevu</button>
-            <button onclick="filterProducts('tanitim',this)" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white/70 hover:bg-white/20 transition-all">🌐 Tanıtım</button>
-            <button onclick="filterProducts('menu',this)" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white/70 hover:bg-white/20 transition-all">🍽️ Menü</button>
-            <button onclick="filterProducts('ozel',this)" class="filter-btn px-5 py-2 rounded-full text-sm font-semibold bg-white/10 text-white/70 hover:bg-white/20 transition-all">🎨 Özel</button>
+        <div class="flex flex-wrap gap-2 justify-center">
+            <button onclick="filterProducts('all',this)" class="filter-btn active-filter">Tümü</button>
+            <button onclick="filterProducts('randevu',this)" class="filter-btn">📅 Randevu</button>
+            <button onclick="filterProducts('tanitim',this)" class="filter-btn">🌐 Tanıtım</button>
+            <button onclick="filterProducts('menu',this)" class="filter-btn">🍽️ Menü</button>
+            <button onclick="filterProducts('ozel',this)" class="filter-btn">🎨 Özel</button>
         </div>
     </div>
 </section>
@@ -118,743 +161,673 @@
 
 <!-- ===== ÜRÜNLER ===== -->
 <section class="py-16 bg-[#FAFBFF]">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5" id="productsContainer">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="space-y-4" id="productsContainer">
 
 
-        <!-- ===== 1. BARBERBOOK ===== -->
-        <div class="product-section reveal" data-cat="randevu">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">💈</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Berber Randevu Sistemi</h3>
-                            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full">BarberBook</span>
+            <!-- ====== 1. BARBERBOOK ====== -->
+            <div class="product-card reveal" data-cat="randevu" style="animation-delay:0s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-13 h-13 w-[52px] h-[52px] bg-blue-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-blue-100">💈</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Berber Randevu Sistemi</h3>
+                                <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-0.5 rounded-full">BarberBook</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Online randevu · Müsait saat sistemi · Admin panel</p>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Online randevu, müsait saat sistemi, admin panel</p>
                     </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center transition-transform accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <!-- Açıklama -->
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Berber dükkanınız için profesyonel web sitesi ve randevu yönetim sistemi. Müşterileriniz müsait saatleri görüp 7/24 randevu alabilir. Siz ise admin panel üzerinden randevuları onaylayıp reddedebilirsiniz.
-                    </p>
-
-                    <!-- Paket Tablosu -->
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th class="rounded-tl-2xl">Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th class="rounded-tr-2xl"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Fotoğraf galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Personel tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Randevuda personel seçimi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Hakkımızda sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Önce/Sonra galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Sipariş Butonları -->
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 2. MENUQR ===== -->
-        <div class="product-section reveal" data-cat="menu">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🍽️</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Restoran Menü Sistemi</h3>
-                            <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2.5 py-1 rounded-full">MenuQR</span>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">QR kodlu dijital menü, fotoğraflı ürünler, çoklu dil</p>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                     </div>
                 </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center transition-transform accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Restoranınız için kağıt menü devri bitti. QR kodlu dijital menünüzle müşterileriniz telefonlarından menünüzü görüntülesin. Menü güncellemeleri anında yansır, baskı masrafı yok.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Dijital menü</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Kategorili ürün listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Fotoğraflı ürünler</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">QR kod teslimi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Çoklu dil (TR/EN)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Günün özel menüsü</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Sosyal medya linkleri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Animasyonlu tasarım</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 3. BEAUTYBOOK ===== -->
-        <div class="product-section reveal" data-cat="randevu">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-pink-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">💅</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Güzellik Salonu Sistemi</h3>
-                            <span class="bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-1 rounded-full">BeautyBook</span>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Berber dükkanınız için profesyonel web sitesi ve randevu yönetim sistemi. Müşterileriniz müsait saatleri görüp 7/24 randevu alabilir. Admin panelinden onaylayın, ret edin — müşteriye otomatik mail gider.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Fotoğraf galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Personel tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Personel seçimi (randevuda)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Hakkımızda sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Önce/Sonra galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Online randevu, personel seçimi, önce/sonra galerisi</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Güzellik salonu ve spa merkezleri için online randevu ve tanıtım sitesi. Müşterileriniz istedikleri uzmanı seçip 7/24 randevu alabilir. Önce/sonra galerisiyle çalışmalarınızı sergileyin.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Fotoğraf galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Personel tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Randevuda personel seçimi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Hakkımızda sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Önce/Sonra galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 4. AUTOBOOK ===== -->
-        <div class="product-section reveal" data-cat="randevu">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🚗</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Oto Servis / Yıkama Sistemi</h3>
-                            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">AutoBook</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Online randevu, araç kayıt, servis geçmişi</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
             </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Oto servis ve yıkama işletmeleri için randevu ve araç yönetim sistemi. Müşteriler araç bilgilerini girerek randevu alır. Admin panelinden plakaya göre servis geçmişini görüntüleyebilirsiniz.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Araç bilgisi formu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Servis geçmişi (plakaya göre)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
-        <!-- ===== 5. GYMBOOK ===== -->
-        <div class="product-section reveal" data-cat="tanitim">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-violet-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🏋️</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Spor Salonu Sistemi</h3>
-                            <span class="bg-violet-100 text-violet-700 text-xs font-bold px-2.5 py-1 rounded-full">GymBook</span>
+            <!-- ====== 2. MENUQR ====== -->
+            <div class="product-card reveal" data-cat="menu" style="animation-delay:0.05s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-orange-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-orange-100">🍽️</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Restoran Menü Sistemi</h3>
+                                <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2.5 py-0.5 rounded-full">MenuQR</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">QR kodlu dijital menü · Fotoğraflı ürünler · Çoklu dil</p>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Üyelik paketleri, ders programı, eğitmen tanıtımı</p>
                     </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Spor salonu ve fitness merkezleri için profesyonel tanıtım sitesi. Üyelik paketlerinizi, ders programınızı ve eğitmenlerinizi sergileyin. PT randevu formu ile kişisel antrenör taleplerini alın.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Tanıtım sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Üyelik paketleri sayfası</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Ders programı (tablo)</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">İletişim formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Eğitmen tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Galeri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">PT randevu formu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Sosyal medya entegrasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Animasyonlu tasarım</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 6. LEGALSITE ===== -->
-        <div class="product-section reveal" data-cat="tanitim">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">⚖️</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Avukat / Hukuk Bürosu Sitesi</h3>
-                            <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-full">LegalSite</span>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Faaliyet alanları, ekip tanıtımı, blog, randevu formu</p>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                     </div>
                 </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Avukat ve hukuk büroları için profesyonel kurumsal web sitesi. Faaliyet alanlarınızı ve ekibinizi tanıtın, blog yazıları ile müvekkil güveni kazanın.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Tanıtım sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Faaliyet alanları</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">İletişim & randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">��</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Ekip/Avukat tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Blog/Makale sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Referanslar sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Çoklu dil (TR/EN)</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 7. DESİGNFOLİO ===== -->
-        <div class="product-section reveal" data-cat="tanitim">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🏗️</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Mimar / İç Mimar Portfolyo Sitesi</h3>
-                            <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full">DesignFolio</span>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Restoranınız için QR kodlu dijital menü. Kağıt menü masrafı yok, güncelleme anında. Müşterileriniz telefonlarından menünüzü kolayca görüntüler.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Dijital menü</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Kategorili ürün listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Fotoğraflı ürünler</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">QR kod teslimi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Çoklu dil (TR/EN)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Günün özel menüsü</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Sosyal medya linkleri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Animasyonlu tasarım</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Portfolyo galerisi, proje detayları, teklif formu</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Mimar ve iç mimarlar için etkileyici portfolyo sitesi. Projelerinizi görseller ve detaylarıyla sergileyin, müşterilerinizden online teklif talebi alın.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Portfolyo galerisi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Hizmetler sayfası</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">İletişim & teklif formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Proje detay sayfaları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Önce/Sonra görselleri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Müşteri yorumları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Blog sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 8. STUDİOSİTE ===== -->
-        <div class="product-section reveal" data-cat="tanitim">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-cyan-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">📸</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Fotoğrafçı / Stüdyo Sitesi</h3>
-                            <span class="bg-cyan-100 text-cyan-700 text-xs font-bold px-2.5 py-1 rounded-full">StudioSite</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Portfolyo galerisi, paket fiyatları, randevu formu</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                     </div>
                 </div>
             </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Fotoğrafçı ve stüdyolar için portfolyo ve randevu sitesi. Çalışmalarınızı kategorilere göre sergileyin, paket fiyatlarınızı gösterin ve müşterilerinizden randevu alın.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Portfolyo galerisi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Paket & fiyat sayfası</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">İletişim & randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Kategori bazlı galeri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Video showreel embed</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Müşteri yorumları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
-        <!-- ===== 9. MASTERSİTE ===== -->
-        <div class="product-section reveal" data-cat="tanitim">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🔧</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Usta / Tadilat Firması Sitesi</h3>
-                            <span class="bg-red-100 text-red-700 text-xs font-bold px-2.5 py-1 rounded-full">MasterSite</span>
+            <!-- ====== 3. BEAUTYBOOK ====== -->
+            <div class="product-card reveal" data-cat="randevu" style="animation-delay:0.1s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-pink-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-pink-100">💅</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Güzellik Salonu Sistemi</h3>
+                                <span class="bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-0.5 rounded-full">BeautyBook</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Online randevu · Personel seçimi · Önce/sonra galerisi</p>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Hizmet tanıtımı, referans galerisi, teklif formu</p>
                     </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Boyacı, tesisatçı, elektrikçi, tadilat ve nakliye gibi usta işletmeleri için tanıtım ve teklif sitesi. Referans işlerinizi sergileyin, online teklif talebi alın.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Hizmetler listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Referans galerisi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Teklif formu (mail ile)</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Proje detay sayfaları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Hizmet bölgesi haritası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Müşteri yorumları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Blog (nasıl yapılır)</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 10. EXPERTSİTE ===== -->
-        <div class="product-section reveal" data-cat="tanitim">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🧠</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Psikolog / Danışman Sitesi</h3>
-                            <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">ExpertSite</span>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Kişisel tanıtım, blog sistemi, online görüşme linki</p>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                     </div>
                 </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-sm">/ay</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </div>
-                </div>
-            </div>
-            <div class="product-body">
-                <div class="border-t border-gray-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Psikolog, diyetisyen, koç ve danışmanlar için kişisel web sitesi. Uzmanlığınızı sergileyin, blog yazıları ile güven kazanın, online randevu ve görüşme linkinizi paylaşın.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 300₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 750₺/ay</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 1.300₺/ay</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Kişisel tanıtım sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Uzmanlık alanları</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Randevu formu (mail ile)</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Blog/Makale sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Seans ücretleri sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Online görüşme (Zoom linki)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Çoklu dil (TR/EN)</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','Başlangıç','300')" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 300₺/ay</button>
-                        <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','Orta','750')" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 750₺/ay</button>
-                        <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','İleri','1300')" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 1.300₺/ay</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- ===== 11. CUSTOMSİTE ===== -->
-        <div class="product-section reveal" data-cat="ozel" style="border: 2px solid #E0E7FF; background: linear-gradient(135deg, #FAFBFF, #F5F3FF);">
-            <div class="product-header" onclick="toggleProduct(this)">
-                <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">🎨</div>
-                    <div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg font-bold text-gray-900">Özel Tasarım Web Sitesi</h3>
-                            <span class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-bold px-2.5 py-1 rounded-full">CustomSite</span>
-                            <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2.5 py-1 rounded-full">✨ Premium</span>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Güzellik salonu ve spa merkezleri için online randevu sistemi. Müşteriler istedikleri uzmanı seçip randevu alır. Önce/sonra galerisiyle çalışmalarınızı sergileyin.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Fotoğraf galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Personel tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Personel seçimi (randevuda)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Hakkımızda sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Önce/Sonra galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <p class="text-gray-500 text-sm mt-0.5">Tamamen özgün, sınırsız sayfalı, hayalinizdeki site</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="hidden sm:block text-right">
-                        <div class="text-xs text-gray-400">Başlangıç fiyatı</div>
-                        <div class="text-lg font-extrabold text-gray-900">6.590₺<span class="text-gray-400 font-normal text-sm"> tek seferlik</span></div>
-                    </div>
-                    <div class="w-8 h-8 bg-indigo-100 rounded-xl flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="product-body">
-                <div class="border-t border-indigo-100 pt-6">
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        Hazır şablonlar size yetmiyorsa, hayalinizdeki web sitesini tamamen size özel tasarlayalım. Sınırsız sayfa, özgün ve benzersiz tasarım, istediğiniz her özellik.
-                    </p>
-                    <div class="overflow-x-auto rounded-2xl border border-indigo-100 mb-6">
-                        <table class="pkg-table w-full">
-                            <thead>
-                                <tr>
-                                    <th>Özellik</th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç - 6.590₺</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta - 13.490₺</span></th>
-                                    <th><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri - 29.990₺</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="font-medium text-gray-700">Sayfa sayısı</td><td class="text-gray-700 font-medium">1-3 sayfa</td><td class="text-gray-700 font-medium">5-7 sayfa</td><td class="text-gray-700 font-medium">10+ sayfa</td></tr>
-                                <tr><td class="font-medium text-gray-700">Tamamen özel tasarım</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Mobil uyumlu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SSL sertifikası</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">İletişim formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Revizyon hakkı</td><td class="text-gray-700 font-medium">2 kez</td><td class="text-gray-700 font-medium">5 kez</td><td class="text-gray-700 font-medium">Sınırsız</td></tr>
-                                <tr><td class="font-medium text-gray-700">Teslim süresi</td><td class="text-gray-700 font-medium">5-7 iş günü</td><td class="text-gray-700 font-medium">10-14 iş günü</td><td class="text-gray-700 font-medium">20-30 iş günü</td></tr>
-                                <tr><td class="font-medium text-gray-700">Logo tasarımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Blog sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Animasyonlu tasarım</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Çoklu dil desteği</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td class="font-medium text-gray-700">Aylık bakım dahil</td><td class="text-gray-500 text-xs">+199₺/ay</td><td class="text-gray-500 text-xs">+349₺/ay</td><td class="text-gray-500 text-xs">+599₺/ay</td></tr>
-                                <tr><td class="font-medium text-gray-700">Destek süresi</td><td class="text-gray-700 font-medium">1 ay</td><td class="text-gray-700 font-medium">3 ay</td><td class="text-gray-700 font-medium">6 ay</td></tr>
-                            </tbody>
-                        </table>
+
+
+            <!-- ====== 4. AUTOBOOK ====== -->
+            <div class="product-card reveal" data-cat="randevu" style="animation-delay:0.15s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-emerald-100">🚗</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Oto Servis / Yıkama Sistemi</h3>
+                                <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-0.5 rounded-full">AutoBook</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Online randevu · Araç kayıt · Servis geçmişi</p>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','Başlangıç','6590',true)" class="w-full bg-green-50 border-2 border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-green-100 transition-all">Başlangıç - 6.590₺</button>
-                        <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','Orta','13490',true)" class="w-full btn-primary text-white px-4 py-3 rounded-xl text-sm font-bold">⭐ Orta - 13.490₺</button>
-                        <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','İleri','29990',true)" class="w-full bg-purple-50 border-2 border-purple-200 text-purple-700 px-4 py-3 rounded-xl text-sm font-bold hover:bg-purple-100 transition-all">İleri - 29.990₺</button>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
+                        </div>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Oto servis ve yıkama işletmeleri için randevu ve araç yönetim sistemi. Müşteriler araç bilgilerini girerek randevu alır. Admin panelinden plakaya göre servis geçmişini takip edin.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Araç bilgisi formu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Servis geçmişi (plakaya göre)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
+            <!-- ====== 5. GYMBOOK ====== -->
+            <div class="product-card reveal" data-cat="tanitim" style="animation-delay:0.2s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-violet-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-violet-100">🏋️</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Spor Salonu Sistemi</h3>
+                                <span class="bg-violet-100 text-violet-700 text-xs font-bold px-2.5 py-0.5 rounded-full">GymBook</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Üyelik paketleri · Ders programı · Eğitmen tanıtımı</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
+                        </div>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Spor salonu ve fitness merkezleri için profesyonel tanıtım sitesi. Üyelik paketlerinizi, ders programınızı ve eğitmenlerinizi sergileyin.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Tanıtım sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Üyelik paketleri sayfası</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Ders programı (tablo)</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">İletişim formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Eğitmen tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Galeri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">PT randevu formu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Sosyal medya entegrasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Animasyonlu tasarım</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ====== 6. LEGALSITE ====== -->
+            <div class="product-card reveal" data-cat="tanitim" style="animation-delay:0.25s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-slate-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-slate-200">⚖️</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Avukat / Hukuk Bürosu Sitesi</h3>
+                                <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-0.5 rounded-full">LegalSite</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Faaliyet alanları · Ekip tanıtımı · Blog sistemi</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
+                        </div>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Avukat ve hukuk büroları için profesyonel kurumsal web sitesi. Faaliyet alanlarınızı ve ekibinizi tanıtın, blog yazıları ile müvekkil güveni kazanın.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Tanıtım sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Faaliyet alanları</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">İletişim & randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Ekip/Avukat tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Blog/Makale sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Referanslar sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Çoklu dil (TR/EN)</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ====== 7. DESIGNFOLIO ====== -->
+            <div class="product-card reveal" data-cat="tanitim" style="animation-delay:0.3s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-amber-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-amber-100">🏗️</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Mimar / İç Mimar Portfolyo Sitesi</h3>
+                                <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-0.5 rounded-full">DesignFolio</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Portfolyo galerisi · Proje detayları · Teklif formu</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
+                        </div>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Mimar ve iç mimarlar için etkileyici portfolyo sitesi. Projelerinizi görseller ve detaylarıyla sergileyin, online teklif talebi alın.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Portfolyo galerisi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Hizmetler sayfası</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">İletişim & teklif formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Proje detay sayfaları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Önce/Sonra görselleri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Müşteri yorumları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Blog sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ====== 8. STUDIOSITE ====== -->
+            <div class="product-card reveal" data-cat="tanitim" style="animation-delay:0.35s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-cyan-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-cyan-100">📸</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Fotoğrafçı / Stüdyo Sitesi</h3>
+                                <span class="bg-cyan-100 text-cyan-700 text-xs font-bold px-2.5 py-0.5 rounded-full">StudioSite</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Portfolyo galerisi · Paket fiyatları · Randevu formu</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
+                        </div>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Fotoğrafçı ve stüdyolar için portfolyo ve randevu sitesi. Çalışmalarınızı kategorilere göre sergileyin, paket fiyatlarınızı gösterin ve randevu alın.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Portfolyo galerisi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Paket & fiyat sayfası</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">İletişim & randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Kategori bazlı galeri</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Video showreel embed</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Müşteri yorumları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ====== 9. MASTERSITE ====== -->
+            <div class="product-card reveal" data-cat="tanitim" style="animation-delay:0.4s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-red-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-red-100">🔧</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Usta / Tadilat Firması Sitesi</h3>
+                                <span class="bg-red-100 text-red-700 text-xs font-bold px-2.5 py-0.5 rounded-full">MasterSite</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Hizmet tanıtımı · Referans galerisi · Teklif formu</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
+                        </div>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Boyacı, tesisatçı, elektrikçi, tadilat ve nakliye gibi usta işletmeleri için tanıtım ve teklif sitesi. Referans işlerinizi sergileyin, online teklif talebi alın.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Hizmetler listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Referans galerisi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Teklif formu (mail ile)</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Google Maps</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Proje detay sayfaları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Hizmet bölgesi haritası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Müşteri yorumları</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Blog (nasıl yapılır)</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ====== 10. EXPERTSITE ====== -->
+            <div class="product-card reveal" data-cat="tanitim" style="animation-delay:0.45s">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-indigo-50 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-indigo-100">🧠</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Psikolog / Danışman Sitesi</h3>
+                                <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-0.5 rounded-full">ExpertSite</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Kişisel tanıtım · Blog sistemi · Online görüşme linki</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">300₺<span class="text-gray-400 font-normal text-xs">/ay</span></div>
+                        </div>
+                        <div class="accordion-icon"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-gray-50 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Psikolog, diyetisyen, koç ve danışmanlar için kişisel web sitesi. Uzmanlığınızı sergileyin, blog yazıları ile güven kazanın, online randevu ve Zoom görüşme linkinizi paylaşın.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-gray-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 300₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 750₺/ay</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 1.300₺/ay</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Kişisel tanıtım sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Uzmanlık alanları</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Randevu formu (mail ile)</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Subdomain</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Blog/Makale sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Seans ücretleri sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Online görüşme (Zoom linki)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Çoklu dil (TR/EN)</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','Başlangıç','300',false)" class="order-btn-start">Başlangıç · 300₺/ay</button>
+                            <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','Orta','750',false)" class="order-btn-middle btn-primary">⭐ Orta · 750₺/ay</button>
+                            <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','İleri','1300',false)" class="order-btn-advance">İleri · 1.300₺/ay</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ====== 11. CUSTOMSITE ====== -->
+            <div class="product-card reveal" data-cat="ozel" style="animation-delay:0.5s;border-color:#C7D2FE;background:linear-gradient(135deg,#FAFBFF,#F5F3FF)">
+                <div class="product-header" onclick="toggleCard(this)">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <div class="w-[52px] h-[52px] bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 border border-indigo-200">🎨</div>
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h3 class="text-base sm:text-lg font-bold text-gray-900">Özel Tasarım Web Sitesi</h3>
+                                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full text-white" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">CustomSite</span>
+                                <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2.5 py-0.5 rounded-full">✨ Premium</span>
+                            </div>
+                            <p class="text-gray-400 text-xs sm:text-sm mt-0.5 truncate">Tamamen özgün · Sınırsız sayfa · Hayalinizdeki site</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 flex-shrink-0">
+                        <div class="hidden sm:block text-right">
+                            <div class="text-xs text-gray-400">başlangıç</div>
+                            <div class="text-base font-extrabold text-gray-900">6.590₺<span class="text-gray-400 font-normal text-xs"> tek</span></div>
+                        </div>
+                        <div class="accordion-icon" style="background:#EEF2FF"><svg class="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                    </div>
+                </div>
+                <div class="accordion-body">
+                    <div class="px-6 pb-6 border-t border-indigo-100 pt-5">
+                        <p class="text-gray-500 text-sm leading-relaxed mb-5">Hazır şablonlar size yetmiyorsa, hayalinizdeki web sitesini tamamen size özel tasarlayalım. Sınırsız sayfa, özgün ve benzersiz tasarım, istediğiniz her özellik.</p>
+                        <div class="overflow-x-auto rounded-2xl border border-indigo-100 mb-5">
+                            <table class="pkg-table">
+                                <thead><tr>
+                                    <th style="min-width:160px">Özellik</th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Başlangıç · 6.590₺</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span>Orta · 13.490₺</span></th>
+                                    <th><span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-purple-500 inline-block"></span>İleri · 29.990₺</span></th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr><td class="text-gray-700 font-medium">Sayfa sayısı</td><td class="font-semibold text-gray-700">1-3 sayfa</td><td class="font-semibold text-gray-700">5-7 sayfa</td><td class="font-semibold text-gray-700">10+ sayfa</td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Tamamen özel tasarım</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">İletişim formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">WhatsApp butonu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Revizyon hakkı</td><td class="font-semibold text-gray-700">2 kez</td><td class="font-semibold text-gray-700">5 kez</td><td class="font-semibold text-gray-700">Sınırsız</td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Teslim süresi</td><td class="font-semibold text-gray-700">5-7 iş günü</td><td class="font-semibold text-gray-700">10-14 iş günü</td><td class="font-semibold text-gray-700">20-30 iş günü</td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Logo tasarımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">SEO optimizasyonu</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Blog sistemi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Özel domain bağlama</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Animasyonlu tasarım</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Çoklu dil desteği</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Aylık bakım</td><td class="text-gray-500 text-xs">+199₺/ay</td><td class="text-gray-500 text-xs">+349₺/ay</td><td class="text-gray-500 text-xs">+599₺/ay</td></tr>
+                                    <tr><td class="text-gray-700 font-medium">Destek süresi</td><td class="font-semibold text-gray-700">1 ay</td><td class="font-semibold text-gray-700">3 ay</td><td class="font-semibold text-gray-700">6 ay</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','Başlangıç','6590',true)" class="order-btn-start">Başlangıç · 6.590₺</button>
+                            <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','Orta','13490',true)" class="order-btn-middle btn-primary">⭐ Orta · 13.490₺</button>
+                            <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','İleri','29990',true)" class="order-btn-advance">İleri · 29.990₺</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div><!-- /productsContainer -->
     </div>
 </section>
 
@@ -874,7 +847,7 @@
         <div class="p-6">
 
             <!-- Giriş Gerekli -->
-            <div id="loginRequired" class="hidden text-center py-6">
+            <div id="loginRequired" class="hidden text-center py-6 animate-bounce-in">
                 <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🔐</div>
                 <h4 class="text-lg font-bold text-gray-900 mb-2">Giriş Yapmanız Gerekiyor</h4>
                 <p class="text-gray-500 text-sm mb-6">Sipariş verebilmek için lütfen giriş yapın veya kayıt olun.</p>
@@ -885,7 +858,7 @@
             </div>
 
             <!-- Başarı -->
-            <div id="orderSuccess" class="hidden text-center py-6">
+            <div id="orderSuccess" class="hidden text-center py-6 animate-bounce-in">
                 <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🎉</div>
                 <h4 class="text-lg font-bold text-gray-900 mb-2">Siparişiniz Alındı!</h4>
                 <p class="text-gray-500 text-sm mb-6">Talebiniz oluşturuldu. En kısa sürede sizi arayarak süreci başlatacağız.</p>
@@ -895,40 +868,62 @@
                 </div>
             </div>
 
-            <!-- Hata -->
-            <div id="orderError" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
-                <p class="text-red-700 text-sm font-semibold">❌ Hata oluştu. Lütfen <a href="https://wa.me/905523845336" class="underline">WhatsApp</a>'tan ulaşın.</p>
-            </div>
-
-            <!-- Form -->
+            <!-- Form Bölümü -->
             <div id="orderFormSection">
-                <!-- Seçilen Paket Özeti -->
-                <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 mb-5 flex items-center justify-between">
+
+                <!-- Paket Özeti -->
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-4 mb-5 flex items-center justify-between">
                     <div>
                         <div class="text-xs text-indigo-500 font-bold uppercase tracking-wide">Seçilen Paket</div>
                         <div id="selectedPkgDisplay" class="font-bold text-gray-900 text-sm mt-0.5"></div>
                     </div>
                     <div class="text-right">
                         <div id="selectedPriceDisplay" class="text-2xl font-extrabold text-indigo-600"></div>
-                        <div id="selectedPeriod" class="text-xs text-gray-400">/ay</div>
+                        <div id="selectedPeriod" class="text-xs text-gray-400"></div>
                     </div>
                 </div>
 
+                <!-- Hata -->
+                <div id="orderError" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl animate-slide-down">
+                    <p id="orderErrorText" class="text-red-700 text-sm font-semibold">❌ Bir hata oluştu.</p>
+                </div>
+
                 <form id="orderForm" class="space-y-4">
+                    <!-- İşletme Adı - ZORUNLU -->
                     <div>
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">
-                            İşletme Adı 
-                            <span class="text-gray-400 font-normal normal-case tracking-normal">(opsiyonel)</span>
+                            İşletme Adı <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" id="orderBusiness" required placeholder="İşletmenizin adı" class="input-field">
+                        <input
+                            type="text"
+                            id="orderBusiness"
+                            placeholder="İşletmenizin adı"
+                            class="input-field"
+                        >
+                        <p id="businessError" class="hidden text-red-500 text-xs mt-1 font-medium">⚠️ Lütfen işletme adınızı girin.</p>
                     </div>
+
+                    <!-- Not -->
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Notunuz</label>
-                        <textarea id="orderNote" rows="3" placeholder="Özel istekleriniz, sitenizde olmasını istedikleriniz..." class="input-field" style="resize:none"></textarea>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">
+                            Notunuz <span class="text-gray-400 font-normal normal-case">(opsiyonel)</span>
+                        </label>
+                        <textarea
+                            id="orderNote"
+                            rows="3"
+                            placeholder="Özel istekleriniz, sitenizde olmasını istedikleriniz..."
+                            class="input-field"
+                            style="resize:none"
+                        ></textarea>
                     </div>
-                    <button type="submit" id="orderSubmitBtn" class="w-full btn-primary text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2">
+
+                    <button type="submit" id="orderSubmitBtn"
+                        class="w-full btn-primary text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2">
                         <span id="orderBtnText">Siparişi Gönder 🚀</span>
-                        <svg id="orderBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        <svg id="orderBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </button>
                     <p class="text-center text-gray-400 text-xs">Ödeme sipariş onayından sonra alınır.</p>
                 </form>
@@ -943,7 +938,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center"><span class="text-white font-black text-sm">X</span></div>
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                    <span class="text-white font-black text-sm">X</span>
+                </div>
                 <span class="font-bold">XXX Yazılım</span>
             </div>
             <p class="text-white/20 text-xs">© 2024 XXX Yazılım Ltd. Şti. Tüm Hakları Saklıdır.</p>
@@ -956,7 +953,8 @@
 </footer>
 
 <!-- WhatsApp -->
-<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 items-center gap-3 bg-green-500 text-white pl-5 pr-6 py-3.5 rounded-full shadow-2xl hover:bg-green-600 hover:scale-105 transition-all">
+<a href="https://wa.me/905523845336" target="_blank"
+    class="hidden lg:flex fixed bottom-8 right-8 z-50 items-center gap-3 bg-green-500 text-white pl-5 pr-6 py-3.5 rounded-full shadow-2xl hover:bg-green-600 hover:scale-105 transition-all">
     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     <span class="font-semibold text-sm">WhatsApp ile Yazın</span>
 </a>
@@ -1011,27 +1009,35 @@
         }
     });
 
+    // Sipariş gönder
     window._submitOrder = async function() {
         const user = window._currentUser;
         if (!user) return;
 
+        const businessInput = document.getElementById('orderBusiness');
+        const businessError = document.getElementById('businessError');
+        const business = businessInput.value.trim();
+
+        // Validasyon
+        if (!business) {
+            businessInput.classList.add('error');
+            businessError.classList.remove('hidden');
+            businessInput.focus();
+            return;
+        }
+
+        businessInput.classList.remove('error');
+        businessError.classList.add('hidden');
+
         const btn     = document.getElementById('orderSubmitBtn');
         const btnText = document.getElementById('orderBtnText');
         const loader  = document.getElementById('orderBtnLoader');
+        const errBox  = document.getElementById('orderError');
 
         btn.disabled = true;
         btnText.textContent = 'Gönderiliyor...';
         loader.classList.remove('hidden');
-
-        const business = document.getElementById('orderBusiness').value.trim();
-        if (!business) {
-            document.getElementById('orderError').classList.remove('hidden');
-            document.getElementById('orderError').querySelector('p').textContent = '❌ Lütfen işletme adını girin.';
-            btn.disabled = false;
-            btnText.textContent = 'Siparişi Gönder 🚀';
-            loader.classList.add('hidden');
-            return;
-        }
+        errBox.classList.add('hidden');
 
         try {
             await addDoc(collection(db, "orders"), {
@@ -1042,8 +1048,8 @@
                 packageName : window._selectedPackage,
                 price       : window._selectedPrice,
                 isCustom    : window._isCustom || false,
-                businessName: document.getElementById('orderBusiness').value || '',
-                note        : document.getElementById('orderNote').value || '',
+                businessName: business,
+                note        : document.getElementById('orderNote').value.trim() || '',
                 status      : 'pending',
                 createdAt   : serverTimestamp()
             });
@@ -1052,8 +1058,9 @@
             document.getElementById('orderSuccess').classList.remove('hidden');
 
         } catch(err) {
-            console.error(err);
-            document.getElementById('orderError').classList.remove('hidden');
+            console.error('Sipariş hatası:', err);
+            document.getElementById('orderErrorText').textContent = '❌ Hata oluştu. Lütfen WhatsApp\'tan ulaşın.';
+            errBox.classList.remove('hidden');
         } finally {
             btn.disabled = false;
             btnText.textContent = 'Siparişi Gönder 🚀';
@@ -1061,6 +1068,7 @@
         }
     };
 </script>
+
 
 <!-- ===== NORMAL JS ===== -->
 <script>
@@ -1070,7 +1078,8 @@
     window._selectedPrice   = '';
     window._isCustom        = false;
 
-    function openOrder(productName, icon, pkg, price, isCustom = false) {
+    // Modal Aç
+    function openOrder(productName, icon, pkg, price, isCustom) {
         window._currentProduct  = productName;
         window._currentIcon     = icon;
         window._selectedPackage = pkg;
@@ -1078,14 +1087,17 @@
         window._isCustom        = isCustom;
 
         const formatted = parseInt(price).toLocaleString('tr-TR');
-        document.getElementById('modalProductName').textContent   = productName;
-        document.getElementById('selectedPkgDisplay').textContent = pkg + ' Paketi';
+        document.getElementById('modalProductName').textContent    = productName;
+        document.getElementById('selectedPkgDisplay').textContent  = pkg + ' Paketi';
         document.getElementById('selectedPriceDisplay').textContent = formatted + '₺';
-        document.getElementById('selectedPeriod').textContent     = isCustom ? 'tek seferlik' : '/ay';
+        document.getElementById('selectedPeriod').textContent      = isCustom ? 'tek seferlik' : '/ay';
 
+        // Sıfırla
         document.getElementById('orderSuccess').classList.add('hidden');
         document.getElementById('orderError').classList.add('hidden');
         document.getElementById('orderForm').reset();
+        document.getElementById('orderBusiness').classList.remove('error');
+        document.getElementById('businessError').classList.add('hidden');
 
         if (!window._currentUser) {
             document.getElementById('loginRequired').classList.remove('hidden');
@@ -1099,55 +1111,80 @@
         document.body.style.overflow = 'hidden';
     }
 
+    // Modal Kapat
     function closeOrder() {
         document.getElementById('orderModal').classList.remove('active');
         document.body.style.overflow = '';
     }
-
     function closeOrderOutside(e) {
         if (e.target === document.getElementById('orderModal')) closeOrder();
     }
-
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOrder(); });
 
-    document.getElementById('orderForm').addEventListener('submit', e => {
+    // Form Submit
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
         e.preventDefault();
         window._submitOrder();
     });
 
-    // Accordion
-    function toggleProduct(header) {
-        const body = header.nextElementSibling;
-        const icon = header.querySelector('.accordion-icon');
-        const isOpen = body.classList.contains('open');
+    // Input'a yazılınca hata temizle
+    document.getElementById('orderBusiness').addEventListener('input', function() {
+        if (this.value.trim()) {
+            this.classList.remove('error');
+            document.getElementById('businessError').classList.add('hidden');
+        }
+    });
+
+    // Accordion Toggle
+    function toggleCard(header) {
+        const card   = header.parentElement;
+        const body   = card.querySelector('.accordion-body');
+        const isOpen = card.classList.contains('open');
 
         // Hepsini kapat
-        document.querySelectorAll('.product-body').forEach(b => b.classList.remove('open'));
-        document.querySelectorAll('.accordion-icon').forEach(i => i.classList.remove('rotate-180'));
+        document.querySelectorAll('.product-card').forEach(c => {
+            c.classList.remove('open');
+            c.querySelector('.accordion-body').style.maxHeight = '0px';
+        });
 
         if (!isOpen) {
-            body.classList.add('open');
-            icon.classList.add('rotate-180');
+            card.classList.add('open');
+            body.style.maxHeight = body.scrollHeight + 'px';
+            // İçerik açılınca kaydır
+            setTimeout(() => {
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         }
     }
+
+    // Accordion body max-height güncelle (dinamik içerik için)
+    document.querySelectorAll('.accordion-body').forEach(body => {
+        body.style.maxHeight = '0px';
+    });
 
     // Filtre
     function filterProducts(cat, btn) {
         document.querySelectorAll('.filter-btn').forEach(b => {
-            b.classList.remove('bg-white','text-indigo-700');
-            b.classList.add('bg-white/10','text-white/70');
+            b.classList.remove('active-filter');
         });
-        btn.classList.add('bg-white','text-indigo-700');
-        btn.classList.remove('bg-white/10','text-white/70');
+        btn.classList.add('active-filter');
 
-        document.querySelectorAll('.product-section').forEach(section => {
-            if (cat === 'all' || section.dataset.cat === cat) {
-                section.style.display = '';
+        document.querySelectorAll('.product-card').forEach(card => {
+            if (cat === 'all' || card.dataset.cat === cat) {
+                card.style.display = '';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 10);
             } else {
-                section.style.display = 'none';
-                // Kapalıysa body'yi de kapat
-                section.querySelector('.product-body').classList.remove('open');
-                section.querySelector('.accordion-icon').classList.remove('rotate-180');
+                card.style.display = 'none';
+                // Kapalıysa kapat
+                card.classList.remove('open');
+                const body = card.querySelector('.accordion-body');
+                if (body) body.style.maxHeight = '0px';
             }
         });
     }
@@ -1164,12 +1201,19 @@
         document.getElementById('menuClose').classList.add('hidden');
     }));
 
-    // Reveal
+    // Reveal Animation
     const obs = new IntersectionObserver(
-        entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); }),
-        {threshold:0.05, rootMargin:'0px 0px -30px 0px'}
+        entries => entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('active');
+                e.target.style.opacity = '1';
+                e.target.style.transform = 'translateY(0)';
+            }
+        }),
+        { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
     );
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
+
 </body>
 </html>
