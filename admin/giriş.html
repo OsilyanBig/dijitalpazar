@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim Girişi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif}
+        .input-field{width:100%;padding:13px 16px;border-radius:12px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;outline:none;color:#0F172A}
+        .input-field:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1);background:#fff}
+        .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);transition:all 0.3s}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px -5px rgba(79,70,229,0.4)}
+        @keyframes blob{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}50%{border-radius:50% 60% 30% 60%/30% 60% 70% 40%}}
+        .animate-blob{animation:blob 8s ease-in-out infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
+        @keyframes shake{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-5px)}20%,40%,60%,80%{transform:translateX(5px)}}
+        .shake{animation:shake 0.5s ease}
+    </style>
+</head>
+<body class="bg-dark min-h-screen flex items-center justify-center relative overflow-hidden">
+
+    <div class="absolute top-1/4 -left-32 w-[400px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] animate-blob"></div>
+    <div class="absolute bottom-1/4 -right-32 w-[400px] h-[400px] bg-purple-600/08 rounded-full blur-[100px] animate-blob" style="animation-delay:3s"></div>
+
+    <div class="relative z-10 w-full max-w-sm mx-auto px-4">
+
+        <!-- Logo -->
+        <div class="text-center mb-8">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/25">
+                <span class="text-white font-black text-2xl">X</span>
+            </div>
+            <h1 class="text-white font-bold text-xl">Yönetim Paneli</h1>
+            <p class="text-white/30 text-sm mt-1">Yetkili giriş gereklidir</p>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white rounded-3xl shadow-2xl p-8">
+
+            <!-- Başarı -->
+            <div id="successMsg" class="hidden mb-5 p-4 bg-green-50 border border-green-200 rounded-2xl">
+                <p class="text-green-700 text-sm font-semibold">✅ Giriş başarılı! Yönlendiriliyorsunuz...</p>
+            </div>
+
+            <!-- Hata -->
+            <div id="errorMsg" class="hidden mb-5 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                <p id="errorText" class="text-red-700 text-sm font-semibold"></p>
+            </div>
+
+            <!-- Kilitli -->
+            <div id="lockedMsg" class="hidden text-center py-6">
+                <div class="text-4xl mb-3">🔒</div>
+                <h3 class="font-bold text-gray-900 mb-2">Erişim Kilitlendi</h3>
+                <p class="text-gray-500 text-sm" id="lockTimer">3 dakika sonra tekrar deneyin.</p>
+            </div>
+
+            <form id="adminForm" class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">E-posta</label>
+                    <input type="email" id="adminEmail" required placeholder="admin@..." class="input-field">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Şifre</label>
+                    <div class="relative">
+                        <input type="password" id="adminPassword" required placeholder="••••••••" class="input-field pr-12">
+                        <button type="button" onclick="togglePwd()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <svg id="eyeShow" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            <svg id="eyeHide" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Deneme hakkı göstergesi -->
+                <div id="attemptsWarning" class="hidden">
+                    <p id="attemptsText" class="text-amber-600 text-xs font-semibold text-center"></p>
+                </div>
+
+                <button type="submit" id="loginBtn" class="w-full btn-primary text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2">
+                    <span id="btnText">Giriş Yap</span>
+                    <svg id="btnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center text-white/20 text-xs mt-6">Bu sayfa yalnızca yetkili personel içindir.</p>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",
+            authDomain: "dijital-pazar-3cc34.firebaseapp.com",
+            projectId: "dijital-pazar-3cc34",
+            storageBucket: "dijital-pazar-3cc34.firebasestorage.app",
+            messagingSenderId: "519713206128",
+            appId: "1:519713206128:web:4d1f541d1b469eeb8069b5"
+        };
+
+        const app  = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db   = getFirestore(app);
+
+        let attempts    = 0;
+        const MAX_ATTEMPTS = 3;
+        const LOCK_TIME    = 3 * 60 * 1000; // 3 dakika
+
+        // Zaten giriş yapmışsa ve admin ise panele yönlendir
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (snap.exists() && snap.data().role === 'admin') {
+                    window.location.href = 'panel.html';
+                }
+            }
+        });
+
+        // Kilitlenme kontrolü
+        const lockUntil = localStorage.getItem('adminLockUntil');
+        if (lockUntil && Date.now() < parseInt(lockUntil)) {
+            showLocked(parseInt(lockUntil));
+        }
+
+        document.getElementById('adminForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Kilitli mi?
+            const lock = localStorage.getItem('adminLockUntil');
+            if (lock && Date.now() < parseInt(lock)) {
+                showLocked(parseInt(lock));
+                return;
+            }
+
+            const email    = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+
+            setLoading(true);
+            hideMessages();
+
+            try {
+                const cred = await signInWithEmailAndPassword(auth, email, password);
+                const snap = await getDoc(doc(db, "users", cred.user.uid));
+
+                if (!snap.exists() || snap.data().role !== 'admin') {
+                    await auth.signOut();
+                    handleFailedAttempt();
+                    showError('Bu hesabın yönetici yetkisi yok.');
+                    return;
+                }
+
+                // Başarılı!
+                localStorage.removeItem('adminLockUntil');
+                localStorage.removeItem('adminAttempts');
+                attempts = 0;
+
+                document.getElementById('successMsg').classList.remove('hidden');
+                document.getElementById('adminForm').classList.add('hidden');
+
+                setTimeout(() => { window.location.href = 'panel.html'; }, 1500);
+
+            } catch (err) {
+                handleFailedAttempt();
+                const msgs = {
+                    'auth/invalid-credential': 'E-posta veya şifre hatalı.',
+                    'auth/user-not-found':     'Kullanıcı bulunamadı.',
+                    'auth/wrong-password':     'Şifre yanlış.',
+                    'auth/too-many-requests':  'Çok fazla deneme. Biraz bekleyin.',
+                };
+                showError(msgs[err.code] || 'Giriş başarısız.');
+                shakePage();
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        function handleFailedAttempt() {
+            attempts++;
+            localStorage.setItem('adminAttempts', attempts);
+            const remaining = MAX_ATTEMPTS - attempts;
+
+            if (attempts >= MAX_ATTEMPTS) {
+                const lockUntilTime = Date.now() + LOCK_TIME;
+                localStorage.setItem('adminLockUntil', lockUntilTime);
+                showLocked(lockUntilTime);
+            } else {
+                const warn = document.getElementById('attemptsWarning');
+                const text = document.getElementById('attemptsText');
+                warn.classList.remove('hidden');
+                text.textContent = `⚠️ ${remaining} deneme hakkınız kaldı.`;
+            }
+        }
+
+        function showLocked(lockUntilTime) {
+            document.getElementById('adminForm').classList.add('hidden');
+            document.getElementById('lockedMsg').classList.remove('hidden');
+
+            const countdown = setInterval(() => {
+                const remaining = Math.max(0, Math.ceil((lockUntilTime - Date.now()) / 1000));
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+                document.getElementById('lockTimer').textContent =
+                    remaining > 0 ? `${mins}:${secs.toString().padStart(2,'0')} sonra tekrar deneyin.` : 'Şimdi tekrar deneyebilirsiniz.';
+
+                if (remaining <= 0) {
+                    clearInterval(countdown);
+                    localStorage.removeItem('adminLockUntil');
+                    localStorage.removeItem('adminAttempts');
+                    document.getElementById('adminForm').classList.remove('hidden');
+                    document.getElementById('lockedMsg').classList.add('hidden');
+                    attempts = 0;
+                }
+            }, 1000);
+        }
+
+        function showError(msg) {
+            document.getElementById('errorText').textContent = '❌ ' + msg;
+            document.getElementById('errorMsg').classList.remove('hidden');
+        }
+        function hideMessages() {
+            document.getElementById('errorMsg').classList.add('hidden');
+            document.getElementById('successMsg').classList.add('hidden');
+        }
+        function setLoading(state) {
+            document.getElementById('loginBtn').disabled = state;
+            document.getElementById('btnText').textContent = state ? 'Giriş yapılıyor...' : 'Giriş Yap';
+            document.getElementById('btnLoader').classList.toggle('hidden', !state);
+        }
+        function shakePage() {
+            const card = document.querySelector('.bg-white');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 500);
+        }
+    </script>
+
+    <script>
+        function togglePwd() {
+            const inp  = document.getElementById('adminPassword');
+            const show = document.getElementById('eyeShow');
+            const hide = document.getElementById('eyeHide');
+            if (inp.type === 'password') { inp.type = 'text'; show.classList.add('hidden'); hide.classList.remove('hidden'); }
+            else { inp.type = 'password'; show.classList.remove('hidden'); hide.classList.add('hidden'); }
+        }
+    </script>
+</body>
+</html>
