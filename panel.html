@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panelim | XXX Yazılım</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
+        .gradient-text{background:linear-gradient(135deg,#4F46E5,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);position:relative;overflow:hidden;transition:all 0.3s ease}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px -5px rgba(79,70,229,0.4)}
+        .card-hover{transition:all 0.4s cubic-bezier(0.16,1,0.3,1)}.card-hover:hover{transform:translateY(-4px);box-shadow:0 25px 60px -12px rgba(0,0,0,0.1)}
+        .tab-btn{padding:10px 20px;border-radius:12px;font-size:14px;font-weight:600;transition:all 0.2s;cursor:pointer}
+        .tab-btn.active{background:linear-gradient(135deg,#4F46E5,#7C3AED);color:white;box-shadow:0 4px 15px rgba(79,70,229,0.3)}
+        .tab-btn:not(.active){background:#F1F5F9;color:#64748B}.tab-btn:not(.active):hover{background:#E2E8F0;color:#334155}
+        .status-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:700}
+        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.animate-fade-up{animation:fadeUp 0.5s ease forwards}
+        @media(max-width:1023px){body{padding-bottom:64px}}
+    </style>
+</head>
+<body class="bg-[#FAFBFF] text-gray-900 antialiased">
+
+    <!-- Loading -->
+    <div id="loadingScreen" class="fixed inset-0 bg-dark z-[9999] flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-4 animate-pulse">
+                <span class="text-white font-black text-xl">X</span>
+            </div>
+            <p class="text-white/50 text-sm">Yükleniyor...</p>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl shadow-[0_2px_30px_rgba(0,0,0,0.06)] py-2">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <a href="index.html" class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+                        <span class="text-white font-black text-lg">X</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-lg font-bold leading-tight text-gray-900">XXX Yazılım</span>
+                        <span class="text-[10px] font-medium leading-tight text-indigo-600">Müşteri Paneli</span>
+                    </div>
+                </a>
+
+                <nav class="hidden lg:flex items-center gap-1">
+                    <a href="index.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Ana Sayfa</a>
+                    <a href="urunler.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Ürünler</a>
+                    <a href="panel.html" class="px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 bg-indigo-50">Panelim</a>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <span id="userInitial" class="text-white font-bold text-sm">?</span>
+                        </div>
+                        <span id="userName" class="text-sm font-semibold text-gray-700">Yükleniyor...</span>
+                    </div>
+                    <button onclick="logout()" class="px-4 py-2 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 transition-all">Çıkış</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="pt-28 pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Welcome -->
+            <div class="mb-10 animate-fade-up">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+                    Hoş geldin, <span id="welcomeName" class="gradient-text">Kullanıcı</span> 👋
+                </h1>
+                <p class="text-gray-500">Siparişlerini takip et, sitelerini yönet ve ödemelerini buradan kontrol et.</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8 animate-fade-up" style="animation-delay:0.1s">
+                <button onclick="switchTab('sites')" class="tab-btn active" id="tabSites">🌐 Sitelerim</button>
+                <button onclick="switchTab('orders')" class="tab-btn" id="tabOrders">📦 Siparişlerim</button>
+                <button onclick="switchTab('payments')" class="tab-btn" id="tabPayments">💳 Ödemeler</button>
+                <button onclick="switchTab('account')" class="tab-btn" id="tabAccount">👤 Hesabım</button>
+            </div>
+
+            <!-- ============ SİTELERİM ============ -->
+            <div id="sectionSites" class="animate-fade-up" style="animation-delay:0.15s">
+                <div id="sitesEmpty" class="bg-white rounded-3xl border border-gray-100 p-12 text-center">
+                    <div class="w-20 h-20 bg-indigo-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                        <span class="text-4xl">🌐</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Henüz siteniz yok</h3>
+                    <p class="text-gray-500 mb-6 max-w-md mx-auto">Sipariş verdikten sonra hazırladığımız siteniz burada görünecektir.</p>
+                    <a href="urunler.html" class="inline-flex items-center gap-2 btn-primary text-white px-6 py-3 rounded-xl font-semibold">
+                        Ürünleri İncele →
+                    </a>
+                </div>
+
+                <div id="sitesList" class="grid grid-cols-1 md:grid-cols-2 gap-6 hidden">
+                    <!-- Siteler buraya JS ile eklenecek -->
+                </div>
+            </div>
+
+            <!-- ============ SİPARİŞLERİM ============ -->
+            <div id="sectionOrders" class="hidden">
+                <div id="ordersEmpty" class="bg-white rounded-3xl border border-gray-100 p-12 text-center">
+                    <div class="w-20 h-20 bg-orange-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                        <span class="text-4xl">📦</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Henüz siparişiniz yok</h3>
+                    <p class="text-gray-500 mb-6">İlk siparişinizi oluşturmak için ürünlerimizi inceleyin.</p>
+                    <a href="urunler.html" class="inline-flex items-center gap-2 btn-primary text-white px-6 py-3 rounded-xl font-semibold">
+                        Sipariş Oluştur →
+                    </a>
+                </div>
+
+                <div id="ordersList" class="space-y-4 hidden">
+                    <!-- Siparişler buraya JS ile eklenecek -->
+                </div>
+            </div>
+
+            <!-- ============ ÖDEMELER ============ -->
+            <div id="sectionPayments" class="hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    <!-- Ödeme Bilgisi -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="bg-white rounded-3xl border border-gray-100 p-8">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">💳 Ödeme Bilgileri</h3>
+                            <p class="text-gray-500 text-sm mb-6">Ödemelerinizi aşağıdaki IBAN numarasına yapabilirsiniz.</p>
+
+                            <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 mb-6">
+                                <div class="text-xs font-bold text-indigo-500 uppercase tracking-widest mb-2">IBAN</div>
+                                <div class="flex items-center gap-3">
+                                    <code class="text-lg font-bold text-gray-900 tracking-wide" id="ibanNumber">TR XX XXXX XXXX XXXX XXXX XXXX XX</code>
+                                    <button onclick="copyIban()" class="w-9 h-9 bg-white rounded-lg flex items-center justify-center hover:bg-indigo-100 transition-colors border border-indigo-200" title="Kopyala">
+                                        <svg class="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9.75a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"/></svg>
+                                    </button>
+                                </div>
+                                <div class="text-sm text-indigo-600 font-semibold mt-2">XXX Yazılım Ltd. Şti.</div>
+                            </div>
+
+                            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-2xl">⚠️</span>
+                                    <div>
+                                        <p class="font-bold text-amber-800 text-sm">Önemli Bilgi</p>
+                                        <ul class="text-amber-700 text-sm mt-2 space-y-1">
+                                            <li>• Ödeme yaptıktan sonra dekontunuzu <strong>WhatsApp</strong> ile gönderin.</li>
+                                            <li>• Faturanız e-posta adresinize iletilecektir.</li>
+                                            <li>• Ödeme yapılmayan siteler, son ödeme tarihinden <strong>3 gün</strong> sonra kapatılır.</li>
+                                            <li>• Ödeme açıklamasına <strong>ad soyad</strong> yazmayı unutmayın.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ödeme Geçmişi -->
+                        <div class="bg-white rounded-3xl border border-gray-100 p-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">📋 Ödeme Geçmişi</h3>
+                            <div id="paymentHistory" class="text-center py-8">
+                                <p class="text-gray-400 text-sm">Henüz ödeme kaydınız bulunmamaktadır.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Bilgi -->
+                    <div class="space-y-6">
+                        <div class="bg-dark rounded-3xl p-6">
+                            <h3 class="text-white font-bold mb-4">📞 Ödeme Desteği</h3>
+                            <p class="text-white/40 text-sm mb-4">Ödeme ile ilgili sorunlarınız için bize ulaşın.</p>
+                            <a href="https://wa.me/905523845336?text=Merhaba,%20ödeme%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" class="flex items-center gap-2 bg-green-500 text-white px-4 py-3 rounded-xl font-semibold text-sm hover:bg-green-600 transition-colors">
+                                💬 WhatsApp ile Yazın
+                            </a>
+                        </div>
+
+                        <div class="bg-white rounded-3xl border border-gray-100 p-6">
+                            <h3 class="font-bold text-gray-900 text-sm mb-3">Ödeme Kuralları</h3>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600">Aylık sistemlerde her ayın <strong>ilk 5 günü</strong> içinde ödeme yapılmalıdır.</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600">Özel tasarımlarda <strong>%50 peşin</strong>, teslimatta kalan %50.</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-red-500 mt-0.5">✕</span>
+                                    <span class="text-gray-600">3 gün gecikme sonrası site <strong>kapatılır</strong>.</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-500 mt-0.5">✓</span>
+                                    <span class="text-gray-600">Fatura ödeme sonrası <strong>e-posta</strong> ile iletilir.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ HESABIM ============ -->
+            <div id="sectionAccount" class="hidden">
+                <div class="max-w-2xl">
+                    <div class="bg-white rounded-3xl border border-gray-100 p-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">👤 Hesap Bilgilerim</h3>
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 rounded-2xl p-4">
+                                <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Ad Soyad</div>
+                                <div id="accName" class="font-bold text-gray-900">-</div>
+                            </div>
+                            <div class="bg-gray-50 rounded-2xl p-4">
+                                <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">E-posta</div>
+                                <div id="accEmail" class="font-bold text-gray-900">-</div>
+                            </div>
+                            <div class="bg-gray-50 rounded-2xl p-4">
+                                <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Telefon</div>
+                                <div id="accPhone" class="font-bold text-gray-900">-</div>
+                            </div>
+                            <div class="bg-gray-50 rounded-2xl p-4">
+                                <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Üyelik Tarihi</div>
+                                <div id="accDate" class="font-bold text-gray-900">-</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-gray-100">
+                            <button onclick="logout()" class="w-full bg-red-50 border border-red-200 text-red-600 px-6 py-3 rounded-xl font-semibold hover:bg-red-100 transition-colors">
+                                🚪 Çıkış Yap
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-white/20 text-xs">© 2024 XXX Yazılım Ltd. Şti.</p>
+        </div>
+    </footer>
+
+    <!-- Mobile Bar -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/90 backdrop-blur-xl border-t border-gray-200/50">
+        <div class="grid grid-cols-4">
+            <button onclick="switchTab('sites')" class="flex flex-col items-center justify-center gap-1 py-3 text-indigo-600"><span class="text-lg">🌐</span><span class="text-[10px] font-bold">Sitelerim</span></button>
+            <button onclick="switchTab('orders')" class="flex flex-col items-center justify-center gap-1 py-3 text-gray-500"><span class="text-lg">📦</span><span class="text-[10px] font-bold">Siparişler</span></button>
+            <button onclick="switchTab('payments')" class="flex flex-col items-center justify-center gap-1 py-3 text-gray-500"><span class="text-lg">💳</span><span class="text-[10px] font-bold">Ödeme</span></button>
+            <button onclick="switchTab('account')" class="flex flex-col items-center justify-center gap-1 py-3 text-gray-500"><span class="text-lg">👤</span><span class="text-[10px] font-bold">Hesap</span></button>
+        </div>
+    </div>
+
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",
+            authDomain: "dijital-pazar-3cc34.firebaseapp.com",
+            projectId: "dijital-pazar-3cc34",
+            storageBucket: "dijital-pazar-3cc34.firebasestorage.app",
+            messagingSenderId: "519713206128",
+            appId: "1:519713206128:web:4d1f541d1b469eeb8069b5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Giriş kontrolü
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = 'giris.html';
+                return;
+            }
+
+            // Kullanıcı bilgilerini çek
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    document.getElementById('userName').textContent = data.fullName || 'Kullanıcı';
+                    document.getElementById('welcomeName').textContent = data.firstName || 'Kullanıcı';
+                    document.getElementById('userInitial').textContent = (data.firstName || '?').charAt(0).toUpperCase();
+                    document.getElementById('accName').textContent = data.fullName || '-';
+                    document.getElementById('accEmail').textContent = data.email || '-';
+                    document.getElementById('accPhone').textContent = data.phone || '-';
+
+                    if (data.createdAt) {
+                        const d = data.createdAt.toDate();
+                        document.getElementById('accDate').textContent = d.toLocaleDateString('tr-TR', {day:'numeric',month:'long',year:'numeric'});
+                    }
+                }
+
+                // Siparişleri çek
+                const ordersRef = collection(db, "orders");
+                const ordersQuery = query(ordersRef, where("userId", "==", user.uid), orderBy("createdAt", "desc"));
+                const ordersSnap = await getDocs(ordersQuery);
+
+                if (!ordersSnap.empty) {
+                    document.getElementById('ordersEmpty').classList.add('hidden');
+                    document.getElementById('ordersList').classList.remove('hidden');
+
+                    let ordersHTML = '';
+                    ordersSnap.forEach((docSnap) => {
+                        const o = docSnap.data();
+                        const date = o.createdAt ? o.createdAt.toDate().toLocaleDateString('tr-TR') : '-';
+                        const statusMap = {
+                            'pending': {label:'Talep Alındı', color:'bg-yellow-100 text-yellow-700', dot:'bg-yellow-500'},
+                            'processing': {label:'Hazırlanıyor', color:'bg-blue-100 text-blue-700', dot:'bg-blue-500'},
+                            'ready': {label:'Hazır', color:'bg-green-100 text-green-700', dot:'bg-green-500'},
+                            'active': {label:'Aktif', color:'bg-green-100 text-green-700', dot:'bg-green-500'},
+                            'suspended': {label:'Askıda (Ödeme Bekleniyor)', color:'bg-red-100 text-red-700', dot:'bg-red-500'},
+                            'cancelled': {label:'İptal Edildi', color:'bg-gray-100 text-gray-600', dot:'bg-gray-400'}
+                        };
+                        const status = statusMap[o.status] || statusMap['pending'];
+
+                        ordersHTML += `
+                        <div class="bg-white rounded-2xl border border-gray-100 p-6 card-hover">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">${o.productIcon || '📦'}</div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-900">${o.productName || 'Ürün'}</h4>
+                                        <p class="text-sm text-gray-400">${o.packageName || ''} Paketi • ${date}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="status-badge ${status.color}">
+                                        <span class="w-2 h-2 rounded-full ${status.dot}"></span>
+                                        ${status.label}
+                                    </span>
+                                    <span class="text-lg font-extrabold text-gray-900">${o.price || ''}₺</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    document.getElementById('ordersList').innerHTML = ordersHTML;
+                }
+
+                // Siteleri çek
+                const sitesRef = collection(db, "sites");
+                const sitesQuery = query(sitesRef, where("userId", "==", user.uid));
+                const sitesSnap = await getDocs(sitesQuery);
+
+                if (!sitesSnap.empty) {
+                    document.getElementById('sitesEmpty').classList.add('hidden');
+                    document.getElementById('sitesList').classList.remove('hidden');
+
+                    let sitesHTML = '';
+                    sitesSnap.forEach((docSnap) => {
+                        const s = docSnap.data();
+                        const isActive = s.status === 'active';
+                        const isTrial = s.status === 'trial';
+                        const isSuspended = s.status === 'suspended';
+
+                        let statusBadge = '';
+                        if (isActive) statusBadge = '<span class="status-badge bg-green-100 text-green-700"><span class="w-2 h-2 rounded-full bg-green-500"></span>Aktif</span>';
+                        else if (isTrial) statusBadge = '<span class="status-badge bg-blue-100 text-blue-700"><span class="w-2 h-2 rounded-full bg-blue-500"></span>Deneme Sürümü</span>';
+                        else if (isSuspended) statusBadge = '<span class="status-badge bg-red-100 text-red-700"><span class="w-2 h-2 rounded-full bg-red-500"></span>Askıda - Ödeme Yapın</span>';
+                        else statusBadge = '<span class="status-badge bg-gray-100 text-gray-600"><span class="w-2 h-2 rounded-full bg-gray-400"></span>Hazırlanıyor</span>';
+
+                        sitesHTML += `
+                        <div class="bg-white rounded-3xl border border-gray-100 overflow-hidden card-hover">
+                            <div class="h-1.5 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-2xl">${s.icon || '🌐'}</div>
+                                        <div>
+                                            <h3 class="font-bold text-gray-900">${s.siteName || 'Site'}</h3>
+                                            <p class="text-xs text-gray-400">${s.productName || ''}</p>
+                                        </div>
+                                    </div>
+                                    ${statusBadge}
+                                </div>
+
+                                ${s.siteUrl ? `
+                                <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                                    <div class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-1">Site Adresi</div>
+                                    <a href="${s.siteUrl}" target="_blank" class="text-indigo-600 font-bold text-sm hover:underline break-all">${s.siteUrl}</a>
+                                </div>` : '<div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4"><p class="text-yellow-700 text-sm font-semibold">⏳ Siteniz hazırlanıyor, tamamlandığında burada görünecektir.</p></div>'}
+
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-gray-400">${s.packageName || ''} Paketi</span>
+                                    <span class="font-extrabold text-gray-900">${s.price || ''}₺<span class="text-gray-400 font-normal">${s.isCustom ? '' : '/ay'}</span></span>
+                                </div>
+
+                                ${isSuspended ? `
+                                <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+                                    <p class="text-red-700 text-sm font-semibold">⚠️ Ödemeniz gecikmiş. Siteniz 3 gün içinde kapatılacaktır.</p>
+                                    <button onclick="switchTab('payments')" class="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition-colors">Ödeme Yap →</button>
+                                </div>` : ''}
+                            </div>
+                        </div>`;
+                    });
+                    document.getElementById('sitesList').innerHTML = sitesHTML;
+                }
+
+            } catch(err) {
+                console.error('Veri çekme hatası:', err);
+            }
+
+            // Loading kaldır
+            document.getElementById('loadingScreen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 300);
+        });
+
+        // Çıkış
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+                window.location.href = 'giris.html';
+            } catch(err) {
+                console.error(err);
+            }
+        };
+    </script>
+
+    <script>
+        // Tab Switch
+        function switchTab(tab) {
+            ['sites','orders','payments','account'].forEach(t => {
+                document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
+                document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.remove('active');
+            });
+            document.getElementById('section' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+        }
+
+        // IBAN Kopyala
+        function copyIban() {
+            const iban = document.getElementById('ibanNumber').textContent;
+            navigator.clipboard.writeText(iban.replace(/\s/g, '')).then(() => {
+                alert('IBAN kopyalandı!');
+            });
+        }
+    </script>
+</body>
+</html>
