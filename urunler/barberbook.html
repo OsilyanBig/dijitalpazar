@@ -163,14 +163,23 @@
                             <div class="mb-4">
                                 <div class="text-xs font-bold text-gray-500 mb-2">📅 Tarih Seçin</div>
                                 <div class="grid grid-cols-7 gap-1 text-center">
-                                    {['Pt','Sa','Ça','Pe','Cu','Ct','Pz'].map((g,i) => `<div class="text-[10px] text-gray-400 font-semibold">${g}</div>`).join('')}
-                                    <div class="text-xs py-1 rounded-lg text-gray-400">-</div>
-                                    <div class="text-xs py-1 rounded-lg text-gray-400">-</div>
+                                    <!-- Gün başlıkları -->
+                                    <div class="text-[10px] text-gray-400 font-semibold">Pt</div>
+                                    <div class="text-[10px] text-gray-400 font-semibold">Sa</div>
+                                    <div class="text-[10px] text-gray-400 font-semibold">Ça</div>
+                                    <div class="text-[10px] text-gray-400 font-semibold">Pe</div>
+                                    <div class="text-[10px] text-gray-400 font-semibold">Cu</div>
+                                    <div class="text-[10px] text-gray-400 font-semibold">Ct</div>
+                                    <div class="text-[10px] text-gray-400 font-semibold">Pz</div>
+                                    <!-- Boş günler -->
+                                    <div class="text-xs py-1 rounded-lg text-gray-300">-</div>
+                                    <div class="text-xs py-1 rounded-lg text-gray-300">-</div>
+                                    <!-- Günler -->
                                     <div class="text-xs py-1 rounded-lg bg-blue-600 text-white font-bold cursor-pointer">3</div>
                                     <div class="text-xs py-1 rounded-lg hover:bg-blue-50 text-gray-700 cursor-pointer">4</div>
                                     <div class="text-xs py-1 rounded-lg hover:bg-blue-50 text-gray-700 cursor-pointer">5</div>
                                     <div class="text-xs py-1 rounded-lg hover:bg-blue-50 text-gray-700 cursor-pointer">6</div>
-                                    <div class="text-xs py-1 rounded-lg text-gray-400">-</div>
+                                    <div class="text-xs py-1 rounded-lg text-gray-300">-</div>
                                 </div>
                             </div>
                             <!-- Saatler Mock -->
