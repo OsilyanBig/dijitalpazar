@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudioSite - Fotoğrafçı / Stüdyo Sitesi | XXX Yazılım</title>
+    <meta name="description" content="Fotoğrafçı ve stüdyolar için portfolyo sitesi. Kategori bazlı galeri, paket fiyatları ve randevu formu.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+        .gradient-text{background:linear-gradient(135deg,#4F46E5,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);position:relative;overflow:hidden;transition:all 0.3s ease}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px -5px rgba(79,70,229,0.4)}
+        .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}.reveal.active{opacity:1;transform:translateY(0)}
+        .input-field{width:100%;padding:12px 16px;border-radius:12px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;outline:none;color:#0F172A}
+        .input-field:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1);background:#fff}
+        .input-field::placeholder{color:#94A3B8}
+        .input-field.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+        .modal-overlay.active{opacity:1;pointer-events:all}
+        .modal-box{background:white;border-radius:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;transform:scale(0.9) translateY(20px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
+        .modal-overlay.active .modal-box{transform:scale(1) translateY(0)}
+        .pkg-card{border:2px solid #E2E8F0;border-radius:20px;padding:24px;transition:all 0.3s ease;background:white}
+        .pkg-card:hover{border-color:#0891B2;transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(8,145,178,0.15)}
+        .pkg-card.recommended{border-color:#0891B2;background:linear-gradient(135deg,#ECFEFF,#CFFAFE)}
+        .feature-yes{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#DCFCE7;border-radius:50%;color:#16A34A;font-size:11px;font-weight:700;flex-shrink:0}
+        .feature-no{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#F1F5F9;border-radius:50%;color:#94A3B8;font-size:11px;flex-shrink:0}
+        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}.animate-float{animation:float 3s ease-in-out infinite}
+        @keyframes blob{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}50%{border-radius:50% 60% 30% 60%/30% 60% 70% 40%}}.animate-blob{animation:blob 8s ease-in-out infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}.animate-pulse{animation:pulse 2s ease infinite}
+        @media(max-width:1023px){body{padding-bottom:64px}}
+    </style>
+</head>
+<body class="bg-[#FAFBFF] antialiased">
+
+<!-- HEADER -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-xl shadow-[0_2px_20px_rgba(0,0,0,0.06)] py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-14">
+            <a href="../index.html" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg"><span class="text-white font-black text-lg">X</span></div>
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold leading-tight text-gray-900">XXX Yazılım</span>
+                    <span class="text-[10px] font-medium leading-tight text-indigo-600">Dijital Çözümler</span>
+                </div>
+            </a>
+            <nav class="hidden lg:flex items-center gap-1">
+                <a href="../index.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Ana Sayfa</a>
+                <a href="../urunler.html" class="px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 bg-indigo-50">← Tüm Ürünler</a>
+                <a href="../iletisim.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">İletişim</a>
+            </nav>
+            <div class="hidden lg:flex items-center gap-3" id="headerAuth">
+                <div class="flex gap-2"><div class="w-20 h-9 bg-gray-100 rounded-xl animate-pulse"></div><div class="w-24 h-9 bg-gray-100 rounded-xl animate-pulse"></div></div>
+            </div>
+            <button id="mobileToggle" class="lg:hidden p-2.5 rounded-xl text-gray-900 hover:bg-gray-100">
+                <svg id="menuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
+                <svg id="menuClose" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div id="mobileMenu" class="lg:hidden hidden mt-3">
+            <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-3">
+                <a href="../index.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 font-medium">Ana Sayfa</a>
+                <a href="../urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-indigo-600 bg-indigo-50 font-medium">← Tüm Ürünler</a>
+                <a href="../iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 font-medium">İletişim</a>
+                <div id="mobileAuthButtons" class="mt-2 pt-2 border-t border-gray-100 space-y-2"></div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<!-- HERO -->
+<section class="pt-28 pb-0 bg-dark relative overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px] animate-blob"></div>
+    <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-teal-600/10 rounded-full blur-[120px] animate-blob" style="animation-delay:2s"></div>
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:60px 60px"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <div class="flex items-center gap-2 text-white/30 text-xs mb-10">
+            <a href="../index.html" class="hover:text-white/60">Ana Sayfa</a><span>/</span>
+            <a href="../urunler.html" class="hover:text-white/60">Ürünler</a><span>/</span>
+            <span class="text-white/60">StudioSite</span>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-2 mb-6">
+                    <span class="text-2xl">📸</span>
+                    <span class="text-cyan-400 font-bold text-sm">StudioSite</span>
+                    <span class="bg-cyan-500/20 text-cyan-300 text-xs px-2 py-0.5 rounded-full">Portfolyo Sitesi</span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-white mb-6 leading-tight">
+                    Fotoğraflarınızı<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Dünyaya Gösterin</span>
+                </h1>
+                <p class="text-white/50 text-lg mb-8 leading-relaxed">Etkileyici portfolyo galerisi, şeffaf paket fiyatları ve kolay randevu formu ile müşteri tabanınızı büyütün.</p>
+                <div class="flex flex-wrap gap-3 mb-10">
+                    <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2"><span class="w-2 h-2 bg-green-400 rounded-full"></span><span class="text-white/70 text-sm">24 Saatte Kurulum</span></div>
+                    <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2"><span class="w-2 h-2 bg-green-400 rounded-full"></span><span class="text-white/70 text-sm">Kategori Galerisi</span></div>
+                    <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2"><span class="w-2 h-2 bg-green-400 rounded-full"></span><span class="text-white/70 text-sm">Paket Fiyatları</span></div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="openOrder('Orta','750')" class="btn-primary text-white px-8 py-4 rounded-2xl font-bold text-lg">Hemen Sipariş Ver →</button>
+                    <a href="../iletisim.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all text-center">🤝 Bilgi Al</a>
+                </div>
+            </div>
+
+            <!-- Mock -->
+            <div class="hidden lg:block">
+                <div class="bg-white/5 border border-white/10 rounded-3xl p-6 animate-float">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-2xl">
+                        <div class="bg-gradient-to-r from-cyan-600 to-teal-600 p-4 text-white">
+                            <div class="font-bold">📸 Kaya Photography</div>
+                            <div class="text-white/70 text-xs mt-0.5">Profesyonel Fotoğraf Stüdyosu</div>
+                        </div>
+                        <div class="p-4">
+                            <!-- Kategori tabs -->
+                            <div class="flex gap-2 mb-3 overflow-x-auto">
+                                <span class="bg-cyan-500 text-white text-[10px] font-bold px-3 py-1 rounded-full flex-shrink-0">Düğün</span>
+                                <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full flex-shrink-0">Bebek</span>
+                                <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full flex-shrink-0">Ürün</span>
+                                <span class="bg-gray-100 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full flex-shrink-0">Kurumsal</span>
+                            </div>
+                            <!-- Galeri Grid -->
+                            <div class="grid grid-cols-3 gap-1.5 mb-3">
+                                <div class="aspect-square bg-gradient-to-br from-pink-200 to-rose-300 rounded-lg flex items-center justify-center text-xl">💒</div>
+                                <div class="aspect-square bg-gradient-to-br from-blue-200 to-indigo-300 rounded-lg flex items-center justify-center text-xl">👰</div>
+                                <div class="aspect-square bg-gradient-to-br from-yellow-200 to-orange-300 rounded-lg flex items-center justify-center text-xl">🌸</div>
+                                <div class="aspect-square bg-gradient-to-br from-green-200 to-teal-300 rounded-lg flex items-center justify-center text-xl">🎊</div>
+                                <div class="aspect-square bg-gradient-to-br from-purple-200 to-pink-300 rounded-lg flex items-center justify-center text-xl">💐</div>
+                                <div class="aspect-square bg-gradient-to-br from-cyan-200 to-blue-300 rounded-lg flex items-center justify-center text-xl">🥂</div>
+                            </div>
+                            <!-- Paket -->
+                            <div class="bg-cyan-50 border border-cyan-200 rounded-xl p-3">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="text-xs font-bold text-gray-800">Düğün Paketi</div>
+                                        <div class="text-[10px] text-gray-400">8 saat · 500+ fotoğraf</div>
+                                    </div>
+                                    <div class="text-sm font-extrabold text-cyan-600">₺8.500</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="relative h-16"><svg viewBox="0 0 1440 64" fill="none" xmlns="http://www.w3.org/2000/svg" class="absolute bottom-0 w-full"><path d="M0 64L1440 64L1440 0C1440 0 1200 64 720 64C240 64 0 0 0 0L0 64Z" fill="#FAFBFF"/></svg></div>
+</section>
+
+
+<!-- ÖZELLİKLER -->
+<section class="py-20 bg-[#FAFBFF]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 reveal">
+            <div class="inline-flex items-center gap-2 bg-cyan-50 border border-cyan-100 rounded-full px-4 py-1.5 mb-4">
+                <span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span>
+                <span class="text-sm font-semibold text-cyan-600">Özellikler</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">StudioSite ile <span class="gradient-text">Kariyerinizi Büyütün</span></h2>
+            <p class="text-gray-500 max-w-xl mx-auto">Fotoğrafçı ve stüdyolar için eksiksiz dijital varlık paketi.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-cyan-200 hover:shadow-lg transition-all reveal">
+                <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-2xl mb-4">🖼️</div>
+                <h3 class="font-bold text-gray-900 mb-2">Portfolyo Galerisi</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">En iyi çalışmalarınızı yüksek kaliteli görsellerle sergileyin. İlk izlenim her şeydir, siteniz bunu en iyi şekilde yansıtsın.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-cyan-200 hover:shadow-lg transition-all reveal" style="animation-delay:0.05s">
+                <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-2xl mb-4">📂</div>
+                <h3 class="font-bold text-gray-900 mb-2">Kategori Bazlı Galeri</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Düğün, bebek, ürün, kurumsal... Her kategoriye ayrı bölüm. Müşteriler ilgili çalışmalarınızı kolayca bulur. (Orta+)</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-cyan-200 hover:shadow-lg transition-all reveal" style="animation-delay:0.1s">
+                <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-2xl mb-4">💰</div>
+                <h3 class="font-bold text-gray-900 mb-2">Paket & Fiyat Sayfası</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Hizmet paketlerinizi ve fiyatlarınızı şeffaf biçimde listeleyin. "Fiyat ne kadar?" sorusuna önceden cevap verin.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-cyan-200 hover:shadow-lg transition-all reveal" style="animation-delay:0.15s">
+                <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-2xl mb-4">📅</div>
+                <h3 class="font-bold text-gray-900 mb-2">Randevu & İletişim Formu</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Müşteriler çekim tarihi, yeri ve isteklerini form üzerinden iletebilir. Siz de bilgileri alıp geri arayabilirsiniz.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-cyan-200 hover:shadow-lg transition-all reveal" style="animation-delay:0.2s">
+                <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-2xl mb-4">🎬</div>
+                <h3 class="font-bold text-gray-900 mb-2">Video Showreel</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">YouTube veya Vimeo videolarınızı sitenize gömin. Tanıtım videosu veya düğün klibi ile etkileyici bir ilk izlenim yaratın. (Orta+)</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 border border-gray-100 hover:border-cyan-200 hover:shadow-lg transition-all reveal" style="animation-delay:0.25s">
+                <div class="w-12 h-12 bg-cyan-50 rounded-xl flex items-center justify-center text-2xl mb-4">⭐</div>
+                <h3 class="font-bold text-gray-900 mb-2">Müşteri Yorumları</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Memnun müşterilerinizin yorumlarını yayınlayın. Sosyal kanıt yeni müşterilerin karar vermesini kolaylaştırır. (Orta+)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- FİYATLANDIRMA -->
+<section class="py-20 bg-white relative">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16 reveal">
+            <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-4">
+                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>
+                <span class="text-sm font-semibold text-indigo-600">Fiyatlandırma</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">Size Uygun <span class="gradient-text">Paketi Seçin</span></h2>
+            <p class="text-gray-500 max-w-xl mx-auto">14 gün ücretsiz deneyin. Memnun kalmazsanız iade garantisi.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div class="pkg-card reveal">
+                <div class="flex items-center gap-2 mb-4"><span class="w-3 h-3 rounded-full bg-green-500"></span><span class="font-bold text-gray-700 text-sm">Başlangıç</span></div>
+                <div class="mb-1"><span class="text-4xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay</span></div>
+                <p class="text-gray-400 text-xs mb-6">Kariyerine yeni başlayan fotoğrafçılar</p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Portfolyo galerisi</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Paket & fiyat sayfası</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">İletişim & randevu formu</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">WhatsApp butonu</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Mobil uyumlu & SSL</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-no">✗</span><span class="text-gray-400">Kategori bazlı galeri</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-no">✗</span><span class="text-gray-400">Video showreel</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-no">✗</span><span class="text-gray-400">Müşteri yorumları</span></li>
+                </ul>
+                <button onclick="openOrder('Başlangıç','300')" class="w-full border-2 border-cyan-500 text-cyan-600 px-6 py-3 rounded-xl font-bold hover:bg-cyan-500 hover:text-white transition-all">Başlangıç Seç</button>
+            </div>
+            <div class="pkg-card recommended reveal" style="animation-delay:0.1s">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyan-500"></span><span class="font-bold text-gray-700 text-sm">Orta</span></div>
+                    <span class="bg-cyan-500 text-white text-xs font-bold px-3 py-1 rounded-full">⭐ Önerilen</span>
+                </div>
+                <div class="mb-1"><span class="text-4xl font-extrabold text-gray-900">750₺</span><span class="text-gray-400 text-sm">/ay</span></div>
+                <p class="text-gray-400 text-xs mb-6">Profesyonel fotoğrafçı ve stüdyolar</p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Başlangıç'taki her şey</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Kategori bazlı galeri</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Video showreel embed</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Müşteri yorumları</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-no">✗</span><span class="text-gray-400">Özel domain</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-no">✗</span><span class="text-gray-400">SEO optimizasyonu</span></li>
+                </ul>
+                <button onclick="openOrder('Orta','750')" class="w-full btn-primary text-white px-6 py-3 rounded-xl font-bold">Orta Paketi Seç</button>
+            </div>
+            <div class="pkg-card reveal" style="animation-delay:0.2s">
+                <div class="flex items-center gap-2 mb-4"><span class="w-3 h-3 rounded-full bg-purple-500"></span><span class="font-bold text-gray-700 text-sm">İleri</span></div>
+                <div class="mb-1"><span class="text-4xl font-extrabold text-gray-900">1.300₺</span><span class="text-gray-400 text-sm">/ay</span></div>
+                <p class="text-gray-400 text-xs mb-6">Kurumsal fotoğraf stüdyoları</p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Orta'daki her şey</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Özel domain bağlama</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">SEO optimizasyonu</span></li>
+                    <li class="flex items-center gap-3 text-sm"><span class="feature-yes">✓</span><span class="text-gray-700">Öncelikli destek</span></li>
+                </ul>
+                <button onclick="openOrder('İleri','1300')" class="w-full border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-xl font-bold hover:bg-purple-600 hover:text-white transition-all">İleri Paketi Seç</button>
+            </div>
+        </div>
+        <div class="mt-12 text-center reveal">
+            <div class="inline-flex flex-wrap items-center justify-center gap-6 bg-gray-50 rounded-2xl px-8 py-4">
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>14 Gün Ücretsiz Deneme</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>Koşulsuz İade Garantisi</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>Sözleşmeli Çalışma</div>
+                <div class="flex items-center gap-2 text-sm text-gray-600"><span>✅</span>7/24 Destek</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- SSS -->
+<section class="py-20 bg-[#FAFBFF]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 reveal">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Sıkça Sorulan <span class="gradient-text">Sorular</span></h2>
+        </div>
+        <div class="space-y-3">
+            <div class="faq-item bg-gray-50 rounded-2xl overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">Fotoğraflarımı nasıl siteye yükleyeceğim?</span>
+                    <div class="faq-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-indigo-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5"><p class="text-gray-500 text-sm">Fotoğraflarınızı bize Google Drive, WeTransfer veya WhatsApp üzerinden iletebilirsiniz. Hangi kategoriye ait olduğunu belirtmeniz yeterli, siteye düzenli şekilde ekleriz.</p></div>
+            </div>
+            <div class="faq-item bg-gray-50 rounded-2xl overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">Galeri güncellemeleri ne kadar sürede yapılır?</span>
+                    <div class="faq-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-indigo-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5"><p class="text-gray-500 text-sm">Genellikle aynı iş günü içinde güncelleme yapılır. Acil durumlarda WhatsApp üzerinden iletişime geçebilirsiniz.</p></div>
+            </div>
+            <div class="faq-item bg-gray-50 rounded-2xl overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">Fotoğraf kalitesi düşer mi?</span>
+                    <div class="faq-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-indigo-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5"><p class="text-gray-500 text-sm">Fotoğraflar web için optimize edilir. Bu sayede sayfa hızlı yüklenir ama görsel kalite korunur. Zoom özelliği ile detaylar net görünür.</p></div>
+            </div>
+            <div class="faq-item bg-gray-50 rounded-2xl overflow-hidden reveal">
+                <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left">
+                    <span class="font-semibold text-gray-900 text-sm pr-8">İstediğim zaman iptal edebilir miyim?</span>
+                    <div class="faq-icon w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0"><svg class="w-4 h-4 text-indigo-600 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                </button>
+                <div class="faq-answer hidden px-5 pb-5"><p class="text-gray-500 text-sm">Evet, istediğiniz zaman iptal edebilirsiniz. 14 gün içinde memnun kalmazsanız ödemenizi iade ediyoruz.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- CTA -->
+<section class="py-20 bg-dark relative overflow-hidden">
+    <div class="absolute top-0 left-1/4 w-[400px] h-[400px] bg-cyan-600/10 rounded-full blur-[100px]"></div>
+    <div class="max-w-4xl mx-auto px-4 text-center relative">
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-6">Stüdyonuzu <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400">Dijitale Taşıyalım!</span></h2>
+        <p class="text-white/40 mb-10 max-w-xl mx-auto">14 gün ücretsiz deneyin. Yeni müşteriler portfolyonuzu görsün, iletişime geçsin.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onclick="openOrder('Orta','750')" class="btn-primary text-white px-8 py-4 rounded-2xl font-bold text-lg">Hemen Başla →</button>
+            <a href="../iletisim.html" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-white/10 transition-all">🤝 Önce Görüşelim</a>
+        </div>
+    </div>
+</section>
+
+
+<!-- SİPARİŞ MODAL -->
+<div id="orderModal" class="modal-overlay" onclick="closeOrderOutside(event)">
+    <div class="modal-box">
+        <div class="bg-gradient-to-r from-cyan-500 to-teal-600 p-6 flex items-center justify-between rounded-t-3xl sticky top-0 z-10">
+            <div>
+                <h3 class="text-xl font-bold text-white">📸 StudioSite Sipariş</h3>
+                <p id="modalPkgName" class="text-white/70 text-sm mt-0.5"></p>
+            </div>
+            <button onclick="closeOrder()" class="w-9 h-9 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <div id="loginRequired" class="hidden text-center py-6">
+                <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🔐</div>
+                <h4 class="text-lg font-bold text-gray-900 mb-2">Giriş Yapmanız Gerekiyor</h4>
+                <p class="text-gray-500 text-sm mb-6">Sipariş vermek için lütfen giriş yapın.</p>
+                <div class="flex gap-3 justify-center">
+                    <a href="../giris.html" class="border-2 border-gray-200 text-gray-700 px-6 py-3 rounded-xl text-sm font-semibold hover:border-indigo-300 transition-all">Giriş Yap</a>
+                    <a href="../giris.html?tab=register" class="btn-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">Kayıt Ol →</a>
+                </div>
+            </div>
+            <div id="orderSuccess" class="hidden text-center py-6">
+                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🎉</div>
+                <h4 class="text-lg font-bold text-gray-900 mb-2">Siparişiniz Alındı!</h4>
+                <p class="text-gray-500 text-sm mb-6">Sizi en kısa sürede arayarak süreci başlatacağız.</p>
+                <div class="flex gap-3 justify-center">
+                    <a href="../panel.html" class="btn-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">Panelime Git →</a>
+                    <a href="https://wa.me/905523845336" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-green-600">💬 WhatsApp</a>
+                </div>
+            </div>
+            <div id="orderError" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
+                <p id="orderErrorText" class="text-red-700 text-sm font-semibold"></p>
+            </div>
+            <div id="orderFormSection">
+                <div class="bg-gradient-to-br from-cyan-50 to-teal-50 border border-cyan-100 rounded-2xl p-4 mb-5 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs text-cyan-500 font-bold uppercase tracking-wide">Seçilen Paket</div>
+                        <div id="selectedPkgDisplay" class="font-bold text-gray-900 text-sm mt-0.5"></div>
+                    </div>
+                    <div class="text-right">
+                        <div id="selectedPriceDisplay" class="text-2xl font-extrabold text-cyan-600"></div>
+                        <div class="text-xs text-gray-400">/ay</div>
+                    </div>
+                </div>
+                <form id="orderForm" class="space-y-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Stüdyo / İşletme Adı <span class="text-red-500">*</span></label>
+                        <input type="text" id="orderBusiness" required placeholder="Kaya Photography" class="input-field">
+                        <p id="businessError" class="hidden text-red-500 text-xs mt-1">⚠️ Lütfen stüdyo adını girin.</p>
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">Notunuz <span class="text-gray-400 font-normal">(opsiyonel)</span></label>
+                        <textarea id="orderNote" rows="3" placeholder="Uzmanlık alanı, fotoğraf kategorileri, özel istekler..." class="input-field" style="resize:none"></textarea>
+                    </div>
+                    <button type="submit" id="orderSubmitBtn" class="w-full bg-gradient-to-r from-cyan-500 to-teal-600 text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all">
+                        <span id="orderBtnText">Siparişi Gönder 🚀</span>
+                        <svg id="orderBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    </button>
+                    <p class="text-center text-gray-400 text-xs">Ödeme sipariş onayından sonra alınır.</p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- FOOTER -->
+<footer class="bg-dark text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center"><span class="text-white font-black text-sm">X</span></div>
+                <span class="font-bold">XXX Yazılım</span>
+            </div>
+            <p class="text-white/20 text-xs">© 2024 XXX Yazılım Ltd. Şti.</p>
+            <div class="flex gap-4 text-white/30 text-sm">
+                <a href="../index.html" class="hover:text-white/70 transition-colors">Ana Sayfa</a>
+                <a href="../urunler.html" class="hover:text-white/70 transition-colors">Ürünler</a>
+                <a href="../iletisim.html" class="hover:text-white/70 transition-colors">İletişim</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 items-center gap-3 bg-green-500 text-white pl-5 pr-6 py-3.5 rounded-full shadow-2xl hover:bg-green-600 hover:scale-105 transition-all">
+    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="font-semibold text-sm">WhatsApp ile Yazın</span>
+</a>
+<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/90 backdrop-blur-xl border-t border-gray-200/50">
+    <div class="grid grid-cols-3">
+        <a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-green-600"><span class="text-lg">💬</span><span class="text-[10px] font-bold">WhatsApp</span></a>
+        <a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-blue-600 border-x border-gray-100"><span class="text-lg">📞</span><span class="text-[10px] font-bold">Ara</span></a>
+        <button onclick="openOrder('Orta','750')" class="flex flex-col items-center justify-center gap-1 py-3 text-purple-600"><span class="text-lg">🛒</span><span class="text-[10px] font-bold">Sipariş</span></button>
+    </div>
+</div>
+
+
+<!-- FIREBASE -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    const app=initializeApp({apiKey:"AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",authDomain:"dijital-pazar-3cc34.firebaseapp.com",projectId:"dijital-pazar-3cc34",storageBucket:"dijital-pazar-3cc34.firebasestorage.app",messagingSenderId:"519713206128",appId:"1:519713206128:web:4d1f541d1b469eeb8069b5"});
+    const auth=getAuth(app),db=getFirestore(app);
+    onAuthStateChanged(auth,(user)=>{
+        window._currentUser=user;
+        const ha=document.getElementById('headerAuth'),ma=document.getElementById('mobileAuthButtons');
+        if(user){ha.innerHTML=`<a href="../panel.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Sitelerim</a><a href="../panel.html" class="btn-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">Panelim</a>`;if(ma)ma.innerHTML=`<a href="../panel.html" class="mobile-link block text-center bg-indigo-50 text-indigo-600 px-5 py-3 rounded-xl font-semibold">Panelime Git</a>`;}
+        else{ha.innerHTML=`<a href="../giris.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Giriş Yap</a><a href="../giris.html?tab=register" class="btn-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">Kayıt Ol</a>`;if(ma)ma.innerHTML=`<a href="../giris.html" class="mobile-link block text-center border border-gray-200 text-gray-700 px-5 py-3 rounded-xl font-semibold">Giriş Yap</a><a href="../giris.html?tab=register" class="mobile-link block text-center btn-primary text-white px-5 py-3 rounded-xl font-semibold">Kayıt Ol</a>`;}
+    });
+    window._submitOrder=async function(){
+        const user=window._currentUser;if(!user)return;
+        const bi=document.getElementById('orderBusiness'),be=document.getElementById('businessError'),b=bi.value.trim();
+        if(!b){bi.classList.add('error');be.classList.remove('hidden');bi.focus();return;}
+        bi.classList.remove('error');be.classList.add('hidden');
+        const btn=document.getElementById('orderSubmitBtn'),txt=document.getElementById('orderBtnText'),ldr=document.getElementById('orderBtnLoader');
+        btn.disabled=true;txt.textContent='Gönderiliyor...';ldr.classList.remove('hidden');
+        document.getElementById('orderError').classList.add('hidden');
+        try{
+            await addDoc(collection(db,"orders"),{userId:user.uid,userEmail:user.email,productName:'StudioSite - Fotoğrafçı / Stüdyo',productIcon:'📸',packageName:window._selectedPackage,price:window._selectedPrice,isCustom:false,businessName:b,note:document.getElementById('orderNote').value.trim()||'',status:'pending',createdAt:serverTimestamp()});
+            document.getElementById('orderFormSection').classList.add('hidden');document.getElementById('orderSuccess').classList.remove('hidden');
+        }catch(err){document.getElementById('orderErrorText').textContent='❌ Hata: '+err.message;document.getElementById('orderError').classList.remove('hidden');}
+        finally{btn.disabled=false;txt.textContent='Siparişi Gönder 🚀';ldr.classList.add('hidden');}
+    };
+</script>
+<script>
+    window._selectedPackage='Orta';window._selectedPrice='750';
+    function openOrder(pkg,price){
+        window._selectedPackage=pkg;window._selectedPrice=price;
+        document.getElementById('modalPkgName').textContent=pkg+' Paket - '+parseInt(price).toLocaleString('tr-TR')+'₺/ay';
+        document.getElementById('selectedPkgDisplay').textContent=pkg+' Paketi';
+        document.getElementById('selectedPriceDisplay').textContent=parseInt(price).toLocaleString('tr-TR')+'₺';
+        document.getElementById('orderSuccess').classList.add('hidden');document.getElementById('orderError').classList.add('hidden');
+        document.getElementById('orderForm').reset();document.getElementById('orderBusiness').classList.remove('error');document.getElementById('businessError').classList.add('hidden');
+        if(!window._currentUser){document.getElementById('loginRequired').classList.remove('hidden');document.getElementById('orderFormSection').classList.add('hidden');}
+        else{document.getElementById('loginRequired').classList.add('hidden');document.getElementById('orderFormSection').classList.remove('hidden');}
+        document.getElementById('orderModal').classList.add('active');document.body.style.overflow='hidden';
+    }
+    function closeOrder(){document.getElementById('orderModal').classList.remove('active');document.body.style.overflow='';}
+    function closeOrderOutside(e){if(e.target===document.getElementById('orderModal'))closeOrder();}
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOrder();});
+    document.getElementById('orderForm').addEventListener('submit',e=>{e.preventDefault();window._submitOrder();});
+    document.getElementById('orderBusiness').addEventListener('input',function(){if(this.value.trim()){this.classList.remove('error');document.getElementById('businessError').classList.add('hidden');}});
+    function toggleFaq(btn){
+        const item=btn.parentElement,answer=item.querySelector('.faq-answer'),icon=item.querySelector('.faq-icon svg');
+        document.querySelectorAll('.faq-item').forEach(o=>{if(o!==item){o.querySelector('.faq-answer').classList.add('hidden');o.querySelector('.faq-icon svg').style.transform='';o.classList.remove('bg-indigo-50');o.classList.add('bg-gray-50');}});
+        answer.classList.toggle('hidden');
+        if(!answer.classList.contains('hidden')){icon.style.transform='rotate(180deg)';item.classList.add('bg-indigo-50');item.classList.remove('bg-gray-50');}
+        else{icon.style.transform='';item.classList.remove('bg-indigo-50');item.classList.add('bg-gray-50');}
+    }
+    document.getElementById('mobileToggle').addEventListener('click',()=>{document.getElementById('mobileMenu').classList.toggle('hidden');document.getElementById('menuOpen').classList.toggle('hidden');document.getElementById('menuClose').classList.toggle('hidden');});
+    document.querySelectorAll('.mobile-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.add('hidden');document.getElementById('menuOpen').classList.remove('hidden');document.getElementById('menuClose').classList.add('hidden');}));
+    const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active');}),{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
