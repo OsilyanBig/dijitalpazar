@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giriş Yap | XXX Yazılım</title>
+    <title>Giriş Yap | DijitalPazar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
@@ -17,36 +17,44 @@
         .input-field{width:100%;padding:13px 16px;border-radius:12px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;outline:none;color:#0F172A}
         .input-field:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1);background:#fff}
         .input-field::placeholder{color:#94A3B8}
+        .input-field.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
+        .eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center}
+        .eye-btn:hover{color:#4F46E5}
+
+        /* Account type toggle */
+        .type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+        .type-btn{padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;border:2px solid #E2E8F0;background:white;color:#64748B;text-align:center}
+        .type-btn.active{border-color:#4F46E5;background:linear-gradient(135deg,#EEF2FF,#E0E7FF);color:#4F46E5}
+        .type-btn:hover:not(.active){border-color:#C7D2FE;background:#FAFBFF}
+
         @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
         .animate-fade-up{animation:fadeUp 0.6s ease forwards}
         @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
         @keyframes blob{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}50%{border-radius:50% 60% 30% 60%/30% 60% 70% 40%}}
         .animate-blob{animation:blob 8s ease-in-out infinite}
-        .eye-btn{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94A3B8;padding:4px;display:flex;align-items:center}
-        .eye-btn:hover{color:#4F46E5}
     </style>
 </head>
 <body class="bg-dark min-h-screen">
 
-    <!-- BG Effects -->
+    <!-- BG -->
     <div class="fixed inset-0 bg-dark pointer-events-none">
         <div class="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-[120px] animate-blob"></div>
         <div class="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] animate-blob" style="animation-delay:3s"></div>
         <div class="absolute inset-0 opacity-[0.03]" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:60px 60px"></div>
     </div>
 
-    <!-- Scrollable Container -->
+    <!-- Content -->
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-start py-10 px-4">
 
         <!-- Logo -->
         <div class="text-center mb-8 animate-fade-up">
             <a href="index.html" class="inline-flex items-center gap-3">
                 <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-                    <span class="text-white font-black text-xl">X</span>
+                    <span class="text-white font-black text-xl">D</span>
                 </div>
                 <div class="flex flex-col text-left">
-                    <span class="text-xl font-bold text-white">XXX Yazılım</span>
-                    <span class="text-xs text-indigo-400">Dijital Çözümler</span>
+                    <span class="text-xl font-bold text-white">DijitalPazar</span>
+                    <span class="text-xs text-indigo-400">Premium Dijital Çözümler</span>
                 </div>
             </a>
         </div>
@@ -57,27 +65,19 @@
 
                 <!-- Tabs -->
                 <div class="grid grid-cols-2 border-b border-gray-100">
-                    <button id="tabLogin" onclick="showTab('login')"
-                        class="py-4 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-all">
-                        Giriş Yap
-                    </button>
-                    <button id="tabRegister" onclick="showTab('register')"
-                        class="py-4 text-sm font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-all">
-                        Kayıt Ol
-                    </button>
+                    <button id="tabLogin" onclick="showTab('login')" class="py-4 text-sm font-bold text-indigo-600 border-b-2 border-indigo-600 transition-all">Giriş Yap</button>
+                    <button id="tabRegister" onclick="showTab('register')" class="py-4 text-sm font-bold text-gray-400 border-b-2 border-transparent hover:text-gray-600 transition-all">Kayıt Ol</button>
                 </div>
 
                 <div class="p-7">
 
-                    <!-- Başarı Mesajı -->
+                    <!-- Mesajlar -->
                     <div id="successMsg" class="hidden mb-5 p-4 bg-green-50 border border-green-200 rounded-2xl">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">✅</div>
                             <p id="successText" class="text-green-700 text-sm font-semibold"></p>
                         </div>
                     </div>
-
-                    <!-- Hata Mesajı -->
                     <div id="errorMsg" class="hidden mb-5 p-4 bg-red-50 border border-red-200 rounded-2xl">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">❌</div>
@@ -88,11 +88,11 @@
                     <!-- ===== GİRİŞ FORMU ===== -->
                     <form id="loginForm" class="space-y-4">
                         <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">E-posta *</label>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">E-posta</label>
                             <input type="email" id="loginEmail" required placeholder="ornek@email.com" class="input-field">
                         </div>
                         <div>
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Şifre *</label>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Şifre</label>
                             <div class="relative">
                                 <input type="password" id="loginPassword" required placeholder="••••••••" class="input-field pr-12">
                                 <button type="button" class="eye-btn" onclick="togglePass('loginPassword', this)">
@@ -101,46 +101,70 @@
                                 </button>
                             </div>
                         </div>
-
-                        <button type="submit" id="loginBtn"
-                            class="w-full btn-primary text-white px-6 py-4 rounded-xl text-base font-bold flex items-center justify-center gap-2 mt-2">
+                        <button type="submit" id="loginBtn" class="w-full btn-primary text-white px-6 py-4 rounded-xl text-base font-bold flex items-center justify-center gap-2 mt-2">
                             <span id="loginBtnText">Giriş Yap</span>
-                            <svg id="loginBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
+                            <svg id="loginBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         </button>
-
-                        <button type="button" onclick="resetPassword()"
-                            class="w-full text-center text-sm text-indigo-600 font-semibold hover:text-indigo-700 transition-colors py-1">
-                            Şifremi Unuttum
-                        </button>
+                        <button type="button" onclick="resetPassword()" class="w-full text-center text-sm text-indigo-600 font-semibold hover:text-indigo-700 transition-colors py-1">Şifremi Unuttum</button>
                     </form>
 
                     <!-- ===== KAYIT FORMU ===== -->
                     <form id="registerForm" class="hidden space-y-4">
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Ad *</label>
-                                <input type="text" id="regFirstName" required placeholder="Ahmet" class="input-field">
-                            </div>
-                            <div>
-                                <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Soyad *</label>
-                                <input type="text" id="regLastName" required placeholder="Yılmaz" class="input-field">
+                        <!-- Hesap Türü -->
+                        <div>
+                            <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Hesap Türü</label>
+                            <div class="type-toggle">
+                                <button type="button" class="type-btn active" id="typeBireysel" onclick="setAccountType('bireysel')">
+                                    👤 Bireysel
+                                </button>
+                                <button type="button" class="type-btn" id="typeKurumsal" onclick="setAccountType('kurumsal')">
+                                    🏢 Kurumsal
+                                </button>
                             </div>
                         </div>
 
+                        <!-- Bireysel Alanlar -->
+                        <div id="bireyselFields">
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div>
+                                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Ad *</label>
+                                    <input type="text" id="regFirstName" placeholder="Ahmet" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Soyad *</label>
+                                    <input type="text" id="regLastName" placeholder="Yılmaz" class="input-field">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kurumsal Alanlar -->
+                        <div id="kurumsalFields" class="hidden">
+                            <div class="mb-4">
+                                <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Şirket / İşletme Adı *</label>
+                                <input type="text" id="regCompany" placeholder="ABC Şirketi Ltd. Şti." class="input-field">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div>
+                                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Yetkili Adı *</label>
+                                    <input type="text" id="regCorpFirstName" placeholder="Ahmet" class="input-field">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Yetkili Soyadı *</label>
+                                    <input type="text" id="regCorpLastName" placeholder="Yılmaz" class="input-field">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ortak Alanlar -->
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Telefon *</label>
                             <input type="tel" id="regPhone" required placeholder="05XX XXX XX XX" class="input-field">
                         </div>
-
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">E-posta *</label>
                             <input type="email" id="regEmail" required placeholder="ornek@email.com" class="input-field">
                         </div>
-
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Şifre * (en az 6 karakter)</label>
                             <div class="relative">
@@ -151,50 +175,33 @@
                                 </button>
                             </div>
                         </div>
-
                         <div>
                             <label class="text-xs font-bold text-gray-500 uppercase tracking-widest block mb-2">Şifre Tekrar *</label>
-                            <div class="relative">
-                                <input type="password" id="regPasswordConfirm" required minlength="6" placeholder="••••••••" class="input-field pr-12">
-                                <button type="button" class="eye-btn" onclick="togglePass('regPasswordConfirm', this)">
-                                    <svg class="w-5 h-5 eye-show" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                    <svg class="w-5 h-5 eye-hide hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
-                                </button>
-                            </div>
+                            <input type="password" id="regPasswordConfirm" required minlength="6" placeholder="••••••••" class="input-field">
                         </div>
 
                         <!-- KVKK -->
                         <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-3">
-                            <input type="checkbox" id="regTerms" required
-                                class="mt-0.5 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 flex-shrink-0 cursor-pointer">
+                            <input type="checkbox" id="regTerms" required class="mt-0.5 w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 flex-shrink-0 cursor-pointer">
                             <label for="regTerms" class="text-xs text-gray-500 leading-relaxed cursor-pointer">
                                 <a href="#" class="text-indigo-600 font-semibold hover:underline">Kullanım şartlarını</a> ve
-                                <a href="#" class="text-indigo-600 font-semibold hover:underline">gizlilik politikasını</a>
-                                okudum, kabul ediyorum.
+                                <a href="#" class="text-indigo-600 font-semibold hover:underline">gizlilik politikasını</a> okudum, kabul ediyorum.
                             </label>
                         </div>
 
-                        <!-- KAYIT OL BUTONU -->
-                        <button type="submit" id="regBtn"
-                            class="w-full btn-primary text-white px-6 py-4 rounded-xl text-base font-bold flex items-center justify-center gap-2">
+                        <button type="submit" id="regBtn" class="w-full btn-primary text-white px-6 py-4 rounded-xl text-base font-bold flex items-center justify-center gap-2">
                             <span id="regBtnText">Kayıt Ol</span>
-                            <svg id="regBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
+                            <svg id="regBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         </button>
 
-                        <!-- Giriş Yap Linki -->
                         <p class="text-center text-sm text-gray-400 pb-2">
                             Zaten hesabınız var mı?
                             <button type="button" onclick="showTab('login')" class="text-indigo-600 font-bold hover:underline">Giriş Yap</button>
                         </p>
                     </form>
-
                 </div>
             </div>
 
-            <!-- Alt Link -->
             <div class="text-center mt-6">
                 <a href="index.html" class="text-white/40 text-sm hover:text-white/70 transition-colors inline-flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
@@ -202,8 +209,7 @@
                 </a>
             </div>
         </div>
-
-    </div><!-- end scrollable container -->
+    </div>
 
 
     <!-- ===== FIREBASE ===== -->
@@ -236,7 +242,7 @@
         const auth = getAuth(app);
         const db   = getFirestore(app);
 
-        // Zaten giriş yapmışsa panele yönlendir
+        // Giriş yapmışsa panele git
         onAuthStateChanged(auth, (user) => {
             if (user) window.location.href = 'panel.html';
         });
@@ -246,55 +252,87 @@
             e.preventDefault();
             hideMessages();
 
-            const firstName    = document.getElementById('regFirstName').value.trim();
-            const lastName     = document.getElementById('regLastName').value.trim();
-            const phone        = document.getElementById('regPhone').value.trim();
-            const email        = document.getElementById('regEmail').value.trim();
-            const password     = document.getElementById('regPassword').value;
-            const passwordConf = document.getElementById('regPasswordConfirm').value;
+            const accountType = window._accountType || 'bireysel';
+            let firstName, lastName, companyName, phone, email, password, passwordConf;
 
-            if (!firstName || !lastName || !phone || !email || !password) {
-                showError('Lütfen tüm zorunlu alanları doldurun.'); return;
+            phone       = document.getElementById('regPhone').value.trim();
+            email       = document.getElementById('regEmail').value.trim();
+            password    = document.getElementById('regPassword').value;
+            passwordConf = document.getElementById('regPasswordConfirm').value;
+
+            if (accountType === 'bireysel') {
+                firstName = document.getElementById('regFirstName').value.trim();
+                lastName  = document.getElementById('regLastName').value.trim();
+                companyName = '';
+
+                if (!firstName || !lastName) {
+                    showError('Ad ve soyad zorunludur.');
+                    return;
+                }
+            } else {
+                companyName = document.getElementById('regCompany').value.trim();
+                firstName   = document.getElementById('regCorpFirstName').value.trim();
+                lastName    = document.getElementById('regCorpLastName').value.trim();
+
+                if (!companyName) {
+                    showError('Şirket adı zorunludur.');
+                    return;
+                }
+                if (!firstName || !lastName) {
+                    showError('Yetkili ad ve soyadı zorunludur.');
+                    return;
+                }
+            }
+
+            if (!phone || !email || !password) {
+                showError('Tüm zorunlu alanları doldurun.');
+                return;
             }
             if (password !== passwordConf) {
-                showError('Şifreler eşleşmiyor!'); return;
+                showError('Şifreler eşleşmiyor.');
+                return;
             }
             if (password.length < 6) {
-                showError('Şifre en az 6 karakter olmalıdır.'); return;
+                showError('Şifre en az 6 karakter olmalı.');
+                return;
             }
 
             setLoading('reg', true);
 
             try {
-                // Auth kullanıcısı oluştur
+                // 1. Auth hesabı oluştur
                 const cred = await createUserWithEmailAndPassword(auth, email, password);
                 const uid  = cred.user.uid;
-                console.log('✅ Auth başarılı, UID:', uid);
+                console.log('Auth OK, UID:', uid);
 
-                // Firestore'a yaz
-                await setDoc(doc(db, "users", uid), {
-                    firstName : firstName,
-                    lastName  : lastName,
-                    fullName  : firstName + ' ' + lastName,
-                    email     : email,
-                    phone     : phone,
-                    role      : 'customer',
-                    createdAt : serverTimestamp()
-                });
-                console.log('✅ Firestore yazma başarılı!');
+                // 2. Firestore'a kaydet
+                const userData = {
+                    accountType : accountType,
+                    firstName   : firstName,
+                    lastName    : lastName,
+                    fullName    : firstName + ' ' + lastName,
+                    companyName : companyName,
+                    email       : email,
+                    phone       : phone,
+                    role        : 'customer',
+                    createdAt   : serverTimestamp()
+                };
+
+                console.log('Firestore yazılıyor:', userData);
+                await setDoc(doc(db, "users", uid), userData);
+                console.log('Firestore OK!');
 
                 showSuccess('Hesabınız oluşturuldu! Yönlendiriliyorsunuz...');
                 setTimeout(() => { window.location.href = 'panel.html'; }, 1500);
 
             } catch (err) {
-                console.error('❌ Hata:', err.code, err.message);
+                console.error('Kayıt hatası:', err.code, err.message);
                 const msgs = {
-                    'auth/email-already-in-use' : 'Bu e-posta adresi zaten kullanılıyor.',
-                    'auth/weak-password'         : 'Şifre en az 6 karakter olmalıdır.',
+                    'auth/email-already-in-use' : 'Bu e-posta zaten kullanılıyor.',
+                    'auth/weak-password'         : 'Şifre en az 6 karakter olmalı.',
                     'auth/invalid-email'         : 'Geçersiz e-posta adresi.',
-                    'permission-denied'          : 'Firestore izin hatası! Rules ayarlarını kontrol edin.',
                 };
-                showError(msgs[err.code] || 'Bir hata oluştu: ' + err.message);
+                showError(msgs[err.code] || 'Hata: ' + err.message);
             } finally {
                 setLoading('reg', false);
             }
@@ -309,26 +347,26 @@
             const password = document.getElementById('loginPassword').value;
 
             if (!email || !password) {
-                showError('E-posta ve şifrenizi girin.'); return;
+                showError('E-posta ve şifrenizi girin.');
+                return;
             }
 
             setLoading('login', true);
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                showSuccess('Giriş başarılı! Yönlendiriliyorsunuz...');
+                showSuccess('Giriş başarılı!');
                 setTimeout(() => { window.location.href = 'panel.html'; }, 1000);
-
             } catch (err) {
-                console.error('❌ Giriş hatası:', err.code);
+                console.error('Giriş hatası:', err.code);
                 const msgs = {
                     'auth/user-not-found'     : 'Bu e-posta ile kayıtlı hesap bulunamadı.',
                     'auth/wrong-password'     : 'Şifre yanlış.',
                     'auth/invalid-credential' : 'E-posta veya şifre hatalı.',
-                    'auth/too-many-requests'  : 'Çok fazla deneme. Lütfen biraz bekleyin.',
+                    'auth/too-many-requests'  : 'Çok fazla deneme. Biraz bekleyin.',
                     'auth/invalid-email'      : 'Geçersiz e-posta adresi.',
                 };
-                showError(msgs[err.code] || 'Giriş başarısız: ' + err.message);
+                showError(msgs[err.code] || 'Giriş başarısız.');
             } finally {
                 setLoading('login', false);
             }
@@ -341,11 +379,9 @@
             hideMessages();
             try {
                 await sendPasswordResetEmail(auth, email);
-                showSuccess('Şifre sıfırlama bağlantısı e-postanıza gönderildi.');
+                showSuccess('Şifre sıfırlama bağlantısı gönderildi.');
             } catch (err) {
-                showError(err.code === 'auth/user-not-found'
-                    ? 'Bu e-posta ile kayıtlı hesap bulunamadı.'
-                    : 'Bir hata oluştu. Tekrar deneyin.');
+                showError(err.code === 'auth/user-not-found' ? 'Bu e-posta ile kayıtlı hesap bulunamadı.' : 'Bir hata oluştu.');
             }
         };
 
@@ -372,21 +408,33 @@
                 : (type === 'login' ? 'Giriş Yap' : 'Kayıt Ol');
             document.getElementById(type + 'BtnLoader').classList.toggle('hidden', !state);
         }
-
         window.showError   = showError;
         window.showSuccess = showSuccess;
     </script>
 
     <!-- ===== NORMAL JS ===== -->
     <script>
+        window._accountType = 'bireysel';
+
+        // Hesap türü seç
+        function setAccountType(type) {
+            window._accountType = type;
+
+            document.getElementById('typeBireysel').classList.toggle('active', type === 'bireysel');
+            document.getElementById('typeKurumsal').classList.toggle('active', type === 'kurumsal');
+
+            document.getElementById('bireyselFields').classList.toggle('hidden', type !== 'bireysel');
+            document.getElementById('kurumsalFields').classList.toggle('hidden', type !== 'kurumsal');
+
+            hideMessages();
+        }
+
         // Tab değiştir
         function showTab(tab) {
             const isLogin = tab === 'login';
-
             document.getElementById('loginForm').classList.toggle('hidden', !isLogin);
             document.getElementById('registerForm').classList.toggle('hidden', isLogin);
 
-            // Tab buton stilleri
             const tabLogin    = document.getElementById('tabLogin');
             const tabRegister = document.getElementById('tabRegister');
 
@@ -402,12 +450,14 @@
                 tabLogin.classList.remove('text-indigo-600','border-indigo-600');
             }
 
-            // Mesajları temizle
             document.getElementById('errorMsg').classList.add('hidden');
             document.getElementById('successMsg').classList.add('hidden');
-
-            // Yukarı scroll
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideMessages() {
+            document.getElementById('errorMsg').classList.add('hidden');
+            document.getElementById('successMsg').classList.add('hidden');
         }
 
         // Şifre göster/gizle
@@ -426,11 +476,10 @@
             }
         }
 
-        // URL'de ?tab=register varsa kayıt formunu göster
+        // URL parametresi
         if (new URLSearchParams(window.location.search).get('tab') === 'register') {
             showTab('register');
         }
     </script>
-
 </body>
 </html>
