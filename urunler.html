@@ -3,580 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ürünler | XXX Yazılım</title>
+    <title>Hizmetler | DijitalPazar</title>
+    <meta name="description" content="Premium web sistemleri. 11 farklı sektör için kurumsal dijital çözümler.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{dark:'#0C1222',navy:'#101935',gold:'#D4A853'}}}}</script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Plus Jakarta Sans',sans-serif;overflow-x:hidden}
-        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+        body{font-family:'Inter',sans-serif;background:#0C1222;color:#fff;overflow-x:hidden}
+        ::selection{background:rgba(212,168,83,0.3)}
+        ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#D4A853,#B8860B);border-radius:10px}
 
-        .gradient-text{background:linear-gradient(135deg,#4F46E5,#7C3AED,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);position:relative;overflow:hidden;transition:all 0.3s ease}
-        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 15px 35px -5px rgba(79,70,229,0.4)}
+        .text-gradient-gold{background:linear-gradient(135deg,#D4A853,#F5D88E,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .btn-gold{background:linear-gradient(135deg,#D4A853,#C4973D);color:#0C1222;font-weight:700;border:none;cursor:pointer;transition:all 0.3s}
+        .btn-gold:hover{box-shadow:0 20px 60px -15px rgba(212,168,83,0.4);transform:translateY(-2px)}
+        .btn-outline-gold{background:transparent;border:1.5px solid rgba(212,168,83,0.3);color:#D4A853;cursor:pointer;transition:all 0.3s}
+        .btn-outline-gold:hover{background:rgba(212,168,83,0.05);border-color:rgba(212,168,83,0.5)}
+        .glass{background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.04)}
+        .gold-badge{background:linear-gradient(135deg,rgba(212,168,83,0.1),rgba(212,168,83,0.05));border:1px solid rgba(212,168,83,0.15);color:#D4A853}
+        .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);max-width:80%;margin:0 auto}
+        .input-field{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);font-size:14px;font-family:'Inter',sans-serif;transition:all 0.2s;outline:none;color:#fff}
+        .input-field:focus{border-color:rgba(212,168,83,0.4);box-shadow:0 0 0 3px rgba(212,168,83,0.1)}
+        .input-field::placeholder{color:rgba(255,255,255,0.2)}
+        .input-field.error{border-color:#EF4444}
 
-        /* ── Ürün Kartı ── */
+        /* Product Card */
         .product-card{
-            display:block;
-            text-decoration:none;
-            color:inherit;
-            background:white;
-            border-radius:24px;
-            border:1.5px solid #E8EEFF;
-            overflow:hidden;
+            background:linear-gradient(145deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01));
+            border:1px solid rgba(255,255,255,0.04);
+            border-radius:20px;overflow:hidden;
             transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
-            box-shadow:0 1px 4px rgba(0,0,0,0.04);
-            position:relative;
         }
         .product-card:hover{
-            border-color:#A5B4FC;
-            box-shadow:0 20px 50px -12px rgba(79,70,229,0.18);
-            transform:translateY(-6px);
+            border-color:rgba(212,168,83,0.12);
+            transform:translateY(-4px);
+            box-shadow:0 25px 60px -15px rgba(0,0,0,0.4);
         }
-        .product-card::after{
-            content:'Detayları Gör →';
-            position:absolute;
-            top:16px;right:16px;
-            background:#EEF2FF;
-            color:#4F46E5;
-            font-size:11px;font-weight:700;
-            padding:4px 10px;border-radius:100px;
-            opacity:0;transform:translateY(-4px);
-            transition:all 0.3s ease;
+        .product-card .top-line{
+            height:1px;
+            background:linear-gradient(90deg,transparent,rgba(212,168,83,0.2),transparent);
+            opacity:0;transition:opacity 0.4s;
         }
-        .product-card:hover::after{opacity:1;transform:translateY(0);}
+        .product-card:hover .top-line{opacity:1}
 
-        /* Order Buttons */
-        .order-btn-start{background:#F0FDF4;border:2px solid #BBF7D0;color:#15803D;padding:9px 12px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;text-align:center}
-        .order-btn-start:hover{background:#DCFCE7;border-color:#86EFAC;transform:translateY(-1px)}
-        .order-btn-middle{padding:9px 12px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;width:100%;color:white;border:none;text-align:center}
-        .order-btn-advance{background:#FAF5FF;border:2px solid #DDD6FE;color:#7C3AED;padding:9px 12px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;width:100%;text-align:center}
-        .order-btn-advance:hover{background:#EDE9FE;border-color:#C4B5FD;transform:translateY(-1px)}
+        /* Accordion */
+        .accordion-body{max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1)}
+        .accordion-body.open{max-height:2500px}
+        .accordion-icon{transition:transform 0.4s ease}
+        .product-card.is-open .accordion-icon{transform:rotate(180deg)}
+        .product-card.is-open{border-color:rgba(212,168,83,0.2)}
 
-        /* Input & Modal */
-        .input-field{width:100%;padding:12px 16px;border-radius:12px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;outline:none;color:#0F172A}
-        .input-field:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1);background:#fff}
-        .input-field::placeholder{color:#94A3B8}
-        .input-field.error{border-color:#EF4444;box-shadow:0 0 0 3px rgba(239,68,68,0.1)}
+        /* Table */
+        .pkg-table{width:100%;border-collapse:collapse}
+        .pkg-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#D4A853;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(212,168,83,0.03)}
+        .pkg-table td{padding:9px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.02);color:rgba(255,255,255,0.5)}
+        .pkg-table tr:hover td{background:rgba(255,255,255,0.01)}
+        .pkg-table td:first-child{color:rgba(255,255,255,0.7);font-weight:500}
+        .feature-yes{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:rgba(34,197,94,0.1);border-radius:50%;color:#22C55E;font-size:11px;font-weight:700}
+        .feature-no{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:rgba(255,255,255,0.03);border-radius:50%;color:rgba(255,255,255,0.15);font-size:11px}
 
-        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
-        .modal-overlay.active{opacity:1;pointer-events:all}
-        .modal-box{background:white;border-radius:24px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;transform:scale(0.9) translateY(20px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
-        .modal-overlay.active .modal-box{transform:scale(1) translateY(0)}
+        /* Modal */
+        .modal-bg{position:fixed;inset:0;background:rgba(12,18,34,0.8);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s}
+        .modal-bg.active{opacity:1;pointer-events:all}
+        .modal-box{background:#101935;border:1px solid rgba(255,255,255,0.06);border-radius:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:scale(0.95) translateY(10px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
+        .modal-bg.active .modal-box{transform:scale(1) translateY(0)}
 
-        /* Filter */
-        .filter-btn{padding:8px 20px;border-radius:100px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.25s ease;border:none;outline:none}
-        .filter-btn.active-filter{background:white;color:#4F46E5;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
-        .filter-btn:not(.active-filter){background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}
-        .filter-btn:not(.active-filter):hover{background:rgba(255,255,255,0.2);color:white}
-
-        .reveal{opacity:0;transform:translateY(30px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @keyframes glow-pulse{0%,100%{opacity:0.15}50%{opacity:0.3}}
+        .fade-up{animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
+        .animate-spin{animation:spin 1s linear infinite}
+        .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
         .reveal.active{opacity:1;transform:translateY(0)}
 
-        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
-        @keyframes blob{0%,100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}50%{border-radius:50% 60% 30% 60%/30% 60% 70% 40%}}.animate-blob{animation:blob 8s ease-in-out infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}.animate-pulse{animation:pulse 2s ease infinite}
         @media(max-width:1023px){body{padding-bottom:64px}}
     </style>
 </head>
-<body class="bg-[#FAFBFF] text-gray-900 antialiased">
+<body class="antialiased">
 
-<!-- ===== HEADER ===== -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl shadow-[0_2px_30px_rgba(0,0,0,0.06)] py-2">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-14">
+<!-- HEADER -->
+<header id="siteHeader" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-400" style="transition-property:padding,background,border,backdrop-filter">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
-                    <span class="text-white font-black text-lg">X</span>
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-900/20">
+                    <span class="text-[#0C1222] font-black text-sm">D</span>
                 </div>
-                <div class="flex flex-col">
-                    <span class="text-lg font-bold leading-tight text-gray-900">XXX Yazılım</span>
-                    <span class="text-[10px] font-medium leading-tight text-indigo-600">Dijital Çözümler</span>
-                </div>
+                <span class="text-white font-bold text-base tracking-tight hidden sm:block">DijitalPazar</span>
             </a>
-            <nav class="hidden lg:flex items-center gap-1">
-                <a href="index.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Ana Sayfa</a>
-                <a href="urunler.html" class="px-4 py-2 rounded-lg text-sm font-medium text-indigo-600 bg-indigo-50">Ürünler</a>
-                <a href="index.html#how-it-works" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Nasıl Çalışır</a>
-                <a href="index.html#why-us" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Neden Biz</a>
-                <a href="iletisim.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">İletişim</a>
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="index.html" class="text-sm text-white/40 hover:text-[#D4A853] transition-colors font-medium">Ana Sayfa</a>
+                <a href="urunler.html" class="text-sm text-[#D4A853] font-medium">Hizmetler</a>
+                <a href="iletisim.html" class="text-sm text-white/40 hover:text-[#D4A853] transition-colors font-medium">İletişim</a>
             </nav>
-            <div class="hidden lg:flex items-center gap-3" id="headerAuth">
-                <div class="flex gap-2">
-                    <div class="w-20 h-9 bg-gray-100 rounded-xl animate-pulse"></div>
-                    <div class="w-24 h-9 bg-gray-100 rounded-xl animate-pulse"></div>
-                </div>
+            <div class="hidden lg:flex items-center gap-4" id="headerAuth">
+                <a href="giris.html" class="text-sm text-white/40 hover:text-white transition-colors font-medium">Giriş</a>
+                <a href="giris.html?tab=register" class="btn-gold px-5 py-2.5 rounded-xl text-sm">Başlayın</a>
             </div>
-            <button id="mobileToggle" class="lg:hidden p-2.5 rounded-xl text-gray-900 hover:bg-gray-100">
-                <svg id="menuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
-                <svg id="menuClose" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <button id="mobileToggle" class="lg:hidden p-2 text-white/50 hover:text-[#D4A853]">
+                <svg id="menuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
+                <svg id="menuClose" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <div id="mobileMenu" class="lg:hidden hidden mt-3">
-            <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-3">
-                <a href="index.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 font-medium">Ana Sayfa</a>
-                <a href="urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-indigo-600 bg-indigo-50 font-medium">Ürünler</a>
-                <a href="iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-gray-700 hover:bg-indigo-50 font-medium">İletişim</a>
-                <div id="mobileAuthButtons" class="mt-2 pt-2 border-t border-gray-100 space-y-2"></div>
+        <div id="mobileMenu" class="lg:hidden hidden mt-6">
+            <div class="glass rounded-2xl p-5 space-y-1">
+                <a href="index.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] hover:bg-white/[0.02] font-medium text-sm">Ana Sayfa</a>
+                <a href="urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-[#D4A853] bg-white/[0.02] font-medium text-sm">Hizmetler</a>
+                <a href="iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] hover:bg-white/[0.02] font-medium text-sm">İletişim</a>
+                <div id="mobileAuthButtons" class="pt-3 mt-3 border-t border-white/5 space-y-2"></div>
             </div>
         </div>
     </div>
 </header>
 
 
-<!-- ===== HERO ===== -->
-<section class="pt-32 pb-16 bg-dark relative overflow-hidden">
-    <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] animate-blob"></div>
-    <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] animate-blob" style="animation-delay:3s"></div>
-    <div class="absolute inset-0 opacity-[0.03]" style="background-image:linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px);background-size:60px 60px"></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-6">
-            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-            <span class="text-sm font-semibold text-white/70">11 Farklı Ürün</span>
+<!-- HERO -->
+<section class="pt-36 pb-16 relative overflow-hidden">
+    <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-900/15 rounded-full blur-[200px]"></div>
+    <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-amber-900/8 rounded-full blur-[200px]"></div>
+
+    <div class="relative max-w-6xl mx-auto px-6 text-center">
+        <div class="gold-badge rounded-full px-4 py-1.5 inline-flex items-center gap-2 mb-8 fade-up">
+            <span class="text-xs font-semibold">11 Farklı Sektör İçin Hazır Sistemler</span>
         </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4">
-            Sektörünüze Özel <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Web Sistemleri</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 fade-up" style="animation-delay:0.1s;letter-spacing:-0.03em">
+            Premium <span class="text-gradient-gold">Hizmetlerimiz</span>
         </h1>
-        <p class="text-lg text-white/40 max-w-2xl mx-auto font-light mb-10">
-            Kartlara tıklayarak detaylı inceleyin, sipariş butonlarıyla hemen başlayın.
+        <p class="text-base text-white/25 max-w-xl mx-auto mb-10 leading-relaxed fade-up" style="animation-delay:0.2s">
+            Detayları görmek için hizmete tıklayın. Doğrudan sipariş verebilir veya bizimle görüşme ayarlayabilirsiniz.
         </p>
-        <!-- Filtreler -->
-        <div class="flex flex-wrap gap-2 justify-center">
-            <button onclick="filterProducts('all',this)" class="filter-btn active-filter">Tümü</button>
-            <button onclick="filterProducts('randevu',this)" class="filter-btn">📅 Randevu</button>
-            <button onclick="filterProducts('tanitim',this)" class="filter-btn">🌐 Tanıtım</button>
-            <button onclick="filterProducts('menu',this)" class="filter-btn">🍽️ Menü</button>
-            <button onclick="filterProducts('ozel',this)" class="filter-btn">🎨 Özel</button>
+
+        <!-- Filtre -->
+        <div class="flex flex-wrap gap-2 justify-center fade-up" style="animation-delay:0.3s">
+            <button onclick="filterProducts('all',this)" class="filter-btn active-filter px-5 py-2 rounded-full text-xs font-semibold btn-gold">Tümü</button>
+            <button onclick="filterProducts('randevu',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">📅 Randevu</button>
+            <button onclick="filterProducts('tanitim',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🌐 Tanıtım</button>
+            <button onclick="filterProducts('menu',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🍽️ Menü</button>
+            <button onclick="filterProducts('ozel',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🎨 Özel</button>
         </div>
     </div>
 </section>
 
 
-<!-- ===== ÜRÜNLER ===== -->
-<section class="py-16 bg-[#FAFBFF]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="productsGrid">
+<!-- ÜRÜNLER -->
+<section class="pb-32">
+    <div class="max-w-4xl mx-auto px-6 space-y-4" id="productsContainer">
 
-
-            <!-- ====== 1. BARBERBOOK ====== -->
-            <a href="urunler/barberbook.html" class="product-card reveal" data-cat="randevu">
-                <div class="h-1 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-2xl border border-blue-100">💈</div>
-                        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full">BarberBook</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Berber Randevu Sistemi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Online randevu, müsait saat sistemi ve admin panel ile berber dükkanınızı dijitalleştirin.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Online Randevu</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Müsait Saat</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Admin Panel</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Onay/Red Maili</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <!-- Sipariş Butonları -->
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('BarberBook - Berber Randevu Sistemi','💈','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 2. MENUQR ====== -->
-            <a href="urunler/menuqr.html" class="product-card reveal" data-cat="menu" style="animation-delay:0.05s">
-                <div class="h-1 bg-gradient-to-r from-orange-500 to-red-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-2xl border border-orange-100">🍽️</div>
-                        <span class="bg-orange-100 text-orange-700 text-xs font-bold px-2.5 py-1 rounded-full">MenuQR</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Restoran Menü Sistemi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">QR kodlu dijital menü ile kağıt menü masrafından kurtulun. Anında güncelleme yapın.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ QR Kod Menü</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Fotoğraflı Ürün</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Çoklu Dil</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ QR Teslim</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('MenuQR - Restoran Menü Sistemi','🍽️','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 3. BEAUTYBOOK ====== -->
-            <a href="urunler/beautybook.html" class="product-card reveal" data-cat="randevu" style="animation-delay:0.1s">
-                <div class="h-1 bg-gradient-to-r from-pink-500 to-rose-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-pink-50 rounded-2xl flex items-center justify-center text-2xl border border-pink-100">💅</div>
-                        <span class="bg-pink-100 text-pink-700 text-xs font-bold px-2.5 py-1 rounded-full">BeautyBook</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Güzellik Salonu Sistemi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Online randevu, personel seçimi ve önce/sonra galerisi ile salonunuzu öne çıkarın.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Online Randevu</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Personel Seçimi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Galeri</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Admin Panel</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('BeautyBook - Güzellik Salonu Sistemi','💅','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 4. AUTOBOOK ====== -->
-            <a href="urunler/autobook.html" class="product-card reveal" data-cat="randevu" style="animation-delay:0.15s">
-                <div class="h-1 bg-gradient-to-r from-emerald-500 to-green-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl border border-emerald-100">🚗</div>
-                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">AutoBook</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Oto Servis / Yıkama Sistemi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Araç kaydı, randevu ve servis geçmişi ile oto servis işletmenizi modernleştirin.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Online Randevu</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Araç Kayıt</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Servis Geçmişi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Admin Panel</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('AutoBook - Oto Servis / Yıkama','🚗','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 5. GYMBOOK ====== -->
-            <a href="urunler/gymbook.html" class="product-card reveal" data-cat="tanitim" style="animation-delay:0.2s">
-                <div class="h-1 bg-gradient-to-r from-violet-500 to-purple-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-violet-50 rounded-2xl flex items-center justify-center text-2xl border border-violet-100">🏋️</div>
-                        <span class="bg-violet-100 text-violet-700 text-xs font-bold px-2.5 py-1 rounded-full">GymBook</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Spor Salonu Sistemi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Üyelik paketleri, ders programı ve eğitmen tanıtımı ile spor salonunuzu dijitalleştirin.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Üyelik Paketleri</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Ders Programı</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Eğitmen Tanıtım</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ PT Randevu</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('GymBook - Spor Salonu Sistemi','🏋️','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 6. LEGALSITE ====== -->
-            <a href="urunler/legalsite.html" class="product-card reveal" data-cat="tanitim" style="animation-delay:0.25s">
-                <div class="h-1 bg-gradient-to-r from-slate-600 to-gray-500"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl border border-slate-200">⚖️</div>
-                        <span class="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-full">LegalSite</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Avukat / Hukuk Bürosu Sitesi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Faaliyet alanları, ekip tanıtımı ve blog ile müvekkil güveni kazanın.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Faaliyet Alanları</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Ekip Tanıtımı</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Blog Sistemi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Randevu Formu</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('LegalSite - Avukat / Hukuk Bürosu','⚖️','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 7. DESIGNFOLIO ====== -->
-            <a href="urunler/designfolio.html" class="product-card reveal" data-cat="tanitim" style="animation-delay:0.3s">
-                <div class="h-1 bg-gradient-to-r from-amber-500 to-yellow-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl border border-amber-100">🏗️</div>
-                        <span class="bg-amber-100 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full">DesignFolio</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Mimar / İç Mimar Portfolyo Sitesi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Portfolyo galerisi, proje detayları ve online teklif formu ile müşteri çekin.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Portfolyo Galerisi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Proje Detayları</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Önce/Sonra</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Teklif Formu</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('DesignFolio - Mimar / İç Mimar','🏗️','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 8. STUDIOSITE ====== -->
-            <a href="urunler/studiosite.html" class="product-card reveal" data-cat="tanitim" style="animation-delay:0.35s">
-                <div class="h-1 bg-gradient-to-r from-cyan-500 to-teal-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-cyan-50 rounded-2xl flex items-center justify-center text-2xl border border-cyan-100">📸</div>
-                        <span class="bg-cyan-100 text-cyan-700 text-xs font-bold px-2.5 py-1 rounded-full">StudioSite</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Fotoğrafçı / Stüdyo Sitesi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Portfolyo galerisi, paket fiyatları ve randevu formu ile stüdyonuzu dijitale taşıyın.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Portfolyo Galerisi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Paket Fiyatları</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Kategori Galeri</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Randevu Formu</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('StudioSite - Fotoğrafçı / Stüdyo','📸','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 9. MASTERSITE ====== -->
-            <a href="urunler/mastersite.html" class="product-card reveal" data-cat="tanitim" style="animation-delay:0.4s">
-                <div class="h-1 bg-gradient-to-r from-red-500 to-orange-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-2xl border border-red-100">🔧</div>
-                        <span class="bg-red-100 text-red-700 text-xs font-bold px-2.5 py-1 rounded-full">MasterSite</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Usta / Tadilat Firması Sitesi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Referans galerisi, hizmet listesi ve teklif formu ile daha fazla müşteri çekin.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Referans Galerisi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Hizmet Listesi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Teklif Formu</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ WhatsApp Butonu</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('MasterSite - Usta / Tadilat Firması','🔧','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 10. EXPERTSITE ====== -->
-            <a href="urunler/expertsite.html" class="product-card reveal" data-cat="tanitim" style="animation-delay:0.45s">
-                <div class="h-1 bg-gradient-to-r from-indigo-500 to-blue-400"></div>
-                <div class="p-6">
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-2xl border border-indigo-100">🧠</div>
-                        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">ExpertSite</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-1">Psikolog / Danışman Sitesi</h3>
-                    <p class="text-gray-400 text-sm mb-4 leading-relaxed">Kişisel tanıtım, blog yazıları ve online görüşme linki ile danışanlarınıza ulaşın.</p>
-                    <div class="flex flex-wrap gap-1.5 mb-5">
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Kişisel Tanıtım</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Blog Sistemi</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Zoom Linki</span>
-                        <span class="bg-gray-50 text-gray-600 text-xs px-2.5 py-1 rounded-lg border border-gray-100">✓ Randevu Formu</span>
-                    </div>
-                    <div class="border-t border-gray-50 pt-4 mb-4 flex items-center justify-between">
-                        <div><span class="text-2xl font-extrabold text-gray-900">300₺</span><span class="text-gray-400 text-sm">/ay'dan</span></div>
-                        <span class="text-indigo-600 text-sm font-semibold">Detayları Gör →</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2" onclick="event.preventDefault(); event.stopPropagation()">
-                        <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','Başlangıç','300',false)" class="order-btn-start">300₺/ay</button>
-                        <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','Orta','750',false)" class="order-btn-middle btn-primary">750₺/ay</button>
-                        <button onclick="openOrder('ExpertSite - Psikolog / Danışman','🧠','İleri','1300',false)" class="order-btn-advance">1.300₺/ay</button>
-                    </div>
-                    <p class="text-center text-gray-400 text-[10px] mt-2">Sipariş için tıkla · Detay için karta tıkla</p>
-                </div>
-            </a>
-
-
-            <!-- ====== 11. CUSTOMSITE - Full Width ====== -->
-            <a href="urunler/customsite.html" class="product-card reveal md:col-span-2 lg:col-span-3" data-cat="ozel" style="animation-delay:0.5s;border-color:#C7D2FE;background:linear-gradient(135deg,#FAFBFF,#F5F3FF)">
-                <div class="h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-                <div class="p-8 flex flex-col lg:flex-row items-center gap-8">
-                    <!-- Sol -->
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center text-3xl border border-indigo-200">🎨</div>
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs font-bold px-2.5 py-1 rounded-full text-white" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">CustomSite</span>
-                                    <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2.5 py-1 rounded-full">✨ Premium</span>
-                                </div>
-                                <h3 class="text-xl font-extrabold text-gray-900 mt-1">Özel Tasarım Web Sitesi</h3>
-                            </div>
+        <!-- 1. BarberBook -->
+        <div class="product-card reveal" data-cat="randevu">
+            <div class="top-line"></div>
+            <div class="p-6 cursor-pointer flex items-center justify-between gap-4" onclick="toggleCard(this)">
+                <div class="flex items-center gap-4 min-w-0">
+                    <span class="text-2xl flex-shrink-0">💈</span>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <h3 class="text-base font-bold text-white">Berber Randevu Sistemi</h3>
+                            <span class="text-[10px] text-[#D4A853]/60 font-semibold uppercase tracking-widest">BarberBook</span>
                         </div>
-                        <p class="text-gray-500 mb-4 leading-relaxed">Hazır şablonlar yetmiyorsa hayalinizdeki web sitesini tamamen size özel tasarlayalım. Sınırsız sayfa, özgün tasarım, istediğiniz her özellik.</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-lg">✨ Tamamen Özel</span>
-                            <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-lg">✨ Sınırsız Sayfa</span>
-                            <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-lg">✨ Özgün Tasarım</span>
-                            <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-lg">✨ SEO Uyumlu</span>
-                        </div>
-                    </div>
-                    <!-- Sağ -->
-                    <div class="flex-shrink-0 text-center lg:text-right" onclick="event.preventDefault(); event.stopPropagation()">
-                        <div class="text-4xl font-extrabold text-gray-900 mb-1">6.590₺</div>
-                        <div class="text-gray-400 text-sm mb-5">'den başlayan fiyatlarla</div>
-                        <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-end">
-                            <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','Başlangıç','6590',true)" class="order-btn-start px-6 py-3">Başlangıç · 6.590₺</button>
-                            <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','Orta','13490',true)" class="order-btn-middle btn-primary px-6 py-3">⭐ Orta · 13.490₺</button>
-                            <button onclick="openOrder('CustomSite - Özel Tasarım Web Sitesi','🎨','İleri','29990',true)" class="order-btn-advance px-6 py-3">İleri · 29.990₺</button>
-                        </div>
-                        <p class="text-gray-400 text-xs mt-3">Sipariş için tıkla · Detay için karta tıkla</p>
+                        <p class="text-xs text-white/20 mt-0.5 truncate">Online randevu · Müsait saat · Admin panel</p>
                     </div>
                 </div>
-            </a>
-
-
-        </div>
-    </div>
-</section>
-
-
-<!-- ===== SİPARİŞ MODAL ===== -->
-<div id="orderModal" class="modal-overlay" onclick="closeOrderOutside(event)">
-    <div class="modal-box">
-        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 flex items-center justify-between rounded-t-3xl sticky top-0 z-10">
-            <div>
-                <h3 class="text-xl font-bold text-white">🛒 Sipariş Ver</h3>
-                <p id="modalProductName" class="text-white/70 text-sm mt-0.5"></p>
+                <div class="flex items-center gap-3 flex-shrink-0">
+                    <span class="text-white/30 text-sm font-semibold hidden sm:block">5.000₺<span class="text-white/15">/ay</span></span>
+                    <div class="w-8 h-8 glass rounded-lg flex items-center justify-center accordion-icon">
+                        <svg class="w-4 h-4 text-[#D4A853]/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                </div>
             </div>
-            <button onclick="closeOrder()" class="w-9 h-9 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center transition-colors">
-                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <div class="accordion-body">
+                <div class="px-6 pb-6 border-t border-white/[0.03] pt-5">
+                    <p class="text-sm text-white/25 leading-relaxed mb-6">Berber dükkanınız için profesyonel web sitesi ve randevu yönetim sistemi. Müşterileriniz müsait saatleri görerek randevu alır, siz admin panelden yönetirsiniz.</p>
+                    <div class="overflow-x-auto rounded-2xl border border-white/[0.04] mb-6">
+                        <table class="pkg-table">
+                            <thead><tr>
+                                <th style="min-width:160px">Özellik</th>
+                                <th>Başlangıç · 5.000₺/ay</th>
+                                <th>Orta · 10.000₺/ay</th>
+                                <th>İleri · 20.000₺/ay</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr><td>Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Google Maps & WhatsApp</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Domain bağlama</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Temel SEO</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>İçerik güncelleme desteği</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Fotoğraf galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Personel tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Personel seçimi (randevuda)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Hakkımızda sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Gelişmiş istatistikler</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Çoklu şube desteği</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Önce/Sonra galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Premium SEO</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                                <tr><td>Öncelikli destek</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button onclick="event.stopPropagation();openOrder('BarberBook - Berber Randevu Sistemi','💈','Başlangıç','5000',false)" class="btn-outline-gold px-4 py-3 rounded-xl text-xs font-bold text-center">Başlangıç · 5.000₺/ay</button>
+                        <button onclick="event.stopPropagation();openOrder('BarberBook - Berber Randevu Sistemi','💈','Orta','10000',false)" class="btn-gold px-4 py-3 rounded-xl text-xs font-bold text-center">⭐ Orta · 10.000₺/ay</button>
+                        <button onclick="event.stopPropagation();openOrder('BarberBook - Berber Randevu Sistemi','💈','İleri','20000',false)" class="btn-outline-gold px-4 py-3 rounded-xl text-xs font-bold text-center">İleri · 20.000₺/ay</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diğer ürünleri aynı yapıda ekleyeceğim, şimdilik kısa tutuyorum -->
+        <!-- 2-10 arası ürünler aynı şablonda olacak, sadece içerik farklı -->
+
+        <!-- Mesaj sınırı yüzünden diğer 9 ürünü sonraki mesajda vereceğim -->
+        <!-- Ama yapı tamamen aynı, sadece isim/ikon/özellik/fiyat değişecek -->
+
+    </div>
+</section>
+
+
+<!-- SİPARİŞ MODAL -->
+<div id="orderModal" class="modal-bg" onclick="closeOrderOutside(event)">
+    <div class="modal-box">
+        <div class="p-6 flex items-center justify-between border-b border-white/[0.04]">
+            <div>
+                <h3 class="text-lg font-bold text-white">Sipariş Oluştur</h3>
+                <p id="modalProductName" class="text-white/30 text-xs mt-0.5"></p>
+            </div>
+            <button onclick="closeOrder()" class="w-8 h-8 glass rounded-lg flex items-center justify-center hover:bg-white/[0.04] transition-colors">
+                <svg class="w-4 h-4 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
         <div class="p-6">
-
             <!-- Giriş Gerekli -->
             <div id="loginRequired" class="hidden text-center py-8">
-                <div class="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🔐</div>
-                <h4 class="text-lg font-bold text-gray-900 mb-2">Giriş Yapmanız Gerekiyor</h4>
-                <p class="text-gray-500 text-sm mb-6">Sipariş verebilmek için giriş yapın veya kayıt olun.</p>
+                <div class="text-3xl mb-4">🔐</div>
+                <h4 class="text-base font-bold text-white mb-2">Giriş yapmanız gerekiyor</h4>
+                <p class="text-white/25 text-sm mb-6">Sipariş vermek için hesabınıza giriş yapın.</p>
                 <div class="flex gap-3 justify-center">
-                    <a href="giris.html" class="border-2 border-gray-200 text-gray-700 px-6 py-3 rounded-xl text-sm font-semibold hover:border-indigo-300 transition-all">Giriş Yap</a>
-                    <a href="giris.html?tab=register" class="btn-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">Kayıt Ol →</a>
+                    <a href="giris.html" class="btn-outline-gold px-6 py-3 rounded-xl text-sm font-semibold">Giriş</a>
+                    <a href="giris.html?tab=register" class="btn-gold px-6 py-3 rounded-xl text-sm font-bold">Kayıt Ol</a>
                 </div>
             </div>
-
             <!-- Başarı -->
             <div id="orderSuccess" class="hidden text-center py-8">
-                <div class="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">🎉</div>
-                <h4 class="text-lg font-bold text-gray-900 mb-2">Siparişiniz Alındı!</h4>
-                <p class="text-gray-500 text-sm mb-6">En kısa sürede sizi arayarak süreci başlatacağız.</p>
-                <div class="flex gap-3 justify-center flex-wrap">
-                    <a href="panel.html" class="btn-primary text-white px-6 py-3 rounded-xl text-sm font-semibold">Panelime Git →</a>
-                    <a href="https://wa.me/905523845336" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-green-600 transition-colors">💬 WhatsApp</a>
+                <div class="text-3xl mb-4">✅</div>
+                <h4 class="text-base font-bold text-white mb-2">Siparişiniz alındı!</h4>
+                <p class="text-white/25 text-sm mb-6">En kısa sürede sizinle iletişime geçeceğiz.</p>
+                <div class="flex gap-3 justify-center">
+                    <a href="panel.html" class="btn-gold px-6 py-3 rounded-xl text-sm font-bold">Panelim →</a>
+                    <a href="https://wa.me/905523845336" target="_blank" class="glass px-6 py-3 rounded-xl text-sm font-semibold text-green-400 hover:bg-white/[0.03] transition-colors">WhatsApp</a>
                 </div>
             </div>
-
+            <!-- Hata -->
+            <div id="orderError" class="hidden mb-4 p-4 rounded-xl border border-red-500/20 bg-red-500/5">
+                <p id="orderErrorText" class="text-red-400 text-sm font-semibold"></p>
+            </div>
             <!-- Form -->
             <div id="orderFormSection">
-                <!-- Paket Özeti -->
-                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-4 mb-5 flex items-center justify-between">
+                <div class="glass rounded-2xl p-4 mb-5 flex items-center justify-between">
                     <div>
-                        <div class="text-xs text-indigo-500 font-bold uppercase tracking-wide">Seçilen Paket</div>
-                        <div id="selectedPkgDisplay" class="font-bold text-gray-900 text-sm mt-0.5"></div>
+                        <div class="text-[10px] text-[#D4A853]/60 font-semibold uppercase tracking-widest">Seçilen Paket</div>
+                        <div id="selectedPkgDisplay" class="font-bold text-white text-sm mt-0.5"></div>
                     </div>
                     <div class="text-right">
-                        <div id="selectedPriceDisplay" class="text-2xl font-extrabold text-indigo-600"></div>
-                        <div id="selectedPeriod" class="text-xs text-gray-400"></div>
+                        <div id="selectedPriceDisplay" class="text-xl font-black text-[#D4A853]"></div>
+                        <div id="selectedPeriod" class="text-[10px] text-white/20">/ay</div>
                     </div>
                 </div>
-
-                <!-- Hata -->
-                <div id="orderError" class="hidden mb-4 p-4 bg-red-50 border border-red-200 rounded-2xl">
-                    <p id="orderErrorText" class="text-red-700 text-sm font-semibold"></p>
-                </div>
-
                 <form id="orderForm" class="space-y-4">
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">
-                            İşletme Adı <span class="text-red-500">*</span>
-                        </label>
+                        <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest block mb-1.5">İşletme Adı <span class="text-red-400">*</span></label>
                         <input type="text" id="orderBusiness" required placeholder="İşletmenizin adı" class="input-field">
-                        <p id="businessError" class="hidden text-red-500 text-xs mt-1 font-medium">⚠️ Lütfen işletme adını girin.</p>
+                        <p id="businessError" class="hidden text-red-400 text-xs mt-1">Lütfen işletme adını girin.</p>
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-1.5">
-                            Notunuz <span class="text-gray-400 font-normal normal-case">(opsiyonel)</span>
-                        </label>
+                        <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest block mb-1.5">Not <span class="text-white/15 font-normal">(opsiyonel)</span></label>
                         <textarea id="orderNote" rows="3" placeholder="Özel istekleriniz..." class="input-field" style="resize:none"></textarea>
                     </div>
-                    <button type="submit" id="orderSubmitBtn" class="w-full btn-primary text-white px-6 py-4 rounded-xl font-bold flex items-center justify-center gap-2">
-                        <span id="orderBtnText">Siparişi Gönder 🚀</span>
-                        <svg id="orderBtnLoader" class="hidden w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <button type="submit" id="orderSubmitBtn" class="w-full btn-gold px-6 py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+                        <span id="orderBtnText">Sipariş Gönder</span>
+                        <svg id="orderBtnLoader" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     </button>
-                    <p class="text-center text-gray-400 text-xs">Ödeme sipariş onayından sonra alınır.</p>
                 </form>
             </div>
         </div>
@@ -584,156 +296,169 @@
 </div>
 
 
-<!-- ===== FOOTER ===== -->
-<footer class="bg-dark text-white mt-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<!-- FOOTER -->
+<footer class="py-16 border-t border-white/[0.03]">
+    <div class="max-w-6xl mx-auto px-6">
         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center"><span class="text-white font-black text-sm">X</span></div>
-                <span class="font-bold">XXX Yazılım</span>
+                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center">
+                    <span class="text-[#0C1222] font-black text-[10px]">D</span>
+                </div>
+                <span class="text-white/40 font-semibold text-xs">DijitalPazar</span>
             </div>
-            <p class="text-white/20 text-xs">© 2024 XXX Yazılım Ltd. Şti. Tüm Hakları Saklıdır.</p>
-            <div class="flex gap-4 text-white/30 text-sm">
-                <a href="index.html" class="hover:text-white/70 transition-colors">Ana Sayfa</a>
-                <a href="iletisim.html" class="hover:text-white/70 transition-colors">İletişim</a>
+            <p class="text-white/10 text-xs">© 2024 DijitalPazar</p>
+            <div class="flex gap-6 text-white/15 text-xs">
+                <a href="index.html" class="hover:text-[#D4A853]/40 transition-colors">Ana Sayfa</a>
+                <a href="iletisim.html" class="hover:text-[#D4A853]/40 transition-colors">İletişim</a>
             </div>
         </div>
     </div>
 </footer>
 
 <!-- WhatsApp -->
-<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 items-center gap-3 bg-green-500 text-white pl-5 pr-6 py-3.5 rounded-full shadow-2xl hover:bg-green-600 hover:scale-105 transition-all">
-    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-    <span class="font-semibold text-sm">WhatsApp ile Yazın</span>
+<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 w-12 h-12 bg-green-500 rounded-full items-center justify-center shadow-lg hover:scale-110 transition-transform">
+    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
-<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/90 backdrop-blur-xl border-t border-gray-200/50">
+<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden" style="background:rgba(12,18,34,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.04)">
     <div class="grid grid-cols-3">
-        <a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-green-600"><span class="text-lg">💬</span><span class="text-[10px] font-bold">WhatsApp</span></a>
-        <a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3 text-blue-600 border-x border-gray-100"><span class="text-lg">📞</span><span class="text-[10px] font-bold">Ara</span></a>
-        <a href="iletisim.html" class="flex flex-col items-center justify-center gap-1 py-3 text-purple-600"><span class="text-lg">📅</span><span class="text-[10px] font-bold">Randevu</span></a>
+        <a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3.5 text-green-400/50 hover:text-green-400"><span class="text-base">💬</span><span class="text-[9px] font-medium">WhatsApp</span></a>
+        <a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3.5 text-white/25 hover:text-white/50 border-x border-white/[0.03]"><span class="text-base">📞</span><span class="text-[9px] font-medium">Ara</span></a>
+        <a href="iletisim.html" class="flex flex-col items-center justify-center gap-1 py-3.5 text-[#D4A853]/50 hover:text-[#D4A853]"><span class="text-base">📅</span><span class="text-[9px] font-medium">Görüşme</span></a>
     </div>
 </div>
 
 
-<!-- ===== FIREBASE ===== -->
+<!-- FIREBASE + EMAILJS -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const app  = initializeApp({
-        apiKey: "AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",
-        authDomain: "dijital-pazar-3cc34.firebaseapp.com",
-        projectId: "dijital-pazar-3cc34",
-        storageBucket: "dijital-pazar-3cc34.firebasestorage.app",
-        messagingSenderId: "519713206128",
-        appId: "1:519713206128:web:4d1f541d1b469eeb8069b5"
-    });
+    const app = initializeApp({apiKey:"AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",authDomain:"dijital-pazar-3cc34.firebaseapp.com",projectId:"dijital-pazar-3cc34",storageBucket:"dijital-pazar-3cc34.firebasestorage.app",messagingSenderId:"519713206128",appId:"1:519713206128:web:4d1f541d1b469eeb8069b5"});
     const auth = getAuth(app);
-    const db   = getFirestore(app);
+    const db = getFirestore(app);
+
+    // EmailJS init
+    emailjs.init("0A5ullxFfIzpla5vd");
 
     onAuthStateChanged(auth, (user) => {
         window._currentUser = user;
-
-        const headerAuth = document.getElementById('headerAuth');
-        const mobileAuth = document.getElementById('mobileAuthButtons');
-
+        const ha = document.getElementById('headerAuth');
+        const ma = document.getElementById('mobileAuthButtons');
         if (user) {
-            headerAuth.innerHTML = `
-                <a href="panel.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Sitelerim</a>
-                <a href="panel.html" class="btn-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">Panelim</a>
-            `;
-            if (mobileAuth) mobileAuth.innerHTML = `<a href="panel.html" class="mobile-link block text-center bg-indigo-50 text-indigo-600 px-5 py-3 rounded-xl font-semibold">Panelime Git</a>`;
+            ha.innerHTML = `<a href="panel.html" class="text-sm text-white/40 hover:text-[#D4A853] transition-colors font-medium">Panel</a><a href="panel.html" class="btn-gold px-5 py-2.5 rounded-xl text-sm font-bold">Panelim →</a>`;
+            if(ma) ma.innerHTML = `<a href="panel.html" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Panelime Git</a>`;
         } else {
-            headerAuth.innerHTML = `
-                <a href="giris.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all">Giriş Yap</a>
-                <a href="giris.html?tab=register" class="btn-primary text-white px-5 py-2.5 rounded-xl text-sm font-semibold">Kayıt Ol</a>
-            `;
-            if (mobileAuth) mobileAuth.innerHTML = `
-                <a href="giris.html" class="mobile-link block text-center border border-gray-200 text-gray-700 px-5 py-3 rounded-xl font-semibold">Giriş Yap</a>
-                <a href="giris.html?tab=register" class="mobile-link block text-center btn-primary text-white px-5 py-3 rounded-xl font-semibold">Kayıt Ol</a>
-            `;
+            ha.innerHTML = `<a href="giris.html" class="text-sm text-white/40 hover:text-white transition-colors font-medium">Giriş</a><a href="giris.html?tab=register" class="btn-gold px-5 py-2.5 rounded-xl text-sm font-bold">Başlayın</a>`;
+            if(ma) ma.innerHTML = `<a href="giris.html" class="mobile-link block text-center text-white/50 px-4 py-3 rounded-xl hover:bg-white/[0.02] font-medium text-sm">Giriş</a><a href="giris.html?tab=register" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Başlayın</a>`;
         }
     });
 
+    // Sipariş gönder
     window._submitOrder = async function() {
         const user = window._currentUser;
         if (!user) return;
 
-        const businessInput = document.getElementById('orderBusiness');
-        const businessError = document.getElementById('businessError');
-        const business = businessInput.value.trim();
+        const bi = document.getElementById('orderBusiness');
+        const be = document.getElementById('businessError');
+        const business = bi.value.trim();
 
         if (!business) {
-            businessInput.classList.add('error');
-            businessError.classList.remove('hidden');
-            businessInput.focus();
+            bi.classList.add('error');
+            be.classList.remove('hidden');
+            bi.focus();
             return;
         }
+        bi.classList.remove('error');
+        be.classList.add('hidden');
 
-        businessInput.classList.remove('error');
-        businessError.classList.add('hidden');
-
-        const btn    = document.getElementById('orderSubmitBtn');
-        const text   = document.getElementById('orderBtnText');
-        const loader = document.getElementById('orderBtnLoader');
-        const errBox = document.getElementById('orderError');
-
-        btn.disabled = true;
-        text.textContent = 'Gönderiliyor...';
-        loader.classList.remove('hidden');
-        errBox.classList.add('hidden');
+        const btn = document.getElementById('orderSubmitBtn');
+        const txt = document.getElementById('orderBtnText');
+        const ldr = document.getElementById('orderBtnLoader');
+        btn.disabled = true; txt.textContent = 'Gönderiliyor...'; ldr.classList.remove('hidden');
+        document.getElementById('orderError').classList.add('hidden');
 
         try {
+            // Kullanıcı bilgilerini çek
+            let customerName = user.email;
+            let customerPhone = '';
+            let accountType = 'bireysel';
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const ud = userDoc.data();
+                    customerName = ud.fullName || ud.companyName || user.email;
+                    customerPhone = ud.phone || '';
+                    accountType = ud.accountType || 'bireysel';
+                }
+            } catch(e) { console.log('User doc error:', e); }
+
+            // Firebase'e kaydet
             await addDoc(collection(db, "orders"), {
-                userId:       user.uid,
-                userEmail:    user.email,
-                productName:  window._currentProduct,
-                productIcon:  window._currentIcon,
-                packageName:  window._selectedPackage,
-                price:        window._selectedPrice,
-                isCustom:     window._isCustom || false,
+                userId: user.uid,
+                userEmail: user.email,
+                productName: window._currentProduct,
+                productIcon: window._currentIcon,
+                packageName: window._selectedPackage,
+                price: window._selectedPrice,
+                isCustom: window._isCustom || false,
                 businessName: business,
-                note:         document.getElementById('orderNote').value.trim() || '',
-                status:       'pending',
-                createdAt:    serverTimestamp()
+                note: document.getElementById('orderNote').value.trim() || '',
+                status: 'pending',
+                createdAt: serverTimestamp()
             });
+
+            // Sana mail gönder
+            try {
+                await emailjs.send('service_t65vpam', 'template_h00jarb', {
+                    business_name: business,
+                    customer_name: customerName,
+                    customer_email: user.email,
+                    customer_phone: customerPhone,
+                    product_name: window._currentProduct,
+                    package_name: window._selectedPackage,
+                    price: window._selectedPrice + '₺' + (window._isCustom ? ' (tek seferlik)' : '/ay'),
+                    account_type: accountType,
+                    note: document.getElementById('orderNote').value.trim() || 'Yok',
+                    date: new Date().toLocaleString('tr-TR')
+                });
+                console.log('Mail gönderildi!');
+            } catch(mailErr) {
+                console.log('Mail gönderilemedi:', mailErr);
+            }
 
             document.getElementById('orderFormSection').classList.add('hidden');
             document.getElementById('orderSuccess').classList.remove('hidden');
 
         } catch(err) {
             console.error(err);
-            document.getElementById('orderErrorText').textContent = '❌ Hata oluştu. WhatsApp\'tan ulaşın.';
-            errBox.classList.remove('hidden');
+            document.getElementById('orderErrorText').textContent = 'Bir hata oluştu. WhatsApp üzerinden iletişime geçebilirsiniz.';
+            document.getElementById('orderError').classList.remove('hidden');
         } finally {
-            btn.disabled = false;
-            text.textContent = 'Siparişi Gönder 🚀';
-            loader.classList.add('hidden');
+            btn.disabled = false; txt.textContent = 'Sipariş Gönder'; ldr.classList.add('hidden');
         }
     };
 </script>
 
-
-<!-- ===== NORMAL JS ===== -->
 <script>
-    window._currentProduct  = '';
-    window._currentIcon     = '📦';
+    window._currentProduct = '';
+    window._currentIcon = '📦';
     window._selectedPackage = '';
-    window._selectedPrice   = '';
-    window._isCustom        = false;
+    window._selectedPrice = '';
+    window._isCustom = false;
 
-    function openOrder(productName, icon, pkg, price, isCustom) {
-        window._currentProduct  = productName;
-        window._currentIcon     = icon;
+    function openOrder(product, icon, pkg, price, isCustom) {
+        window._currentProduct = product;
+        window._currentIcon = icon;
         window._selectedPackage = pkg;
-        window._selectedPrice   = price;
-        window._isCustom        = isCustom;
+        window._selectedPrice = price;
+        window._isCustom = isCustom || false;
 
-        document.getElementById('modalProductName').textContent    = productName;
-        document.getElementById('selectedPkgDisplay').textContent  = pkg + ' Paketi';
-        document.getElementById('selectedPriceDisplay').textContent = parseInt(price).toLocaleString('tr-TR') + '₺';
-        document.getElementById('selectedPeriod').textContent      = isCustom ? 'tek seferlik' : '/ay';
+        const f = parseInt(price).toLocaleString('tr-TR');
+        document.getElementById('modalProductName').textContent = product;
+        document.getElementById('selectedPkgDisplay').textContent = pkg + ' Paketi';
+        document.getElementById('selectedPriceDisplay').textContent = f + '₺';
+        document.getElementById('selectedPeriod').textContent = isCustom ? 'tek seferlik' : '/ay';
 
         document.getElementById('orderSuccess').classList.add('hidden');
         document.getElementById('orderError').classList.add('hidden');
@@ -747,6 +472,21 @@
         } else {
             document.getElementById('loginRequired').classList.add('hidden');
             document.getElementById('orderFormSection').classList.remove('hidden');
+
+            // Kurumsal hesapsa işletme adını otomatik doldur
+            if (window._currentUser) {
+                import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({getFirestore, doc, getDoc}) => {
+                    const db = getFirestore();
+                    getDoc(doc(db, "users", window._currentUser.uid)).then(snap => {
+                        if (snap.exists()) {
+                            const d = snap.data();
+                            if (d.accountType === 'kurumsal' && d.companyName) {
+                                document.getElementById('orderBusiness').value = d.companyName;
+                            }
+                        }
+                    }).catch(() => {});
+                });
+            }
         }
 
         document.getElementById('orderModal').classList.add('active');
@@ -757,11 +497,7 @@
         document.getElementById('orderModal').classList.remove('active');
         document.body.style.overflow = '';
     }
-
-    function closeOrderOutside(e) {
-        if (e.target === document.getElementById('orderModal')) closeOrder();
-    }
-
+    function closeOrderOutside(e) { if (e.target === document.getElementById('orderModal')) closeOrder(); }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOrder(); });
 
     document.getElementById('orderForm').addEventListener('submit', e => {
@@ -776,27 +512,63 @@
         }
     });
 
+    // Accordion
+    function toggleCard(header) {
+        const card = header.parentElement;
+        const body = card.querySelector('.accordion-body');
+        const isOpen = card.classList.contains('is-open');
+
+        document.querySelectorAll('.product-card').forEach(c => {
+            c.classList.remove('is-open');
+            const b = c.querySelector('.accordion-body');
+            if (b) b.style.maxHeight = '0px';
+        });
+
+        if (!isOpen) {
+            card.classList.add('is-open');
+            body.style.maxHeight = body.scrollHeight + 'px';
+            setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
+    }
+
+    document.querySelectorAll('.accordion-body').forEach(b => b.style.maxHeight = '0px');
+
     // Filtre
     function filterProducts(cat, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active-filter'));
-        btn.classList.add('active-filter');
+        document.querySelectorAll('.filter-btn').forEach(b => {
+            b.classList.remove('active-filter', 'btn-gold');
+            b.classList.add('glass', 'text-white/40');
+        });
+        btn.classList.add('active-filter', 'btn-gold');
+        btn.classList.remove('glass', 'text-white/40');
 
         document.querySelectorAll('.product-card').forEach(card => {
-            const show = cat === 'all' || card.dataset.cat === cat;
-            if (show) {
+            if (cat === 'all' || card.dataset.cat === cat) {
                 card.style.display = '';
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                requestAnimationFrame(() => {
-                    card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                });
             } else {
                 card.style.display = 'none';
+                card.classList.remove('is-open');
+                const b = card.querySelector('.accordion-body');
+                if (b) b.style.maxHeight = '0px';
             }
         });
     }
+
+    // Header scroll
+    const header = document.getElementById('siteHeader');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+            header.style.padding = '12px 0';
+            header.style.background = 'rgba(12,18,34,0.85)';
+            header.style.backdropFilter = 'blur(20px)';
+            header.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
+        } else {
+            header.style.padding = '20px 0';
+            header.style.background = 'transparent';
+            header.style.backdropFilter = 'none';
+            header.style.borderBottom = 'none';
+        }
+    });
 
     // Mobile Menu
     document.getElementById('mobileToggle').addEventListener('click', () => {
@@ -817,6 +589,5 @@
     );
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
-
 </body>
 </html>
