@@ -3,436 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudioSite - Fotoğrafçı / Stüdyo Sitesi | DijitalPazar</title>
-    <meta name="description" content="Fotoğrafçı ve stüdyolar için portfolyo sitesi. Kategori bazlı galeri, paket fiyatları ve randevu formu.">
+    <title>StudioSite - Fotoğrafçı Sitesi | DijitalPazar</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{dark:'#0C1222',gold:'#D4A853'}}}}</script>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif;background:#0C1222;color:#fff;overflow-x:hidden}
-        ::selection{background:rgba(212,168,83,0.3)}
-        ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#D4A853,#B8860B);border-radius:10px}
-        .text-gradient-gold{background:linear-gradient(135deg,#D4A853,#F5D88E,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .btn-gold{background:linear-gradient(135deg,#D4A853,#C4973D);color:#0C1222;font-weight:700;border:none;cursor:pointer;transition:all 0.3s}
-        .btn-gold:hover{box-shadow:0 20px 60px -15px rgba(212,168,83,0.4);transform:translateY(-2px)}
-        .btn-outline-gold{background:transparent;border:1.5px solid rgba(212,168,83,0.25);color:#D4A853;cursor:pointer;transition:all 0.3s}
-        .btn-outline-gold:hover{background:rgba(212,168,83,0.05);border-color:rgba(212,168,83,0.4)}
-        .glass{background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.04)}
-        .gold-badge{background:linear-gradient(135deg,rgba(212,168,83,0.12),rgba(212,168,83,0.04));border:1px solid rgba(212,168,83,0.18);color:#D4A853}
-        .input-field{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);font-size:14px;font-family:'Inter',sans-serif;transition:all 0.2s;outline:none;color:#fff}
-        .input-field:focus{border-color:rgba(212,168,83,0.4);box-shadow:0 0 0 3px rgba(212,168,83,0.1)}
-        .input-field::placeholder{color:rgba(255,255,255,0.2)}
-        .input-field.error{border-color:#EF4444}
-        .feature-yes{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(34,197,94,0.1);border-radius:50%;color:#22C55E;font-size:10px;font-weight:700;flex-shrink:0}
-        .feature-no{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(255,255,255,0.03);border-radius:50%;color:rgba(255,255,255,0.15);font-size:10px;flex-shrink:0}
-        .pkg-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:20px;padding:28px;transition:all 0.4s;position:relative;overflow:hidden;display:flex;flex-direction:column}
-        .pkg-card:hover{border-color:rgba(212,168,83,0.12);transform:translateY(-4px);box-shadow:0 30px 60px -15px rgba(0,0,0,0.4)}
-        .pkg-card.recommended{border-color:rgba(212,168,83,0.2);background:linear-gradient(160deg,rgba(212,168,83,0.04),rgba(212,168,83,0.01))}
-        .pkg-card.recommended::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#D4A853,transparent)}
-        .pkg-features{flex:1}
-        @keyframes mockFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}.mock-float{animation:mockFloat 5s ease-in-out infinite}
-        .modal-bg{position:fixed;inset:0;background:rgba(12,18,34,0.8);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s}
-        .modal-bg.active{opacity:1;pointer-events:all}
-        .modal-box{background:#101935;border:1px solid rgba(255,255,255,0.06);border-radius:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:scale(0.95);transition:transform 0.3s}
-        .modal-bg.active .modal-box{transform:scale(1)}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        @keyframes glow-pulse{0%,100%{opacity:0.1}50%{opacity:0.25}}
-        .fade-up{animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
-        .animate-spin{animation:spin 1s linear infinite}
-        .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}.reveal.active{opacity:1;transform:translateY(0)}
-        @media(max-width:1023px){body{padding-bottom:64px}}
-    </style>
+    <style>*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif;background:#0C1222;color:#fff;overflow-x:hidden}::selection{background:rgba(212,168,83,0.3)}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#D4A853,#B8860B);border-radius:10px}.text-gradient-gold{background:linear-gradient(135deg,#D4A853,#F5D88E,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}.btn-gold{background:linear-gradient(135deg,#D4A853,#C4973D);color:#0C1222;font-weight:700;border:none;cursor:pointer;transition:all 0.3s}.btn-gold:hover{box-shadow:0 20px 60px -15px rgba(212,168,83,0.4);transform:translateY(-2px)}.btn-outline-gold{background:transparent;border:1.5px solid rgba(212,168,83,0.25);color:#D4A853;cursor:pointer;transition:all 0.3s}.btn-outline-gold:hover{background:rgba(212,168,83,0.05);border-color:rgba(212,168,83,0.4)}.glass{background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.04)}.gold-badge{background:linear-gradient(135deg,rgba(212,168,83,0.12),rgba(212,168,83,0.04));border:1px solid rgba(212,168,83,0.18);color:#D4A853}.input-field{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);font-size:14px;font-family:'Inter',sans-serif;transition:all 0.2s;outline:none;color:#fff}.input-field:focus{border-color:rgba(212,168,83,0.4);box-shadow:0 0 0 3px rgba(212,168,83,0.1)}.input-field::placeholder{color:rgba(255,255,255,0.2)}.input-field.error{border-color:#EF4444}.feature-yes{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(34,197,94,0.1);border-radius:50%;color:#22C55E;font-size:10px;font-weight:700;flex-shrink:0}.feature-no{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(255,255,255,0.03);border-radius:50%;color:rgba(255,255,255,0.15);font-size:10px;flex-shrink:0}.pkg-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:20px;padding:28px;transition:all 0.4s;position:relative;overflow:hidden;display:flex;flex-direction:column}.pkg-card:hover{border-color:rgba(212,168,83,0.12);transform:translateY(-4px);box-shadow:0 30px 60px -15px rgba(0,0,0,0.4)}.pkg-card.recommended{border-color:rgba(212,168,83,0.2);background:linear-gradient(160deg,rgba(212,168,83,0.04),rgba(212,168,83,0.01))}.pkg-card.recommended::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#D4A853,transparent)}.pkg-features{flex:1}@keyframes mockFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}.mock-float{animation:mockFloat 5s ease-in-out infinite}.modal-bg{position:fixed;inset:0;background:rgba(12,18,34,0.8);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s}.modal-bg.active{opacity:1;pointer-events:all}.modal-box{background:#101935;border:1px solid rgba(255,255,255,0.06);border-radius:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:scale(0.95);transition:transform 0.3s}.modal-bg.active .modal-box{transform:scale(1)}@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes glow-pulse{0%,100%{opacity:0.1}50%{opacity:0.25}}.fade-up{animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards}.animate-spin{animation:spin 1s linear infinite}.reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}.reveal.active{opacity:1;transform:translateY(0)}@media(max-width:1023px){body{padding-bottom:64px}}</style>
 </head>
 <body class="antialiased">
 
-<!-- HEADER -->
-<header id="siteHeader" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all" style="transition-duration:0.4s">
-    <div class="max-w-6xl mx-auto px-6">
-        <div class="flex items-center justify-between">
-            <a href="../index.html" class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-900/20">
-                    <span class="text-[#0C1222] font-black text-sm">D</span>
-                </div>
-                <span class="text-white font-bold text-base tracking-tight hidden sm:block">DijitalPazar</span>
-            </a>
-            <nav class="hidden lg:flex items-center gap-8">
-                <a href="../index.html" class="text-sm text-white/40 hover:text-[#D4A853] transition-colors font-medium">Ana Sayfa</a>
-                <a href="../urunler.html" class="text-sm text-[#D4A853] font-medium">Hizmetler</a>
-                <a href="../iletisim.html" class="text-sm text-white/40 hover:text-[#D4A853] transition-colors font-medium">İletişim</a>
-            </nav>
-            <div class="hidden lg:flex items-center gap-4" id="headerAuth">
-                <a href="../giris.html" class="text-sm text-white/40 hover:text-white font-medium">Giriş</a>
-                <a href="../giris.html?tab=register" class="btn-gold px-5 py-2.5 rounded-xl text-sm">Başlayın</a>
-            </div>
-            <button id="mobileToggle" class="lg:hidden p-2 text-white/50 hover:text-[#D4A853]">
-                <svg id="menuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg>
-                <svg id="menuClose" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-        <div id="mobileMenu" class="lg:hidden hidden mt-6">
-            <div class="glass rounded-2xl p-5 space-y-1">
-                <a href="../index.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] font-medium text-sm">Ana Sayfa</a>
-                <a href="../urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-[#D4A853] bg-white/[0.02] font-medium text-sm">← Hizmetler</a>
-                <a href="../iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] font-medium text-sm">İletişim</a>
-                <div id="mobileAuthButtons" class="pt-3 mt-3 border-t border-white/5 space-y-2"></div>
-            </div>
-        </div>
-    </div>
-</header>
+<header id="siteHeader" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all" style="transition-duration:0.4s"><div class="max-w-6xl mx-auto px-6"><div class="flex items-center justify-between"><a href="../index.html" class="flex items-center gap-3"><div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-900/20"><span class="text-[#0C1222] font-black text-sm">D</span></div><span class="text-white font-bold text-base tracking-tight hidden sm:block">DijitalPazar</span></a><nav class="hidden lg:flex items-center gap-8"><a href="../index.html" class="text-sm text-white/40 hover:text-[#D4A853] transition-colors font-medium">Ana Sayfa</a><a href="../urunler.html" class="text-sm text-[#D4A853] font-medium">Hizmetler</a><a href="../iletisim.html" class="text-sm text-white/40 hover:text-[#D4A853] transition-colors font-medium">İletişim</a></nav><div class="hidden lg:flex items-center gap-4" id="headerAuth"><a href="../giris.html" class="text-sm text-white/40 hover:text-white font-medium">Giriş</a><a href="../giris.html?tab=register" class="btn-gold px-5 py-2.5 rounded-xl text-sm">Başlayın</a></div><button id="mobileToggle" class="lg:hidden p-2 text-white/50 hover:text-[#D4A853]"><svg id="menuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5"/></svg><svg id="menuClose" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div><div id="mobileMenu" class="lg:hidden hidden mt-6"><div class="glass rounded-2xl p-5 space-y-1"><a href="../index.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] font-medium text-sm">Ana Sayfa</a><a href="../urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-[#D4A853] bg-white/[0.02] font-medium text-sm">← Hizmetler</a><a href="../iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] font-medium text-sm">İletişim</a><div id="mobileAuthButtons" class="pt-3 mt-3 border-t border-white/5 space-y-2"></div></div></div></div></header>
 
-<!-- HERO -->
 <section class="pt-32 pb-16 relative overflow-hidden">
-    <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-amber-900/15 rounded-full blur-[200px]" style="animation:glow-pulse 4s ease-in-out infinite"></div>
+    <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-cyan-900/15 rounded-full blur-[200px]" style="animation:glow-pulse 4s ease-in-out infinite"></div>
     <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-amber-900/8 rounded-full blur-[200px]" style="animation:glow-pulse 4s ease-in-out infinite 2s"></div>
     <div class="relative z-10 max-w-6xl mx-auto px-6">
-        <div class="flex items-center gap-2 text-white/20 text-xs mb-10 fade-up">
-            <a href="../index.html" class="hover:text-white/40">Ana Sayfa</a><span class="text-white/10">/</span>
-            <a href="../urunler.html" class="hover:text-white/40">Hizmetler</a><span class="text-white/10">/</span>
-            <span class="text-white/40">StudioSite</span>
-        </div>
+        <div class="flex items-center gap-2 text-white/20 text-xs mb-10 fade-up"><a href="../index.html" class="hover:text-white/40">Ana Sayfa</a><span class="text-white/10">/</span><a href="../urunler.html" class="hover:text-white/40">Hizmetler</a><span class="text-white/10">/</span><span class="text-white/40">StudioSite</span></div>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
-                <div class="flex items-center gap-3 mb-8 fade-up" style="animation-delay:0.05s">
-                    <div class="w-14 h-14 bg-gradient-to-br from-amber-500/10 to-yellow-500/5 rounded-2xl flex items-center justify-center text-3xl border border-amber-500/10">📸</div>
-                    <span class="gold-badge text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">Portfolyo Sitesi</span>
-                </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-[0.95] mb-6 fade-up" style="animation-delay:0.1s;letter-spacing:-0.03em">Fotoğrafçı & Stüdyo<br><span class="text-gradient-gold">Portfolyo Sitesi</span></h1>
-                <p class="text-base text-white/25 max-w-md mb-10 leading-relaxed fade-up" style="animation-delay:0.15s">Etkileyici portfolyo galerisi, şeffaf paket fiyatları ve kolay randevu formu ile müşteri tabanınızı büyütün. Stüdyonuzu dijitale taşıyın.</p>
-                <div class="flex flex-col sm:flex-row gap-4 fade-up" style="animation-delay:0.2s">
-                    <button onclick="openOrder('Orta','10.000')" class="btn-gold px-8 py-4 rounded-xl text-sm font-bold inline-flex items-center justify-center gap-2">Sipariş Ver <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></button>
-                    <a href="../iletisim.html" class="btn-outline-gold px-8 py-4 rounded-xl text-sm font-semibold inline-flex items-center justify-center">Görüşme Ayarla</a>
-                </div>
+                <div class="flex items-center gap-3 mb-8 fade-up" style="animation-delay:0.05s"><div class="w-14 h-14 bg-gradient-to-br from-cyan-500/10 to-teal-500/5 rounded-2xl flex items-center justify-center text-3xl border border-cyan-500/10">📸</div><span class="gold-badge text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full">Portfolyo Sitesi</span></div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-[0.95] mb-6 fade-up" style="animation-delay:0.1s;letter-spacing:-0.03em">Fotoğrafçı<br><span class="text-gradient-gold">Sitesi</span></h1>
+                <p class="text-base text-white/25 max-w-md mb-10 leading-relaxed fade-up" style="animation-delay:0.15s">Etkileyici portfolyo galerisi, paket fiyatları ve randevu formu ile müşteri tabanınızı büyütün.</p>
+                <div class="flex flex-col sm:flex-row gap-4 fade-up" style="animation-delay:0.2s"><button onclick="openOrder('Orta','10000')" class="btn-gold px-8 py-4 rounded-xl text-sm font-bold inline-flex items-center justify-center gap-2">Sipariş Ver <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></button><a href="../iletisim.html" class="btn-outline-gold px-8 py-4 rounded-xl text-sm font-semibold inline-flex items-center justify-center">Görüşme Ayarla</a></div>
             </div>
-            <div class="fade-up" style="animation-delay:0.3s">
-                <div class="glass rounded-3xl p-4 sm:p-5 mock-float">
-                    <div class="bg-[#0a0f1e] rounded-2xl overflow-hidden shadow-2xl border border-white/[0.04]">
-                        <div class="hidden sm:flex bg-white/[0.03] px-4 py-3 items-center gap-2 border-b border-white/[0.04]">
-                            <div class="flex gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-red-400/40"></div><div class="w-2.5 h-2.5 rounded-full bg-yellow-400/40"></div><div class="w-2.5 h-2.5 rounded-full bg-green-400/40"></div></div>
-                            <div class="flex-1 bg-white/[0.04] rounded-lg px-3 py-1 text-[10px] text-white/20 text-center">kayaphotography.dijitalpazar.com</div>
-                        </div>
-                        <div class="p-4 bg-gradient-to-b from-amber-950/20 to-transparent">
-                            <div class="flex items-center gap-3 mb-4 pb-3 border-b border-white/[0.04]">
-                                <div class="w-8 h-8 sm:w-9 sm:h-9 bg-amber-500/10 rounded-xl flex items-center justify-center text-base sm:text-lg">📸</div>
-                                <div><div class="font-bold text-white/80 text-[11px] sm:text-xs">Kaya Photography</div><div class="text-[9px] sm:text-[10px] text-white/20">Profesyonel Fotoğraf Stüdyosu</div></div>
-                            </div>
-                            <!-- Kategori tabs -->
-                            <div class="flex gap-1.5 mb-3 overflow-x-auto pb-1">
-                                <span class="bg-[#D4A853]/20 text-[#D4A853] text-[8px] font-bold px-2 py-1 rounded-full flex-shrink-0 border border-[#D4A853]/20">Düğün</span>
-                                <span class="bg-white/[0.03] text-white/25 text-[8px] font-bold px-2 py-1 rounded-full flex-shrink-0 border border-white/[0.04]">Bebek</span>
-                                <span class="bg-white/[0.03] text-white/25 text-[8px] font-bold px-2 py-1 rounded-full flex-shrink-0 border border-white/[0.04]">Ürün</span>
-                                <span class="bg-white/[0.03] text-white/25 text-[8px] font-bold px-2 py-1 rounded-full flex-shrink-0 border border-white/[0.04]">Kurumsal</span>
-                            </div>
-                            <!-- Galeri Grid -->
-                            <div class="grid grid-cols-3 gap-1.5 mb-3">
-                                <div class="aspect-square bg-gradient-to-br from-pink-900/30 to-rose-900/20 rounded-xl flex items-center justify-center text-xl">💒</div>
-                                <div class="aspect-square bg-gradient-to-br from-blue-900/30 to-indigo-900/20 rounded-xl flex items-center justify-center text-xl">👰</div>
-                                <div class="aspect-square bg-gradient-to-br from-yellow-900/30 to-orange-900/20 rounded-xl flex items-center justify-center text-xl">🌸</div>
-                                <div class="aspect-square bg-gradient-to-br from-green-900/30 to-teal-900/20 rounded-xl flex items-center justify-center text-xl">🎊</div>
-                                <div class="aspect-square bg-gradient-to-br from-purple-900/30 to-pink-900/20 rounded-xl flex items-center justify-center text-xl">💐</div>
-                                <div class="aspect-square bg-gradient-to-br from-amber-900/30 to-yellow-900/20 rounded-xl flex items-center justify-center text-xl">🥂</div>
-                            </div>
-                            <!-- Paket -->
-                            <div class="bg-[#D4A853]/5 border border-[#D4A853]/15 rounded-xl p-2.5">
-                                <div class="flex justify-between items-center">
-                                    <div><div class="text-[9px] font-bold text-white/50">Düğün Paketi</div><div class="text-[8px] text-white/20">8 saat · 500+ fotoğraf</div></div>
-                                    <div class="text-[11px] font-extrabold text-[#D4A853]">₺8.500</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="fade-up" style="animation-delay:0.3s"><div class="flex justify-center"><div class="mock-float"><div class="w-[260px] sm:w-[280px] bg-[#1a1a2e] rounded-[2rem] sm:rounded-[2.5rem] p-2.5 sm:p-3 shadow-2xl border-2 sm:border-4 border-white/[0.06]"><div class="bg-[#0a0f1e] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden">
+                <div class="flex justify-between px-4 py-1.5 text-[8px] text-white/30"><span>9:41</span><div class="flex gap-1 items-center"><div class="w-3 h-1.5 border border-white/30 rounded-sm"><div class="w-2 h-full bg-green-400/60 rounded-sm"></div></div></div></div>
+                <div class="bg-gradient-to-r from-cyan-600/80 to-teal-600/80 p-3 text-center"><div class="text-base sm:text-lg">📸</div><div class="font-bold text-white text-[10px] sm:text-xs">Kaya Photography</div><div class="text-white/50 text-[8px] sm:text-[9px]">Profesyonel Fotoğraf</div></div>
+                <div class="flex gap-1.5 px-3 py-2 overflow-x-auto"><span class="bg-[#D4A853] text-[#0C1222] text-[8px] sm:text-[9px] px-2.5 py-1 rounded-full font-bold flex-shrink-0">Düğün</span><span class="bg-white/[0.04] text-white/30 text-[8px] sm:text-[9px] px-2.5 py-1 rounded-full flex-shrink-0">Bebek</span><span class="bg-white/[0.04] text-white/30 text-[8px] sm:text-[9px] px-2.5 py-1 rounded-full flex-shrink-0">Ürün</span></div>
+                <div class="grid grid-cols-3 gap-1 px-3 mb-2"><div class="aspect-square bg-gradient-to-br from-pink-900/20 to-rose-900/10 rounded-lg flex items-center justify-center text-sm">💒</div><div class="aspect-square bg-gradient-to-br from-blue-900/20 to-indigo-900/10 rounded-lg flex items-center justify-center text-sm">👰</div><div class="aspect-square bg-gradient-to-br from-yellow-900/20 to-orange-900/10 rounded-lg flex items-center justify-center text-sm">🌸</div><div class="aspect-square bg-gradient-to-br from-green-900/20 to-teal-900/10 rounded-lg flex items-center justify-center text-sm">🎊</div><div class="aspect-square bg-gradient-to-br from-purple-900/20 to-pink-900/10 rounded-lg flex items-center justify-center text-sm">💐</div><div class="aspect-square bg-gradient-to-br from-cyan-900/20 to-blue-900/10 rounded-lg flex items-center justify-center text-sm">🥂</div></div>
+                <div class="px-3 pb-3"><div class="bg-[#D4A853]/5 border border-[#D4A853]/10 rounded-lg p-2 flex justify-between items-center"><div><div class="text-[9px] sm:text-[10px] font-bold text-white/50">Düğün Paketi</div><div class="text-[7px] sm:text-[8px] text-white/15">8 saat · 500+ fotoğraf</div></div><span class="text-[10px] sm:text-xs font-black text-[#D4A853]/70">₺8.500</span></div></div>
+            </div></div></div></div></div>
         </div>
     </div>
 </section>
 
-<!-- ÖZELLİKLER -->
 <section class="py-24 relative"><div class="max-w-6xl mx-auto px-6">
     <div class="mb-16 reveal"><p class="text-[#D4A853] text-xs font-semibold uppercase tracking-[0.2em] mb-4">Özellikler</p><h2 class="text-3xl sm:text-4xl font-black">StudioSite ile neler <span class="text-gradient-gold">yapabilirsiniz?</span></h2></div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal"><div class="text-xl mb-4">🖼️</div><h3 class="text-sm font-bold text-white mb-2">Portfolyo Galerisi</h3><p class="text-xs text-white/20 leading-relaxed">En iyi çalışmalarınızı yüksek kaliteli görsellerle sergileyin. İlk izlenim her şeydir.</p></div>
+        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal"><div class="text-xl mb-4">🖼️</div><h3 class="text-sm font-bold text-white mb-2">Portfolyo Galerisi</h3><p class="text-xs text-white/20 leading-relaxed">En iyi çalışmalarınızı yüksek kaliteli görsellerle sergileyin.</p></div>
         <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.05s"><div class="text-xl mb-4">📂</div><h3 class="text-sm font-bold text-white mb-2">Kategori Bazlı Galeri</h3><p class="text-xs text-white/20 leading-relaxed">Düğün, bebek, ürün, kurumsal... Her kategoriye ayrı bölüm. (Orta+)</p></div>
-        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.1s"><div class="text-xl mb-4">💰</div><h3 class="text-sm font-bold text-white mb-2">Paket & Fiyat Sayfası</h3><p class="text-xs text-white/20 leading-relaxed">Hizmet paketlerinizi ve fiyatlarınızı şeffaf biçimde listeleyin.</p></div>
-        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.15s"><div class="text-xl mb-4">📅</div><h3 class="text-sm font-bold text-white mb-2">Randevu & İletişim Formu</h3><p class="text-xs text-white/20 leading-relaxed">Müşteriler çekim tarihi, yeri ve isteklerini form üzerinden iletebilir.</p></div>
-        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.2s"><div class="text-xl mb-4">🎬</div><h3 class="text-sm font-bold text-white mb-2">Video Showreel</h3><p class="text-xs text-white/20 leading-relaxed">YouTube veya Vimeo videolarınızı sitenize gömin. Etkileyici ilk izlenim. (Orta+)</p></div>
-        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.25s"><div class="text-xl mb-4">⭐</div><h3 class="text-sm font-bold text-white mb-2">Müşteri Yorumları</h3><p class="text-xs text-white/20 leading-relaxed">Memnun müşterilerinizin yorumlarını yayınlayın. Sosyal kanıt sağlayın. (Orta+)</p></div>
+        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.1s"><div class="text-xl mb-4">💰</div><h3 class="text-sm font-bold text-white mb-2">Paket & Fiyat</h3><p class="text-xs text-white/20 leading-relaxed">Hizmet paketlerinizi ve fiyatlarınızı şeffaf biçimde listeleyin.</p></div>
+        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.15s"><div class="text-xl mb-4">📅</div><h3 class="text-sm font-bold text-white mb-2">Randevu Formu</h3><p class="text-xs text-white/20 leading-relaxed">Müşteriler çekim tarihi ve isteklerini form ile iletebilir.</p></div>
+        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.2s"><div class="text-xl mb-4">🎬</div><h3 class="text-sm font-bold text-white mb-2">Video Showreel</h3><p class="text-xs text-white/20 leading-relaxed">YouTube veya Vimeo videolarınızı sitenize gömin. (Orta+)</p></div>
+        <div class="glass rounded-2xl p-6 hover:bg-white/[0.03] transition-all reveal" style="animation-delay:0.25s"><div class="text-xl mb-4">⭐</div><h3 class="text-sm font-bold text-white mb-2">Müşteri Yorumları</h3><p class="text-xs text-white/20 leading-relaxed">Memnun müşterilerinizin yorumlarını yayınlayın. (Orta+)</p></div>
     </div>
 </div></section>
 
-<!-- FİYATLANDIRMA -->
-<section class="py-24 relative">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-900/5 rounded-full blur-[250px]"></div>
-    <div class="relative z-10 max-w-6xl mx-auto px-6">
-        <div class="text-center mb-16 reveal"><p class="text-[#D4A853] text-xs font-semibold uppercase tracking-[0.2em] mb-4">Fiyatlandırma</p><h2 class="text-3xl sm:text-4xl font-black">Paketinizi <span class="text-gradient-gold">seçin</span></h2><p class="text-sm text-white/20 mt-4 max-w-md mx-auto">İlk siparişinizde 14 gün ücretsiz deneme.</p></div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-            <!-- Başlangıç -->
-            <div class="pkg-card reveal">
-                <div class="flex items-center gap-2 mb-5"><div class="w-2.5 h-2.5 rounded-full bg-emerald-400/40"></div><span class="text-xs font-bold text-white/50 uppercase tracking-wider">Başlangıç</span></div>
-                <div class="mb-1"><span class="text-3xl font-black text-white">5.000₺</span><span class="text-white/20 text-sm">/ay</span></div>
-                <p class="text-xs text-white/15 mb-6">Kariyerine yeni başlayan fotoğrafçılar</p>
-                <div class="pkg-features"><ul class="space-y-2.5 mb-8">
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Portfolyo galerisi</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Paket & fiyat sayfası</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">İletişim & randevu formu</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">WhatsApp butonu</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Mobil uyumlu & SSL</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Domain bağlama</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">İçerik güncelleme desteği</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Kategori bazlı galeri</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Video showreel</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Müşteri yorumları</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">SEO optimizasyonu</span></li>
-                    <li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li>
-                </ul></div>
-                <button onclick="openOrder('Başlangıç','5000')" class="w-full btn-outline-gold px-5 py-3.5 rounded-xl text-xs font-bold">Başlangıç Seç</button>
-            </div>
-            <!-- Orta -->
-            <div class="pkg-card recommended reveal" style="animation-delay:0.1s">
-                <div class="flex items-center justify-between mb-5"><div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#D4A853]/60"></div><span class="text-xs font-bold text-white/50 uppercase tracking-wider">Orta</span></div><span class="gold-badge text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Önerilen</span></div>
-                <div class="mb-1"><span class="text-3xl font-black text-white">10.000₺</span><span class="text-white/20 text-sm">/ay</span></div>
-                <p class="text-xs text-white/15 mb-6">Profesyonel fotoğrafçı ve stüdyolar</p>
-                <div class="pkg-features"><ul class="space-y-2.5 mb-8">
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Başlangıç'taki her şey</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Kategori bazlı galeri</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Video showreel embed</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Müşteri yorumları</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">SEO optimizasyonu</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Öncelikli destek</span></li>
-                    <li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li>
-                </ul></div>
-                <button onclick="openOrder('Orta','10000')" class="w-full btn-gold px-5 py-3.5 rounded-xl text-xs font-bold">Orta Paketi Seç</button>
-            </div>
-            <!-- İleri -->
-            <div class="pkg-card reveal" style="animation-delay:0.2s">
-                <div class="flex items-center gap-2 mb-5"><div class="w-2.5 h-2.5 rounded-full bg-purple-400/40"></div><span class="text-xs font-bold text-white/50 uppercase tracking-wider">İleri</span></div>
-                <div class="mb-1"><span class="text-3xl font-black text-white">20.000₺</span><span class="text-white/20 text-sm">/ay</span></div>
-                <p class="text-xs text-white/15 mb-6">Kurumsal fotoğraf stüdyoları</p>
-                <div class="pkg-features"><ul class="space-y-2.5 mb-8">
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Orta'daki her şey</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">SEO optimizasyonu</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Öncelikli destek</span></li>
-                    <li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Kurumsal tasarım</span></li>
-                    <li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li>
-                    <li class="opacity-0 text-xs">s</li>
-                </ul></div>
-                <button onclick="openOrder('İleri','20000')" class="w-full btn-outline-gold px-5 py-3.5 rounded-xl text-xs font-bold">İleri Paketi Seç</button>
-            </div>
-        </div>
-        <div class="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-white/15 text-xs reveal">
-            <span>✦ 14 Gün Deneme</span><span>✦ Koşulsuz İade</span><span>✦ Sözleşmeli Çalışma</span><span>✦ 7/24 Destek</span><span>✦ Faturalı Hizmet</span>
-        </div>
+<section class="py-24 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-900/5 rounded-full blur-[250px]"></div><div class="relative z-10 max-w-6xl mx-auto px-6">
+    <div class="text-center mb-16 reveal"><p class="text-[#D4A853] text-xs font-semibold uppercase tracking-[0.2em] mb-4">Fiyatlandırma</p><h2 class="text-3xl sm:text-4xl font-black">Paketinizi <span class="text-gradient-gold">seçin</span></h2><p class="text-sm text-white/20 mt-4 max-w-md mx-auto">İlk siparişinizde 14 gün ücretsiz deneme.</p></div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+        <div class="pkg-card reveal"><div class="flex items-center gap-2 mb-5"><div class="w-2.5 h-2.5 rounded-full bg-emerald-400/40"></div><span class="text-xs font-bold text-white/50 uppercase tracking-wider">Başlangıç</span></div><div class="mb-1"><span class="text-3xl font-black text-white">5.000₺</span><span class="text-white/20 text-sm">/ay</span></div><p class="text-xs text-white/15 mb-6">Kariyerine yeni başlayanlar</p><div class="pkg-features"><ul class="space-y-2.5 mb-8"><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Portfolyo galerisi</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Paket & fiyat sayfası</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Randevu formu</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">WhatsApp butonu</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Domain & SSL</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Temel SEO</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Mobil uyumlu</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">İçerik güncelleme</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Kategori galeri</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Video showreel</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Müşteri yorumları</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Premium SEO</span></li><li class="opacity-0 text-xs">s</li></ul></div><button onclick="openOrder('Başlangıç','5000')" class="w-full btn-outline-gold px-5 py-3.5 rounded-xl text-xs font-bold">Başlangıç Seç</button></div>
+        <div class="pkg-card recommended reveal" style="animation-delay:0.1s"><div class="flex items-center justify-between mb-5"><div class="flex items-center gap-2"><div class="w-2.5 h-2.5 rounded-full bg-[#D4A853]/60"></div><span class="text-xs font-bold text-white/50 uppercase tracking-wider">Orta</span></div><span class="gold-badge text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full">Önerilen</span></div><div class="mb-1"><span class="text-3xl font-black text-white">10.000₺</span><span class="text-white/20 text-sm">/ay</span></div><p class="text-xs text-white/15 mb-6">Profesyonel fotoğrafçılar</p><div class="pkg-features"><ul class="space-y-2.5 mb-8"><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Başlangıç'taki her şey</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Kategori bazlı galeri</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Video showreel embed</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Müşteri yorumları</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Gelişmiş galeri yapısı</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Premium SEO</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-no">✗</span><span class="text-white/15">Öncelikli destek</span></li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li></ul></div><button onclick="openOrder('Orta','10000')" class="w-full btn-gold px-5 py-3.5 rounded-xl text-xs font-bold">Orta Paketi Seç</button></div>
+        <div class="pkg-card reveal" style="animation-delay:0.2s"><div class="flex items-center gap-2 mb-5"><div class="w-2.5 h-2.5 rounded-full bg-purple-400/40"></div><span class="text-xs font-bold text-white/50 uppercase tracking-wider">İleri</span></div><div class="mb-1"><span class="text-3xl font-black text-white">20.000₺</span><span class="text-white/20 text-sm">/ay</span></div><p class="text-xs text-white/15 mb-6">Kurumsal fotoğraf stüdyoları</p><div class="pkg-features"><ul class="space-y-2.5 mb-8"><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Orta'daki her şey</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Premium SEO</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Öncelikli destek</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Kurumsal tasarım</span></li><li class="flex items-center gap-2.5 text-xs"><span class="feature-yes">✓</span><span class="text-white/40">Çoklu lokasyon</span></li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li><li class="opacity-0 text-xs">s</li></ul></div><button onclick="openOrder('İleri','20000')" class="w-full btn-outline-gold px-5 py-3.5 rounded-xl text-xs font-bold">İleri Paketi Seç</button></div>
     </div>
-</section>
-
-<!-- SSS -->
-<section class="py-24"><div class="max-w-3xl mx-auto px-6">
-    <div class="mb-14 reveal"><p class="text-[#D4A853] text-xs font-semibold uppercase tracking-[0.2em] mb-4">SSS</p><h2 class="text-3xl font-black">Sık sorulan <span class="text-gradient-gold">sorular</span></h2></div>
-    <div class="space-y-3">
-        <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">Fotoğraflarımı nasıl siteye yükleyeceğim?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Fotoğraflarınızı bize Google Drive, WeTransfer veya WhatsApp üzerinden iletebilirsiniz. Hangi kategoriye ait olduğunu belirtmeniz yeterli, siteye düzenli şekilde ekleriz.</p></div></div>
-        <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">Galeri güncellemeleri ne kadar sürede yapılır?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Genellikle aynı iş günü içinde güncelleme yapılır. Acil durumlarda WhatsApp üzerinden iletişime geçebilirsiniz.</p></div></div>
-        <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">Fotoğraf kalitesi düşer mi?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Fotoğraflar web için optimize edilir. Bu sayede sayfa hızlı yüklenir ama görsel kalite korunur.</p></div></div>
-        <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">İstediğim zaman iptal edebilir miyim?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Evet, cayma bedeli yoktur. 14 gün içinde memnun kalmazsanız ödemenizi iade ediyoruz.</p></div></div>
-    </div>
+    <div class="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-white/15 text-xs reveal"><span>✦ 14 Gün Deneme</span><span>✦ Sözleşmeli Çalışma</span><span>✦ 7/24 Destek</span><span>✦ Faturalı Hizmet</span></div>
 </div></section>
 
-<!-- CTA -->
-<section class="py-24 relative">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-amber-900/8 rounded-full blur-[200px]"></div>
-    <div class="relative max-w-3xl mx-auto px-6 text-center reveal">
-        <h2 class="text-3xl sm:text-4xl font-black mb-6">Stüdyonuzu dijitale <span class="text-gradient-gold">taşıyalım.</span></h2>
-        <p class="text-sm text-white/20 mb-10 max-w-md mx-auto">14 gün ücretsiz deneyin. Yeni müşteriler portfolyonuzu görsün.</p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <button onclick="openOrder('Orta','10.000')" class="btn-gold px-10 py-4 rounded-xl text-sm font-bold">Sipariş Ver</button>
-            <a href="../iletisim.html" class="btn-outline-gold px-10 py-4 rounded-xl text-sm font-semibold">Görüşme Ayarla</a>
-        </div>
-    </div>
-</section>
+<section class="py-24"><div class="max-w-3xl mx-auto px-6"><div class="mb-14 reveal"><p class="text-[#D4A853] text-xs font-semibold uppercase tracking-[0.2em] mb-4">SSS</p><h2 class="text-3xl font-black">Sık sorulan <span class="text-gradient-gold">sorular</span></h2></div><div class="space-y-3">
+    <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">Fotoğraflarımı nasıl yükleyeceğim?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Google Drive, WeTransfer veya WhatsApp ile bize iletin. Kategorisini belirtin, siteye ekleriz.</p></div></div>
+    <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">Fotoğraf kalitesi düşer mi?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Web için optimize edilir ama görsel kalite korunur. Sayfa hızlı yüklenir, detaylar net görünür.</p></div></div>
+    <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">Galeri güncellemeleri ne kadar sürer?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Genellikle aynı iş günü içinde güncellenir.</p></div></div>
+    <div class="faq glass rounded-2xl overflow-hidden reveal"><button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-5 text-left"><span class="text-sm font-semibold text-white/70 pr-6">İptal edebilir miyim?</span><svg class="w-4 h-4 text-[#D4A853]/40 faq-icon transition-transform flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></button><div class="faq-answer hidden px-5 pb-5"><p class="text-xs text-white/25 leading-relaxed">Evet, cayma bedeli yoktur. 14 gün deneme hakkınız var.</p></div></div>
+</div></div></section>
 
-<!-- SİPARİŞ MODAL -->
-<div id="orderModal" class="modal-bg" onclick="closeOrderOutside(event)">
-    <div class="modal-box">
-        <div class="p-6 flex items-center justify-between border-b border-white/[0.04]">
-            <div>
-                <h3 class="text-base font-bold text-white">📸 StudioSite Sipariş</h3>
-                <p id="modalPkgName" class="text-white/25 text-xs mt-0.5"></p>
-            </div>
-            <button onclick="closeOrder()" class="w-8 h-8 glass rounded-lg flex items-center justify-center hover:bg-white/[0.04]">
-                <svg class="w-4 h-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-        <div class="p-6">
-            <div id="loginRequired" class="hidden text-center py-8">
-                <div class="text-3xl mb-4">🔐</div>
-                <h4 class="text-sm font-bold text-white mb-2">Giriş yapmanız gerekiyor</h4>
-                <p class="text-white/20 text-xs mb-6">Sipariş için giriş yapın.</p>
-                <div class="flex gap-3 justify-center">
-                    <a href="../giris.html" class="btn-outline-gold px-6 py-3 rounded-xl text-xs font-semibold">Giriş</a>
-                    <a href="../giris.html?tab=register" class="btn-gold px-6 py-3 rounded-xl text-xs font-bold">Kayıt Ol</a>
-                </div>
-            </div>
-            <div id="orderSuccess" class="hidden text-center py-8">
-                <div class="text-3xl mb-4">✅</div>
-                <h4 class="text-sm font-bold text-white mb-2">Siparişiniz alındı</h4>
-                <p class="text-white/20 text-xs mb-6">En kısa sürede iletişime geçeceğiz.</p>
-                <div class="flex gap-3 justify-center">
-                    <a href="../panel.html" class="btn-gold px-6 py-3 rounded-xl text-xs font-bold">Panelim</a>
-                    <a href="https://wa.me/905523845336" target="_blank" class="glass px-6 py-3 rounded-xl text-xs font-semibold text-green-400">WhatsApp</a>
-                </div>
-            </div>
-            <div id="orderError" class="hidden mb-4 p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                <p id="orderErrorText" class="text-red-400 text-xs font-semibold"></p>
-            </div>
-            <div id="orderFormSection">
-                <div class="glass rounded-2xl p-4 mb-5 flex items-center justify-between">
-                    <div>
-                        <div class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">Seçilen</div>
-                        <div id="selectedPkgDisplay" class="font-bold text-white text-sm mt-0.5"></div>
-                    </div>
-                    <div class="text-right">
-                        <div id="selectedPriceDisplay" class="text-xl font-black text-[#D4A853]"></div>
-                        <div class="text-[10px] text-white/15">/ay</div>
-                    </div>
-                </div>
-                <form id="orderForm" class="space-y-4">
-                    <div>
-                        <label class="text-[10px] font-bold text-white/25 uppercase tracking-widest block mb-1.5">Stüdyo / İşletme Adı <span class="text-red-400">*</span></label>
-                        <input type="text" id="orderBusiness" required placeholder="Kaya Photography" class="input-field">
-                        <p id="businessError" class="hidden text-red-400 text-xs mt-1">Lütfen stüdyo adını girin.</p>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-white/25 uppercase tracking-widest block mb-1.5">Not <span class="text-white/10">(opsiyonel)</span></label>
-                        <textarea id="orderNote" rows="3" placeholder="Uzmanlık alanı, fotoğraf kategorileri, özel istekler..." class="input-field" style="resize:none"></textarea>
-                    </div>
-                    <button type="submit" id="orderSubmitBtn" class="w-full btn-gold px-6 py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
-                        <span id="orderBtnText">Sipariş Gönder</span>
-                        <svg id="orderBtnLoader" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<section class="py-24 relative"><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-900/8 rounded-full blur-[200px]"></div><div class="relative max-w-3xl mx-auto px-6 text-center reveal"><h2 class="text-3xl sm:text-4xl font-black mb-6">Stüdyonuzu dijitale <span class="text-gradient-gold">taşıyalım.</span></h2><p class="text-sm text-white/20 mb-10">14 gün ücretsiz deneyin.</p><div class="flex flex-col sm:flex-row gap-4 justify-center"><button onclick="openOrder('Orta','10000')" class="btn-gold px-10 py-4 rounded-xl text-sm font-bold">Sipariş Ver</button><a href="../iletisim.html" class="btn-outline-gold px-10 py-4 rounded-xl text-sm font-semibold">Görüşme Ayarla</a></div></div></section>
 
-<!-- FOOTER -->
-<footer class="py-14 border-t border-white/[0.03]">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-            <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center"><span class="text-[#0C1222] font-black text-[10px]">D</span></div>
-            <span class="text-white/30 font-semibold text-xs">DijitalPazar</span>
-        </div>
-        <p class="text-white/8 text-xs">© 2026 DijitalPazar</p>
-        <div class="flex gap-6 text-white/12 text-xs">
-            <a href="../index.html" class="hover:text-[#D4A853]/30">Ana Sayfa</a>
-            <a href="../urunler.html" class="hover:text-[#D4A853]/30">Hizmetler</a>
-            <a href="../iletisim.html" class="hover:text-[#D4A853]/30">İletişim</a>
-        </div>
-    </div>
-</footer>
+<div id="orderModal" class="modal-bg" onclick="closeOrderOutside(event)"><div class="modal-box"><div class="p-6 flex items-center justify-between border-b border-white/[0.04]"><div><h3 class="text-base font-bold text-white">📸 StudioSite Sipariş</h3><p id="modalPkgName" class="text-white/25 text-xs mt-0.5"></p></div><button onclick="closeOrder()" class="w-8 h-8 glass rounded-lg flex items-center justify-center hover:bg-white/[0.04]"><svg class="w-4 h-4 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div><div class="p-6"><div id="loginRequired" class="hidden text-center py-8"><div class="text-3xl mb-4">🔐</div><h4 class="text-sm font-bold text-white mb-2">Giriş yapmanız gerekiyor</h4><p class="text-white/20 text-xs mb-6">Sipariş için giriş yapın.</p><div class="flex gap-3 justify-center"><a href="../giris.html" class="btn-outline-gold px-6 py-3 rounded-xl text-xs font-semibold">Giriş</a><a href="../giris.html?tab=register" class="btn-gold px-6 py-3 rounded-xl text-xs font-bold">Kayıt Ol</a></div></div><div id="orderSuccess" class="hidden text-center py-8"><div class="text-3xl mb-4">✅</div><h4 class="text-sm font-bold text-white mb-2">Siparişiniz alındı</h4><p class="text-white/20 text-xs mb-6">En kısa sürede iletişime geçeceğiz.</p><div class="flex gap-3 justify-center"><a href="../panel.html" class="btn-gold px-6 py-3 rounded-xl text-xs font-bold">Panelim</a><a href="https://wa.me/905523845336" target="_blank" class="glass px-6 py-3 rounded-xl text-xs font-semibold text-green-400">WhatsApp</a></div></div><div id="orderError" class="hidden mb-4 p-4 rounded-xl border border-red-500/20 bg-red-500/5"><p id="orderErrorText" class="text-red-400 text-xs font-semibold"></p></div><div id="orderFormSection"><div class="glass rounded-2xl p-4 mb-5 flex items-center justify-between"><div><div class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">Seçilen</div><div id="selectedPkgDisplay" class="font-bold text-white text-sm mt-0.5"></div></div><div class="text-right"><div id="selectedPriceDisplay" class="text-xl font-black text-[#D4A853]"></div><div class="text-[10px] text-white/15">/ay</div></div></div><form id="orderForm" class="space-y-4"><div><label class="text-[10px] font-bold text-white/25 uppercase tracking-widest block mb-1.5">Stüdyo Adı <span class="text-red-400">*</span></label><input type="text" id="orderBusiness" required placeholder="Stüdyo adınız" class="input-field"><p id="businessError" class="hidden text-red-400 text-xs mt-1">Lütfen stüdyo adını girin.</p></div><div><label class="text-[10px] font-bold text-white/25 uppercase tracking-widest block mb-1.5">Not <span class="text-white/10">(opsiyonel)</span></label><textarea id="orderNote" rows="3" placeholder="Özel istekleriniz..." class="input-field" style="resize:none"></textarea></div><button type="submit" id="orderSubmitBtn" class="w-full btn-gold px-6 py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2"><span id="orderBtnText">Sipariş Gönder</span><svg id="orderBtnLoader" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></button></form></div></div></div></div>
 
-<!-- WhatsApp Desktop -->
-<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 w-12 h-12 bg-green-500 rounded-full items-center justify-center shadow-lg hover:scale-110 transition-transform">
-    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
+<footer class="py-14 border-t border-white/[0.03]"><div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4"><div class="flex items-center gap-3"><div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center"><span class="text-[#0C1222] font-black text-[10px]">D</span></div><span class="text-white/30 font-semibold text-xs">DijitalPazar</span></div><p class="text-white/8 text-xs">© 2026 DijitalPazar</p><div class="flex gap-6 text-white/12 text-xs"><a href="../index.html" class="hover:text-[#D4A853]/30">Ana Sayfa</a><a href="../urunler.html" class="hover:text-[#D4A853]/30">Hizmetler</a><a href="../iletisim.html" class="hover:text-[#D4A853]/30">İletişim</a></div></div></footer>
 
-<!-- Mobile Bottom Bar -->
-<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden" style="background:rgba(12,18,34,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.04)">
-    <div class="grid grid-cols-3">
-        <a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3.5 text-green-400/50 hover:text-green-400"><span class="text-base">💬</span><span class="text-[9px] font-medium">WhatsApp</span></a>
-        <a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3.5 text-white/25 hover:text-white/50 border-x border-white/[0.03]"><span class="text-base">📞</span><span class="text-[9px] font-medium">Ara</span></a>
-        <button onclick="openOrder('Orta','10.000')" class="flex flex-col items-center justify-center gap-1 py-3.5 text-[#D4A853]/50 hover:text-[#D4A853]"><span class="text-base">🛒</span><span class="text-[9px] font-medium">Sipariş</span></button>
-    </div>
-</div>
+<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 w-12 h-12 bg-green-500 rounded-full items-center justify-center shadow-lg hover:scale-110 transition-transform"><svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+<div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden" style="background:rgba(12,18,34,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.04)"><div class="grid grid-cols-3"><a href="https://wa.me/905523845336" class="flex flex-col items-center justify-center gap-1 py-3.5 text-green-400/50 hover:text-green-400"><span class="text-base">💬</span><span class="text-[9px] font-medium">WhatsApp</span></a><a href="tel:+905523845336" class="flex flex-col items-center justify-center gap-1 py-3.5 text-white/25 hover:text-white/50 border-x border-white/[0.03]"><span class="text-base">📞</span><span class="text-[9px] font-medium">Ara</span></a><button onclick="openOrder('Orta','10000')" class="flex flex-col items-center justify-center gap-1 py-3.5 text-[#D4A853]/50 hover:text-[#D4A853]"><span class="text-base">🛒</span><span class="text-[9px] font-medium">Sipariş</span></button></div></div>
 
-<!-- FIREBASE -->
 <script type="module">
-    import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import{getFirestore,collection,addDoc,serverTimestamp,doc,getDoc}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-    const app=initializeApp({apiKey:"AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",authDomain:"dijital-pazar-3cc34.firebaseapp.com",projectId:"dijital-pazar-3cc34",storageBucket:"dijital-pazar-3cc34.firebasestorage.app",messagingSenderId:"519713206128",appId:"1:519713206128:web:4d1f541d1b469eeb8069b5"});
-    const auth=getAuth(app),db=getFirestore(app);
-    emailjs.init("0A5ullxFfIzpla5vd");
-    onAuthStateChanged(auth,(u)=>{
-        window._currentUser=u;
-        const h=document.getElementById('headerAuth'),m=document.getElementById('mobileAuthButtons');
-        if(u){
-            h.innerHTML=`<a href="../panel.html" class="text-sm text-white/40 hover:text-[#D4A853] font-medium">Panel</a><a href="../panel.html" class="btn-gold px-5 py-2.5 rounded-xl text-sm font-bold">Panelim →</a>`;
-            if(m)m.innerHTML=`<a href="../panel.html" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Panelime Git</a>`;
-        }else{
-            h.innerHTML=`<a href="../giris.html" class="text-sm text-white/40 hover:text-white font-medium">Giriş</a><a href="../giris.html?tab=register" class="btn-gold px-5 py-2.5 rounded-xl text-sm font-bold">Başlayın</a>`;
-            if(m)m.innerHTML=`<a href="../giris.html" class="mobile-link block text-center text-white/50 px-4 py-3 rounded-xl font-medium text-sm">Giriş</a><a href="../giris.html?tab=register" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Başlayın</a>`;
-        }
-    });
-    window._submitOrder=async function(){
-        const u=window._currentUser;if(!u)return;
-        const bi=document.getElementById('orderBusiness'),be=document.getElementById('businessError'),b=bi.value.trim();
-        if(!b){bi.classList.add('error');be.classList.remove('hidden');bi.focus();return;}
-        bi.classList.remove('error');be.classList.add('hidden');
-        const btn=document.getElementById('orderSubmitBtn'),txt=document.getElementById('orderBtnText'),ldr=document.getElementById('orderBtnLoader');
-        btn.disabled=true;txt.textContent='Gönderiliyor...';ldr.classList.remove('hidden');
-        document.getElementById('orderError').classList.add('hidden');
-        try{
-            let cn=u.email,cp='',at='bireysel';
-            try{const ud=await getDoc(doc(db,"users",u.uid));if(ud.exists()){const d=ud.data();cn=d.fullName||d.companyName||u.email;cp=d.phone||'';at=d.accountType||'bireysel';}}catch(e){}
-            await addDoc(collection(db,"orders"),{userId:u.uid,userEmail:u.email,productName:'StudioSite - Fotoğrafçı / Stüdyo',productIcon:'📸',packageName:window._pkg,price:window._price,isCustom:false,businessName:b,note:document.getElementById('orderNote').value.trim()||'',status:'pending',createdAt:serverTimestamp()});
-            try{await emailjs.send('service_t65vpam','template_h00jarb',{business_name:b,customer_name:cn,customer_email:u.email,customer_phone:cp,product_name:'StudioSite - Fotoğrafçı / Stüdyo',package_name:window._pkg,price:window._price+'₺/ay',account_type:at,note:document.getElementById('orderNote').value.trim()||'Yok',date:new Date().toLocaleString('tr-TR')});}catch(e){}
-            document.getElementById('orderFormSection').classList.add('hidden');
-            document.getElementById('orderSuccess').classList.remove('hidden');
-        }catch(err){
-            document.getElementById('orderErrorText').textContent='Bir hata oluştu. WhatsApp üzerinden ulaşabilirsiniz.';
-            document.getElementById('orderError').classList.remove('hidden');
-        }finally{btn.disabled=false;txt.textContent='Sipariş Gönder';ldr.classList.add('hidden');}
-    };
+    import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";import{getFirestore,collection,addDoc,serverTimestamp,doc,getDoc}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";const app=initializeApp({apiKey:"AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",authDomain:"dijital-pazar-3cc34.firebaseapp.com",projectId:"dijital-pazar-3cc34",storageBucket:"dijital-pazar-3cc34.firebasestorage.app",messagingSenderId:"519713206128",appId:"1:519713206128:web:4d1f541d1b469eeb8069b5"});const auth=getAuth(app),db=getFirestore(app);emailjs.init("0A5ullxFfIzpla5vd");onAuthStateChanged(auth,(u)=>{window._currentUser=u;const h=document.getElementById('headerAuth'),m=document.getElementById('mobileAuthButtons');if(u){h.innerHTML=`<a href="../panel.html" class="text-sm text-white/40 hover:text-[#D4A853] font-medium">Panel</a><a href="../panel.html" class="btn-gold px-5 py-2.5 rounded-xl text-sm font-bold">Panelim →</a>`;if(m)m.innerHTML=`<a href="../panel.html" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Panelime Git</a>`;}else{h.innerHTML=`<a href="../giris.html" class="text-sm text-white/40 hover:text-white font-medium">Giriş</a><a href="../giris.html?tab=register" class="btn-gold px-5 py-2.5 rounded-xl text-sm font-bold">Başlayın</a>`;if(m)m.innerHTML=`<a href="../giris.html" class="mobile-link block text-center text-white/50 px-4 py-3 rounded-xl font-medium text-sm">Giriş</a><a href="../giris.html?tab=register" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Başlayın</a>`;}});window._submitOrder=async function(){const u=window._currentUser;if(!u)return;const bi=document.getElementById('orderBusiness'),be=document.getElementById('businessError'),b=bi.value.trim();if(!b){bi.classList.add('error');be.classList.remove('hidden');bi.focus();return;}bi.classList.remove('error');be.classList.add('hidden');const btn=document.getElementById('orderSubmitBtn'),txt=document.getElementById('orderBtnText'),ldr=document.getElementById('orderBtnLoader');btn.disabled=true;txt.textContent='Gönderiliyor...';ldr.classList.remove('hidden');document.getElementById('orderError').classList.add('hidden');try{let cn=u.email,cp='',at='bireysel';try{const ud=await getDoc(doc(db,"users",u.uid));if(ud.exists()){const d=ud.data();cn=d.fullName||d.companyName||u.email;cp=d.phone||'';at=d.accountType||'bireysel';}}catch(e){}await addDoc(collection(db,"orders"),{userId:u.uid,userEmail:u.email,productName:'StudioSite - Fotoğrafçı / Stüdyo',productIcon:'📸',packageName:window._pkg,price:window._price,isCustom:false,businessName:b,note:document.getElementById('orderNote').value.trim()||'',status:'pending',createdAt:serverTimestamp()});try{await emailjs.send('service_t65vpam','template_h00jarb',{business_name:b,customer_name:cn,customer_email:u.email,customer_phone:cp,product_name:'StudioSite - Fotoğrafçı / Stüdyo',package_name:window._pkg,price:window._price+'₺/ay',account_type:at,note:document.getElementById('orderNote').value.trim()||'Yok',date:new Date().toLocaleString('tr-TR')});}catch(e){}document.getElementById('orderFormSection').classList.add('hidden');document.getElementById('orderSuccess').classList.remove('hidden');}catch(err){document.getElementById('orderErrorText').textContent='Bir hata oluştu. WhatsApp üzerinden ulaşabilirsiniz.';document.getElementById('orderError').classList.remove('hidden');}finally{btn.disabled=false;txt.textContent='Sipariş Gönder';ldr.classList.add('hidden');}};
 </script>
 <script>
-    window._pkg='Orta';window._price='10.000';
-    function openOrder(p,pr){
-        window._pkg=p;window._price=pr;
-        document.getElementById('modalPkgName').textContent=p+' · '+parseInt(pr).toLocaleString('tr-TR')+'₺/ay';
-        document.getElementById('selectedPkgDisplay').textContent=p+' Paketi';
-        document.getElementById('selectedPriceDisplay').textContent=parseInt(pr).toLocaleString('tr-TR')+'₺';
-        document.getElementById('orderSuccess').classList.add('hidden');
-        document.getElementById('orderError').classList.add('hidden');
-        document.getElementById('orderForm').reset();
-        document.getElementById('orderBusiness').classList.remove('error');
-        document.getElementById('businessError').classList.add('hidden');
-        if(!window._currentUser){document.getElementById('loginRequired').classList.remove('hidden');document.getElementById('orderFormSection').classList.add('hidden');}
-        else{
-            document.getElementById('loginRequired').classList.add('hidden');
-            document.getElementById('orderFormSection').classList.remove('hidden');
-            import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({getFirestore,doc,getDoc})=>{
-                getDoc(doc(getFirestore(),"users",window._currentUser.uid)).then(s=>{if(s.exists()&&s.data().accountType==='kurumsal'&&s.data().companyName)document.getElementById('orderBusiness').value=s.data().companyName;}).catch(()=>{});
-            });
-        }
-        document.getElementById('orderModal').classList.add('active');
-        document.body.style.overflow='hidden';
-    }
-    function closeOrder(){document.getElementById('orderModal').classList.remove('active');document.body.style.overflow='';}
-    function closeOrderOutside(e){if(e.target===document.getElementById('orderModal'))closeOrder();}
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOrder();});
-    document.getElementById('orderForm').addEventListener('submit',e=>{e.preventDefault();window._submitOrder();});
-    document.getElementById('orderBusiness').addEventListener('input',function(){if(this.value.trim()){this.classList.remove('error');document.getElementById('businessError').classList.add('hidden');}});
-    function toggleFaq(btn){
-        const item=btn.parentElement,answer=item.querySelector('.faq-answer'),icon=btn.querySelector('.faq-icon');
-        document.querySelectorAll('.faq').forEach(o=>{if(o!==item){o.querySelector('.faq-answer').classList.add('hidden');o.querySelector('.faq-icon').style.transform='';o.style.borderColor='rgba(255,255,255,0.04)';}});
-        answer.classList.toggle('hidden');
-        if(!answer.classList.contains('hidden')){icon.style.transform='rotate(180deg)';item.style.borderColor='rgba(212,168,83,0.1)';}
-        else{icon.style.transform='';item.style.borderColor='rgba(255,255,255,0.04)';}
-    }
-    const header=document.getElementById('siteHeader');
-    window.addEventListener('scroll',()=>{if(window.scrollY>60){header.style.padding='12px 0';header.style.background='rgba(12,18,34,0.9)';header.style.backdropFilter='blur(20px)';header.style.borderBottom='1px solid rgba(255,255,255,0.03)';}else{header.style.padding='20px 0';header.style.background='transparent';header.style.backdropFilter='none';header.style.borderBottom='none';}});
-    document.getElementById('mobileToggle').addEventListener('click',()=>{document.getElementById('mobileMenu').classList.toggle('hidden');document.getElementById('menuOpen').classList.toggle('hidden');document.getElementById('menuClose').classList.toggle('hidden');});
-    document.querySelectorAll('.mobile-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.add('hidden');document.getElementById('menuOpen').classList.remove('hidden');document.getElementById('menuClose').classList.add('hidden');}));
-    const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active');}),{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
-    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+    window._pkg='Orta';window._price='10000';function openOrder(p,pr){window._pkg=p;window._price=pr;document.getElementById('modalPkgName').textContent=p+' · '+parseInt(pr).toLocaleString('tr-TR')+'₺/ay';document.getElementById('selectedPkgDisplay').textContent=p+' Paketi';document.getElementById('selectedPriceDisplay').textContent=parseInt(pr).toLocaleString('tr-TR')+'₺';document.getElementById('orderSuccess').classList.add('hidden');document.getElementById('orderError').classList.add('hidden');document.getElementById('orderForm').reset();document.getElementById('orderBusiness').classList.remove('error');document.getElementById('businessError').classList.add('hidden');if(!window._currentUser){document.getElementById('loginRequired').classList.remove('hidden');document.getElementById('orderFormSection').classList.add('hidden');}else{document.getElementById('loginRequired').classList.add('hidden');document.getElementById('orderFormSection').classList.remove('hidden');import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({getFirestore,doc,getDoc})=>{getDoc(doc(getFirestore(),"users",window._currentUser.uid)).then(s=>{if(s.exists()&&s.data().accountType==='kurumsal'&&s.data().companyName)document.getElementById('orderBusiness').value=s.data().companyName;}).catch(()=>{});});}document.getElementById('orderModal').classList.add('active');document.body.style.overflow='hidden';}function closeOrder(){document.getElementById('orderModal').classList.remove('active');document.body.style.overflow='';}function closeOrderOutside(e){if(e.target===document.getElementById('orderModal'))closeOrder();}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOrder();});document.getElementById('orderForm').addEventListener('submit',e=>{e.preventDefault();window._submitOrder();});document.getElementById('orderBusiness').addEventListener('input',function(){if(this.value.trim()){this.classList.remove('error');document.getElementById('businessError').classList.add('hidden');}});function toggleFaq(btn){const item=btn.parentElement,answer=item.querySelector('.faq-answer'),icon=btn.querySelector('.faq-icon');document.querySelectorAll('.faq').forEach(o=>{if(o!==item){o.querySelector('.faq-answer').classList.add('hidden');o.querySelector('.faq-icon').style.transform='';o.style.borderColor='rgba(255,255,255,0.04)';}});answer.classList.toggle('hidden');if(!answer.classList.contains('hidden')){icon.style.transform='rotate(180deg)';item.style.borderColor='rgba(212,168,83,0.1)';}else{icon.style.transform='';item.style.borderColor='rgba(255,255,255,0.04)';}}const header=document.getElementById('siteHeader');window.addEventListener('scroll',()=>{if(window.scrollY>60){header.style.padding='12px 0';header.style.background='rgba(12,18,34,0.9)';header.style.backdropFilter='blur(20px)';header.style.borderBottom='1px solid rgba(255,255,255,0.03)';}else{header.style.padding='20px 0';header.style.background='transparent';header.style.backdropFilter='none';header.style.borderBottom='none';}});document.getElementById('mobileToggle').addEventListener('click',()=>{document.getElementById('mobileMenu').classList.toggle('hidden');document.getElementById('menuOpen').classList.toggle('hidden');document.getElementById('menuClose').classList.toggle('hidden');});document.querySelectorAll('.mobile-link').forEach(l=>l.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.add('hidden');document.getElementById('menuOpen').classList.remove('hidden');document.getElementById('menuClose').classList.add('hidden');}));const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active');}),{threshold:0.08,rootMargin:'0px 0px -40px 0px'});document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
