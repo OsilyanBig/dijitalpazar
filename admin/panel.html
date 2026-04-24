@@ -87,7 +87,7 @@
             <div class="glass rounded-xl p-3"><p class="text-amber-400/50 text-[10px] font-semibold">Teslim edildiğinde müşteri panelinde site görünecek ve ödeme süreci başlayacak.</p></div>
             <div><label class="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-1">Site Adı *</label><input type="text" id="dSiteName" placeholder="Ahmet'in Berber Salonu" class="input-sm w-full"></div>
             <div><label class="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-1">Site URL *</label><input type="url" id="dSiteUrl" placeholder="https://ahmet-berber.vercel.app" class="input-sm w-full"></div>
-            <div><label class="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-1">Bakım Ücreti (CustomSite için)</label><input type="number" id="dMaintenancePrice" placeholder="5000" class="input-sm w-full"></div>
+            <div id="maintenanceField" class="hidden"><label class="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-1">Aylık Bakım Ücreti (CustomSite)</label><input type="number" id="dMaintenancePrice" placeholder="5000" class="input-sm w-full"></div>
             <div id="deliverErr" class="hidden p-3 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400/60 text-[10px] font-semibold"></div>
             <button onclick="doDeliver()" id="deliverBtn" class="w-full btn-gold py-3 rounded-xl text-xs font-bold">Teslim Et</button>
         </div>
@@ -162,7 +162,17 @@
         document.getElementById('deliverInfo').textContent=`${o.productName} · ${o.businessName||''} · ${o.userEmail||''}`;
         document.getElementById('dSiteName').value=o.businessName||'';
         document.getElementById('dSiteUrl').value='';
-        document.getElementById('dMaintenancePrice').value=o.isCustom?'5000':'';
+    
+    // Bakım alanı sadece CustomSite için görünsün
+        const maintenanceField = document.getElementById('maintenanceField');
+        if(o.isCustom){
+            maintenanceField.classList.remove('hidden');
+            document.getElementById('dMaintenancePrice').value='5000';
+        } else {
+            maintenanceField.classList.add('hidden');
+            document.getElementById('dMaintenancePrice').value='';
+        }
+    
         document.getElementById('deliverErr').classList.add('hidden');
         document.getElementById('deliverModal').classList.add('show');
     };
