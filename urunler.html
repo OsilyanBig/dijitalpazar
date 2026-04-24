@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hizmetler | DijitalPazar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{dark:'#0C1222',gold:'#D4A853'}}}}</script>
     <style>
@@ -17,53 +16,82 @@
         .text-gradient-gold{background:linear-gradient(135deg,#D4A853,#F5D88E,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         .btn-gold{background:linear-gradient(135deg,#D4A853,#C4973D);color:#0C1222;font-weight:700;border:none;cursor:pointer;transition:all 0.3s}
         .btn-gold:hover{box-shadow:0 20px 60px -15px rgba(212,168,83,0.4);transform:translateY(-2px)}
-        .btn-outline-gold{background:transparent;border:1.5px solid rgba(212,168,83,0.3);color:#D4A853;cursor:pointer;transition:all 0.3s}
-        .btn-outline-gold:hover{background:rgba(212,168,83,0.05);border-color:rgba(212,168,83,0.5)}
+        .btn-outline-gold{background:transparent;border:1.5px solid rgba(212,168,83,0.25);color:#D4A853;cursor:pointer;transition:all 0.3s}
+        .btn-outline-gold:hover{background:rgba(212,168,83,0.05);border-color:rgba(212,168,83,0.4)}
         .glass{background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.04)}
-        .gold-badge{background:linear-gradient(135deg,rgba(212,168,83,0.1),rgba(212,168,83,0.05));border:1px solid rgba(212,168,83,0.15);color:#D4A853}
-        .input-field{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);font-size:14px;font-family:'Inter',sans-serif;transition:all 0.2s;outline:none;color:#fff}
-        .input-field:focus{border-color:rgba(212,168,83,0.4);box-shadow:0 0 0 3px rgba(212,168,83,0.1)}
-        .input-field::placeholder{color:rgba(255,255,255,0.2)}
-        .input-field.error{border-color:#EF4444}
+        .gold-badge{background:linear-gradient(135deg,rgba(212,168,83,0.12),rgba(212,168,83,0.04));border:1px solid rgba(212,168,83,0.18);color:#D4A853}
+
+        /* Noise texture */
+        .noise{position:relative}
+        .noise::after{content:'';position:absolute;inset:0;opacity:0.015;pointer-events:none;
+        background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+        /* Dot grid */
+        .dot-grid{background-image:radial-gradient(rgba(212,168,83,0.07) 1px,transparent 1px);background-size:32px 32px}
 
         /* Product Card */
         .product-card{
-            display:block;text-decoration:none;color:inherit;
-            background:linear-gradient(145deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01));
+            display:block;text-decoration:none;color:inherit;position:relative;
+            background:linear-gradient(160deg,rgba(255,255,255,0.025) 0%,rgba(255,255,255,0.005) 100%);
             border:1px solid rgba(255,255,255,0.04);
-            border-radius:20px;overflow:hidden;
-            transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
-            position:relative;
+            border-radius:24px;overflow:hidden;
+            transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
         }
-        .product-card .top-line{
-            position:absolute;top:0;left:0;right:0;height:1px;
-            background:linear-gradient(90deg,transparent,rgba(212,168,83,0.25),transparent);
-            opacity:0;transition:opacity 0.4s;
+        .product-card::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:1px;
+            background:linear-gradient(90deg,transparent 0%,rgba(212,168,83,0.3) 50%,transparent 100%);
+            opacity:0;transition:opacity 0.5s;
+        }
+        .product-card::after{
+            content:'';position:absolute;inset:0;
+            background:radial-gradient(ellipse at top right,rgba(212,168,83,0.03) 0%,transparent 60%);
+            opacity:0;transition:opacity 0.5s;pointer-events:none;
         }
         .product-card:hover{
-            border-color:rgba(212,168,83,0.15);
-            transform:translateY(-6px);
-            box-shadow:0 30px 80px -20px rgba(0,0,0,0.5);
+            border-color:rgba(212,168,83,0.12);
+            transform:translateY(-8px);
+            box-shadow:0 40px 80px -20px rgba(0,0,0,0.6),0 0 60px -30px rgba(212,168,83,0.1);
         }
-        .product-card:hover .top-line{opacity:1}
-        .product-card:hover .card-arrow{color:#D4A853;transform:translateX(4px)}
+        .product-card:hover::before{opacity:1}
+        .product-card:hover::after{opacity:1}
+        .product-card:hover .card-icon{transform:scale(1.15)}
+        .product-card:hover .card-arrow{color:#D4A853;transform:translateX(6px)}
+        .product-card:hover .card-glow{opacity:0.15}
 
-        .card-arrow{color:rgba(255,255,255,0.15);transition:all 0.3s}
+        .card-icon{transition:transform 0.4s cubic-bezier(0.16,1,0.3,1)}
+        .card-arrow{color:rgba(255,255,255,0.1);transition:all 0.4s cubic-bezier(0.16,1,0.3,1)}
+        .card-glow{position:absolute;top:-30%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(212,168,83,0.15),transparent 70%);opacity:0;transition:opacity 0.5s;pointer-events:none}
 
-        /* Order buttons inside card - prevent link navigation */
-        .order-btn{position:relative;z-index:2}
+        /* Custom Card */
+        .custom-card{
+            display:block;text-decoration:none;color:inherit;position:relative;
+            background:linear-gradient(160deg,rgba(212,168,83,0.04) 0%,rgba(212,168,83,0.01) 50%,rgba(99,102,241,0.02) 100%);
+            border:1px solid rgba(212,168,83,0.1);
+            border-radius:28px;overflow:hidden;
+            transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
+        }
+        .custom-card::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:2px;
+            background:linear-gradient(90deg,transparent,#D4A853,rgba(99,102,241,0.5),transparent);
+            opacity:0.4;
+        }
+        .custom-card:hover{
+            border-color:rgba(212,168,83,0.2);
+            transform:translateY(-6px);
+            box-shadow:0 40px 80px -20px rgba(0,0,0,0.5),0 0 80px -30px rgba(212,168,83,0.1);
+        }
 
-        /* Modal */
-        .modal-bg{position:fixed;inset:0;background:rgba(12,18,34,0.8);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s}
-        .modal-bg.active{opacity:1;pointer-events:all}
-        .modal-box{background:#101935;border:1px solid rgba(255,255,255,0.06);border-radius:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;transform:scale(0.95) translateY(10px);transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
-        .modal-bg.active .modal-box{transform:scale(1) translateY(0)}
+        /* Animations */
+        @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        @keyframes glow-pulse{0%,100%{opacity:0.1}50%{opacity:0.25}}
+        @keyframes orbit{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
 
-        @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        @keyframes glow-pulse{0%,100%{opacity:0.15}50%{opacity:0.3}}
-        .fade-up{animation:fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
-        .animate-spin{animation:spin 1s linear infinite}
+        .fade-up{animation:fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards}
+        .float{animation:float 7s ease-in-out infinite}
+        .glow-pulse{animation:glow-pulse 4s ease-in-out infinite}
+
         .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
         .reveal.active{opacity:1;transform:translateY(0)}
 
@@ -73,7 +101,7 @@
 <body class="antialiased">
 
 <!-- HEADER -->
-<header id="siteHeader" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all" style="transition-property:padding,background,backdrop-filter,border">
+<header id="siteHeader" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all" style="transition-property:all;transition-duration:0.4s">
     <div class="max-w-6xl mx-auto px-6">
         <div class="flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3">
@@ -107,204 +135,304 @@
 
 
 <!-- HERO -->
-<section class="pt-36 pb-16 relative overflow-hidden">
-    <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-900/15 rounded-full blur-[200px]"></div>
-    <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-amber-900/8 rounded-full blur-[200px]"></div>
-    <div class="relative max-w-6xl mx-auto px-6 text-center">
-        <div class="gold-badge rounded-full px-4 py-1.5 inline-flex items-center gap-2 mb-8 fade-up">
-            <span class="text-xs font-semibold">11 Farklı Sektör İçin Premium Sistemler</span>
+<section class="pt-36 pb-20 relative overflow-hidden noise">
+    <div class="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-indigo-900/15 rounded-full blur-[250px] glow-pulse"></div>
+    <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-amber-900/8 rounded-full blur-[250px] glow-pulse" style="animation-delay:2s"></div>
+
+    <!-- Orbit ring decoration -->
+    <div class="absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] opacity-[0.03] hidden xl:block" style="animation:orbit 30s linear infinite">
+        <div class="w-full h-full rounded-full border border-white/30"></div>
+    </div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
+        <div class="gold-badge rounded-full px-5 py-2 inline-flex items-center gap-2 mb-10 fade-up">
+            <div class="w-1.5 h-1.5 bg-[#D4A853] rounded-full"></div>
+            <span class="text-xs font-semibold tracking-wide">11 SEKTÖR · PREMIUM SİSTEMLER</span>
         </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 fade-up" style="animation-delay:0.1s;letter-spacing:-0.03em">
+        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 fade-up" style="animation-delay:0.1s;letter-spacing:-0.04em">
             Premium <span class="text-gradient-gold">Hizmetlerimiz</span>
         </h1>
-        <p class="text-base text-white/25 max-w-xl mx-auto mb-10 leading-relaxed fade-up" style="animation-delay:0.2s">
-            İşletmenize özel çözümler. Detayları incelemek için hizmete tıklayın, doğrudan sipariş verin.
+        <p class="text-base sm:text-lg text-white/25 max-w-xl mx-auto mb-12 leading-relaxed fade-up" style="animation-delay:0.2s">
+            İşletmenize özel dijital çözümler. Detayları incelemek için hizmete tıklayın.
         </p>
+
+        <!-- Filtre -->
         <div class="flex flex-wrap gap-2 justify-center fade-up" style="animation-delay:0.3s">
-            <button onclick="filterProducts('all',this)" class="filter-btn active-f btn-gold px-5 py-2 rounded-full text-xs font-semibold">Tümü</button>
-            <button onclick="filterProducts('randevu',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">📅 Randevu</button>
-            <button onclick="filterProducts('tanitim',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🌐 Tanıtım</button>
-            <button onclick="filterProducts('menu',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🍽️ Menü</button>
-            <button onclick="filterProducts('ozel',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🎨 Özel</button>
+            <button onclick="filterProducts('all',this)" class="filter-btn active-f btn-gold px-5 py-2.5 rounded-full text-xs font-bold transition-all">Tümü</button>
+            <button onclick="filterProducts('randevu',this)" class="filter-btn px-5 py-2.5 rounded-full text-xs font-semibold glass text-white/30 hover:text-[#D4A853] hover:border-[#D4A853]/20 transition-all">📅 Randevu Sistemleri</button>
+            <button onclick="filterProducts('tanitim',this)" class="filter-btn px-5 py-2.5 rounded-full text-xs font-semibold glass text-white/30 hover:text-[#D4A853] hover:border-[#D4A853]/20 transition-all">🌐 Tanıtım Siteleri</button>
+            <button onclick="filterProducts('menu',this)" class="filter-btn px-5 py-2.5 rounded-full text-xs font-semibold glass text-white/30 hover:text-[#D4A853] hover:border-[#D4A853]/20 transition-all">🍽️ Menü Sistemi</button>
         </div>
     </div>
 </section>
 
 
 <!-- ÜRÜNLER -->
-<section class="pb-32">
+<section class="pb-20">
     <div class="max-w-6xl mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="productsGrid">
 
             <!-- 1. BarberBook -->
-            <a href="urunler/barberbook.html" class="product-card p-7 group reveal" data-cat="randevu">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">💈</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">BarberBook</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Berber Randevu Sistemi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Online randevu, müsait saat takibi ve admin panel ile işletmenizi dijitale taşıyın.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div>
-                        <span class="text-white/35 text-sm font-semibold">5.000₺</span>
-                        <span class="text-white/15 text-xs">/ay'dan</span>
+            <a href="urunler/barberbook.html" class="product-card p-8 group reveal" data-cat="randevu">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500/10 to-cyan-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-blue-500/10">💈</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">BarberBook</span>
                     </div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Berber Randevu Sistemi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Online randevu, müsait saat takibi ve admin panel ile işletmenizi dijitale taşıyın.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div>
+                            <span class="text-white/30 text-sm font-bold">5.000₺</span>
+                            <span class="text-white/10 text-xs">/ay'dan</span>
+                        </div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 2. MenuQR -->
-            <a href="urunler/menuqr.html" class="product-card p-7 group reveal" data-cat="menu" style="animation-delay:0.05s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">🍽️</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">MenuQR</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Dijital Menü Sistemi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">QR kodlu menü ile kağıt masrafından kurtulun. Anında güncelleme, çoklu dil desteği.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/menuqr.html" class="product-card p-8 group reveal" data-cat="menu" style="animation-delay:0.06s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-orange-500/10 to-red-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-orange-500/10">🍽️</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">MenuQR</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Dijital Menü Sistemi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">QR kodlu menü ile kağıt masrafından kurtulun. Anında güncelleme, çoklu dil.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 3. BeautyBook -->
-            <a href="urunler/beautybook.html" class="product-card p-7 group reveal" data-cat="randevu" style="animation-delay:0.1s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">💅</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">BeautyBook</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Güzellik Salonu Sistemi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Online randevu, personel seçimi ve önce/sonra galerisi ile salonunuzu öne çıkarın.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/beautybook.html" class="product-card p-8 group reveal" data-cat="randevu" style="animation-delay:0.12s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-pink-500/10 to-rose-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-pink-500/10">💅</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">BeautyBook</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Güzellik Salonu Sistemi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Online randevu, personel seçimi ve galeri ile salonunuzu öne çıkarın.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 4. AutoBook -->
-            <a href="urunler/autobook.html" class="product-card p-7 group reveal" data-cat="randevu" style="animation-delay:0.15s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">🚗</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">AutoBook</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Oto Servis Sistemi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Online randevu, araç kayıt ve servis geçmişi ile servisinizi modernleştirin.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/autobook.html" class="product-card p-8 group reveal" data-cat="randevu" style="animation-delay:0.18s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500/10 to-green-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-emerald-500/10">🚗</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">AutoBook</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Oto Servis Sistemi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Online randevu, araç kayıt ve servis geçmişi ile servisinizi modernleştirin.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 5. GymBook -->
-            <a href="urunler/gymbook.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.2s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">🏋️</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">GymBook</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Spor Salonu Sistemi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Üyelik paketleri, ders programı ve eğitmen tanıtımı ile salonunuzu sergileyin.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/gymbook.html" class="product-card p-8 group reveal" data-cat="tanitim" style="animation-delay:0.24s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-violet-500/10 to-purple-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-violet-500/10">🏋️</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">GymBook</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Spor Salonu Sistemi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Üyelik paketleri, ders programı ve eğitmen tanıtımı ile salonunuzu sergileyin.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 6. LegalSite -->
-            <a href="urunler/legalsite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.25s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">⚖️</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">LegalSite</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Hukuk Bürosu Sitesi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Faaliyet alanları, ekip tanıtımı ve blog ile kurumsal kimliğinizi oluşturun.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/legalsite.html" class="product-card p-8 group reveal" data-cat="tanitim" style="animation-delay:0.3s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-slate-400/10 to-gray-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-slate-400/10">⚖️</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">LegalSite</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Hukuk Bürosu Sitesi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Faaliyet alanları, ekip tanıtımı ve blog ile kurumsal kimliğinizi oluşturun.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 7. DesignFolio -->
-            <a href="urunler/designfolio.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.3s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">🏗️</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">DesignFolio</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Mimar Portfolyo Sitesi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Proje galerisi, önce/sonra görselleri ve online teklif formu ile işlerinizi sergileyin.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/designfolio.html" class="product-card p-8 group reveal" data-cat="tanitim" style="animation-delay:0.36s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-500/10 to-yellow-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-amber-500/10">🏗️</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">DesignFolio</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Mimar Portfolyo Sitesi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Proje galerisi, önce/sonra görselleri ve teklif formu ile işlerinizi sergileyin.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 8. StudioSite -->
-            <a href="urunler/studiosite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.35s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">📸</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">StudioSite</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Fotoğrafçı Sitesi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Portfolyo galerisi, paket fiyatları ve randevu formu ile müşteri tabanınızı büyütün.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/studiosite.html" class="product-card p-8 group reveal" data-cat="tanitim" style="animation-delay:0.42s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-cyan-500/10 to-teal-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-cyan-500/10">📸</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">StudioSite</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Fotoğrafçı Sitesi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Portfolyo galerisi, paket fiyatları ve randevu ile müşteri tabanınızı büyütün.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 9. MasterSite -->
-            <a href="urunler/mastersite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.4s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">🔧</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">MasterSite</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Usta / Tadilat Sitesi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Hizmet tanıtımı, referans galerisi ve online teklif formu ile yeni müşteriler kazanın.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/mastersite.html" class="product-card p-8 group reveal" data-cat="tanitim" style="animation-delay:0.48s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-red-500/10 to-orange-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-red-500/10">🔧</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">MasterSite</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Usta / Tadilat Sitesi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Hizmet tanıtımı, referans galerisi ve teklif formu ile yeni müşteriler kazanın.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
             <!-- 10. ExpertSite -->
-            <a href="urunler/expertsite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.45s">
-                <div class="top-line"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">🧠</span>
-                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">ExpertSite</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Psikolog / Danışman Sitesi</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Kişisel tanıtım, blog sistemi, seans ücretleri ve online görüşme linki.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
-                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                </div>
-            </a>
-
-            <!-- 11. CustomSite -->
-            <a href="urunler/customsite.html" class="product-card p-7 group reveal relative" data-cat="ozel" style="animation-delay:0.5s;border-color:rgba(212,168,83,0.1)">
-                <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4A853]/25 to-transparent"></div>
-                <div class="flex items-center justify-between mb-6">
-                    <span class="text-2xl">🎨</span>
-                    <span class="gold-badge text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Premium</span>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Özel Tasarım</h3>
-                <p class="text-sm text-white/20 leading-relaxed mb-6">Tamamen size özel, benzersiz tasarım. Sınırsız sayfa, sınırsız olasılık.</p>
-                <div class="flex items-center justify-between pt-5 border-t border-[#D4A853]/10">
-                    <div><span class="text-[#D4A853]/50 text-sm font-semibold">75.000₺</span><span class="text-[#D4A853]/25 text-xs">'den</span></div>
-                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <a href="urunler/expertsite.html" class="product-card p-8 group reveal" data-cat="tanitim" style="animation-delay:0.54s">
+                <div class="card-glow"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500/10 to-blue-500/5 rounded-2xl flex items-center justify-center text-2xl card-icon border border-indigo-500/10">🧠</div>
+                        <span class="text-[10px] text-white/15 font-semibold uppercase tracking-[0.15em]">ExpertSite</span>
+                    </div>
+                    <h3 class="text-base font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Psikolog / Danışman Sitesi</h3>
+                    <p class="text-[13px] text-white/20 leading-relaxed mb-8">Kişisel tanıtım, blog, seans ücretleri ve online görüşme linki.</p>
+                    <div class="flex items-center justify-between pt-5 border-t border-white/[0.03]">
+                        <div><span class="text-white/30 text-sm font-bold">5.000₺</span><span class="text-white/10 text-xs">/ay'dan</span></div>
+                        <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                    </div>
                 </div>
             </a>
 
         </div>
+    </div>
+</section>
+
+
+<!-- CUSTOM SITE - ÖZEL BÖLÜM -->
+<section class="pb-32 relative noise">
+    <div class="absolute inset-0 dot-grid opacity-30"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-900/5 rounded-full blur-[250px]"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-6">
+
+        <!-- Divider -->
+        <div class="flex items-center gap-6 mb-16 reveal">
+            <div class="flex-1 h-px bg-gradient-to-r from-transparent to-[#D4A853]/10"></div>
+            <span class="text-[#D4A853]/30 text-xs font-semibold uppercase tracking-[0.3em]">Özel Hizmet</span>
+            <div class="flex-1 h-px bg-gradient-to-l from-transparent to-[#D4A853]/10"></div>
+        </div>
+
+        <a href="urunler/customsite.html" class="custom-card block group reveal">
+            <div class="p-10 sm:p-14">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+
+                    <!-- Sol -->
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-14 h-14 bg-gradient-to-br from-[#D4A853]/15 to-[#D4A853]/5 rounded-2xl flex items-center justify-center text-3xl card-icon border border-[#D4A853]/15">🎨</div>
+                            <div>
+                                <div class="gold-badge text-[10px] font-bold uppercase tracking-[0.15em] px-3 py-1 rounded-full inline-block">✦ Premium Özel Tasarım</div>
+                            </div>
+                        </div>
+
+                        <h2 class="text-3xl sm:text-4xl font-black mb-4 leading-tight group-hover:text-[#D4A853] transition-colors" style="letter-spacing:-0.02em">
+                            Hayalinizdeki web sitesi,<br>
+                            <span class="text-gradient-gold">tamamen size özel.</span>
+                        </h2>
+
+                        <p class="text-sm text-white/25 leading-relaxed mb-8 max-w-md">
+                            Hazır şablonlar yetmiyorsa doğru yerdesiniz. Sınırsız sayfa, benzersiz tasarım, 
+                            markanıza özel dijital deneyim. Her detay sizin isteklerinize göre şekillenir.
+                        </p>
+
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="glass text-white/25 text-[11px] font-medium px-3 py-1.5 rounded-full">Tamamen Özgün</span>
+                            <span class="glass text-white/25 text-[11px] font-medium px-3 py-1.5 rounded-full">Sınırsız Sayfa</span>
+                            <span class="glass text-white/25 text-[11px] font-medium px-3 py-1.5 rounded-full">Premium Tasarım</span>
+                            <span class="glass text-white/25 text-[11px] font-medium px-3 py-1.5 rounded-full">SEO Uyumlu</span>
+                            <span class="glass text-white/25 text-[11px] font-medium px-3 py-1.5 rounded-full">Revizyon Hakkı</span>
+                        </div>
+
+                        <div class="inline-flex items-center gap-3 btn-outline-gold px-6 py-3 rounded-xl text-sm font-semibold group-hover:bg-[#D4A853]/5 transition-all">
+                            Detayları İncele
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- Sağ - Fiyat & Detay -->
+                    <div class="lg:text-right">
+                        <div class="inline-block lg:ml-auto">
+                            <div class="text-white/10 text-xs font-medium uppercase tracking-[0.2em] mb-3">Başlangıç Fiyatı</div>
+                            <div class="text-5xl sm:text-6xl font-black text-gradient-gold mb-2" style="letter-spacing:-0.03em">75.000₺</div>
+                            <div class="text-white/15 text-sm mb-8">tek seferlik · aylık bakım opsiyonel</div>
+
+                            <div class="space-y-3 text-left lg:text-right">
+                                <div class="flex items-center gap-3 lg:justify-end">
+                                    <span class="text-white/30 text-xs">Başlangıç</span>
+                                    <span class="text-white/15 text-xs">·</span>
+                                    <span class="text-[#D4A853]/50 text-xs font-semibold">75.000₺</span>
+                                    <span class="text-white/10 text-xs">+ 5.000₺/ay bakım</span>
+                                </div>
+                                <div class="flex items-center gap-3 lg:justify-end">
+                                    <span class="text-white/30 text-xs">Orta</span>
+                                    <span class="text-white/15 text-xs">·</span>
+                                    <span class="text-[#D4A853]/50 text-xs font-semibold">125.000₺</span>
+                                    <span class="text-white/10 text-xs">+ 10.000₺/ay bakım</span>
+                                </div>
+                                <div class="flex items-center gap-3 lg:justify-end">
+                                    <span class="text-white/30 text-xs">İleri</span>
+                                    <span class="text-white/15 text-xs">·</span>
+                                    <span class="text-[#D4A853]/50 text-xs font-semibold">250.000₺</span>
+                                    <span class="text-white/10 text-xs">+ 20.000₺/ay bakım</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
 </section>
 
@@ -315,19 +443,20 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center"><span class="text-[#0C1222] font-black text-[10px]">D</span></div>
-                <span class="text-white/40 font-semibold text-xs">DijitalPazar</span>
+                <span class="text-white/30 font-semibold text-xs">DijitalPazar</span>
             </div>
-            <p class="text-white/10 text-xs">© 2024 DijitalPazar</p>
-            <div class="flex gap-6 text-white/15 text-xs">
-                <a href="index.html" class="hover:text-[#D4A853]/40 transition-colors">Ana Sayfa</a>
-                <a href="iletisim.html" class="hover:text-[#D4A853]/40 transition-colors">İletişim</a>
+            <p class="text-white/8 text-xs">© 2024 DijitalPazar</p>
+            <div class="flex gap-6 text-white/12 text-xs">
+                <a href="index.html" class="hover:text-[#D4A853]/30 transition-colors">Ana Sayfa</a>
+                <a href="iletisim.html" class="hover:text-[#D4A853]/30 transition-colors">İletişim</a>
             </div>
         </div>
     </div>
 </footer>
 
+
 <!-- WhatsApp -->
-<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 w-12 h-12 bg-green-500 rounded-full items-center justify-center shadow-lg hover:scale-110 transition-transform">
+<a href="https://wa.me/905523845336" target="_blank" class="hidden lg:flex fixed bottom-8 right-8 z-50 w-12 h-12 bg-green-500 rounded-full items-center justify-center shadow-lg shadow-green-900/30 hover:scale-110 transition-transform">
     <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 <div class="fixed bottom-0 left-0 right-0 z-50 lg:hidden" style="background:rgba(12,18,34,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.04)">
@@ -352,54 +481,34 @@
             if(ma) ma.innerHTML = `<a href="panel.html" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Panelime Git</a>`;
         } else {
             ha.innerHTML = `<a href="giris.html" class="text-sm text-white/40 hover:text-white transition-colors font-medium">Giriş</a><a href="giris.html?tab=register" class="btn-gold px-5 py-2.5 rounded-xl text-sm font-bold">Başlayın</a>`;
-            if(ma) ma.innerHTML = `<a href="giris.html" class="mobile-link block text-center text-white/50 px-4 py-3 rounded-xl hover:bg-white/[0.02] font-medium text-sm">Giriş</a><a href="giris.html?tab=register" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Başlayın</a>`;
+            if(ma) ma.innerHTML = `<a href="giris.html" class="mobile-link block text-center text-white/50 px-4 py-3 rounded-xl font-medium text-sm">Giriş</a><a href="giris.html?tab=register" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Başlayın</a>`;
         }
     });
 </script>
 
 <script>
-    // Filtre
     function filterProducts(cat, btn) {
         document.querySelectorAll('.filter-btn').forEach(b => {
-            b.classList.remove('active-f', 'btn-gold');
-            b.classList.add('glass', 'text-white/40');
+            b.classList.remove('active-f','btn-gold');
+            b.classList.add('glass','text-white/30');
         });
-        btn.classList.add('active-f', 'btn-gold');
-        btn.classList.remove('glass', 'text-white/40');
-
+        btn.classList.add('active-f','btn-gold');
+        btn.classList.remove('glass','text-white/30');
         document.querySelectorAll('.product-card').forEach(card => {
             if (cat === 'all' || card.dataset.cat === cat) {
                 card.style.display = '';
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                setTimeout(() => {
-                    card.style.transition = 'opacity 0.4s, transform 0.4s';
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 10);
-            } else {
-                card.style.display = 'none';
-            }
+                card.style.opacity = '0';card.style.transform = 'translateY(20px)';
+                setTimeout(() => {card.style.transition='opacity 0.5s,transform 0.5s';card.style.opacity='1';card.style.transform='translateY(0)';}, 10);
+            } else { card.style.display = 'none'; }
         });
     }
 
-    // Header scroll
     const header = document.getElementById('siteHeader');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 60) {
-            header.style.padding = '12px 0';
-            header.style.background = 'rgba(12,18,34,0.85)';
-            header.style.backdropFilter = 'blur(20px)';
-            header.style.borderBottom = '1px solid rgba(255,255,255,0.03)';
-        } else {
-            header.style.padding = '20px 0';
-            header.style.background = 'transparent';
-            header.style.backdropFilter = 'none';
-            header.style.borderBottom = 'none';
-        }
+        if (window.scrollY > 60) {header.style.padding='12px 0';header.style.background='rgba(12,18,34,0.9)';header.style.backdropFilter='blur(20px)';header.style.borderBottom='1px solid rgba(255,255,255,0.03)';}
+        else {header.style.padding='20px 0';header.style.background='transparent';header.style.backdropFilter='none';header.style.borderBottom='none';}
     });
 
-    // Mobile
     document.getElementById('mobileToggle').addEventListener('click', () => {
         document.getElementById('mobileMenu').classList.toggle('hidden');
         document.getElementById('menuOpen').classList.toggle('hidden');
@@ -411,7 +520,6 @@
         document.getElementById('menuClose').classList.add('hidden');
     }));
 
-    // Reveal
     const obs = new IntersectionObserver(
         entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); }),
         { threshold: 0.05, rootMargin: '0px 0px -30px 0px' }
