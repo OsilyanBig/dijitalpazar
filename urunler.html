@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hizmetler | DijitalPazar</title>
-    <meta name="description" content="Premium web sistemleri. 11 farklı sektör için kurumsal dijital çözümler.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{dark:'#0C1222',navy:'#101935',gold:'#D4A853'}}}}</script>
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{dark:'#0C1222',gold:'#D4A853'}}}}</script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
         body{font-family:'Inter',sans-serif;background:#0C1222;color:#fff;overflow-x:hidden}
@@ -22,7 +21,6 @@
         .btn-outline-gold:hover{background:rgba(212,168,83,0.05);border-color:rgba(212,168,83,0.5)}
         .glass{background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.04)}
         .gold-badge{background:linear-gradient(135deg,rgba(212,168,83,0.1),rgba(212,168,83,0.05));border:1px solid rgba(212,168,83,0.15);color:#D4A853}
-        .divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);max-width:80%;margin:0 auto}
         .input-field{width:100%;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);font-size:14px;font-family:'Inter',sans-serif;transition:all 0.2s;outline:none;color:#fff}
         .input-field:focus{border-color:rgba(212,168,83,0.4);box-shadow:0 0 0 3px rgba(212,168,83,0.1)}
         .input-field::placeholder{color:rgba(255,255,255,0.2)}
@@ -30,38 +28,30 @@
 
         /* Product Card */
         .product-card{
+            display:block;text-decoration:none;color:inherit;
             background:linear-gradient(145deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01));
             border:1px solid rgba(255,255,255,0.04);
             border-radius:20px;overflow:hidden;
             transition:all 0.4s cubic-bezier(0.16,1,0.3,1);
-        }
-        .product-card:hover{
-            border-color:rgba(212,168,83,0.12);
-            transform:translateY(-4px);
-            box-shadow:0 25px 60px -15px rgba(0,0,0,0.4);
+            position:relative;
         }
         .product-card .top-line{
-            height:1px;
-            background:linear-gradient(90deg,transparent,rgba(212,168,83,0.2),transparent);
+            position:absolute;top:0;left:0;right:0;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(212,168,83,0.25),transparent);
             opacity:0;transition:opacity 0.4s;
         }
+        .product-card:hover{
+            border-color:rgba(212,168,83,0.15);
+            transform:translateY(-6px);
+            box-shadow:0 30px 80px -20px rgba(0,0,0,0.5);
+        }
         .product-card:hover .top-line{opacity:1}
+        .product-card:hover .card-arrow{color:#D4A853;transform:translateX(4px)}
 
-        /* Accordion */
-        .accordion-body{max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1)}
-        .accordion-body.open{max-height:2500px}
-        .accordion-icon{transition:transform 0.4s ease}
-        .product-card.is-open .accordion-icon{transform:rotate(180deg)}
-        .product-card.is-open{border-color:rgba(212,168,83,0.2)}
+        .card-arrow{color:rgba(255,255,255,0.15);transition:all 0.3s}
 
-        /* Table */
-        .pkg-table{width:100%;border-collapse:collapse}
-        .pkg-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#D4A853;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid rgba(255,255,255,0.04);background:rgba(212,168,83,0.03)}
-        .pkg-table td{padding:9px 14px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.02);color:rgba(255,255,255,0.5)}
-        .pkg-table tr:hover td{background:rgba(255,255,255,0.01)}
-        .pkg-table td:first-child{color:rgba(255,255,255,0.7);font-weight:500}
-        .feature-yes{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:rgba(34,197,94,0.1);border-radius:50%;color:#22C55E;font-size:11px;font-weight:700}
-        .feature-no{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:rgba(255,255,255,0.03);border-radius:50%;color:rgba(255,255,255,0.15);font-size:11px}
+        /* Order buttons inside card - prevent link navigation */
+        .order-btn{position:relative;z-index:2}
 
         /* Modal */
         .modal-bg{position:fixed;inset:0;background:rgba(12,18,34,0.8);backdrop-filter:blur(12px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.3s}
@@ -83,13 +73,11 @@
 <body class="antialiased">
 
 <!-- HEADER -->
-<header id="siteHeader" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all duration-400" style="transition-property:padding,background,border,backdrop-filter">
+<header id="siteHeader" class="fixed top-0 left-0 right-0 z-50 py-5 transition-all" style="transition-property:padding,background,backdrop-filter,border">
     <div class="max-w-6xl mx-auto px-6">
         <div class="flex items-center justify-between">
             <a href="index.html" class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-900/20">
-                    <span class="text-[#0C1222] font-black text-sm">D</span>
-                </div>
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-amber-900/20"><span class="text-[#0C1222] font-black text-sm">D</span></div>
                 <span class="text-white font-bold text-base tracking-tight hidden sm:block">DijitalPazar</span>
             </a>
             <nav class="hidden lg:flex items-center gap-8">
@@ -108,9 +96,9 @@
         </div>
         <div id="mobileMenu" class="lg:hidden hidden mt-6">
             <div class="glass rounded-2xl p-5 space-y-1">
-                <a href="index.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] hover:bg-white/[0.02] font-medium text-sm">Ana Sayfa</a>
+                <a href="index.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] font-medium text-sm">Ana Sayfa</a>
                 <a href="urunler.html" class="mobile-link block px-4 py-3 rounded-xl text-[#D4A853] bg-white/[0.02] font-medium text-sm">Hizmetler</a>
-                <a href="iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] hover:bg-white/[0.02] font-medium text-sm">İletişim</a>
+                <a href="iletisim.html" class="mobile-link block px-4 py-3 rounded-xl text-white/50 hover:text-[#D4A853] font-medium text-sm">İletişim</a>
                 <div id="mobileAuthButtons" class="pt-3 mt-3 border-t border-white/5 space-y-2"></div>
             </div>
         </div>
@@ -122,21 +110,18 @@
 <section class="pt-36 pb-16 relative overflow-hidden">
     <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-900/15 rounded-full blur-[200px]"></div>
     <div class="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-amber-900/8 rounded-full blur-[200px]"></div>
-
     <div class="relative max-w-6xl mx-auto px-6 text-center">
         <div class="gold-badge rounded-full px-4 py-1.5 inline-flex items-center gap-2 mb-8 fade-up">
-            <span class="text-xs font-semibold">11 Farklı Sektör İçin Hazır Sistemler</span>
+            <span class="text-xs font-semibold">11 Farklı Sektör İçin Premium Sistemler</span>
         </div>
         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 fade-up" style="animation-delay:0.1s;letter-spacing:-0.03em">
             Premium <span class="text-gradient-gold">Hizmetlerimiz</span>
         </h1>
         <p class="text-base text-white/25 max-w-xl mx-auto mb-10 leading-relaxed fade-up" style="animation-delay:0.2s">
-            Detayları görmek için hizmete tıklayın. Doğrudan sipariş verebilir veya bizimle görüşme ayarlayabilirsiniz.
+            İşletmenize özel çözümler. Detayları incelemek için hizmete tıklayın, doğrudan sipariş verin.
         </p>
-
-        <!-- Filtre -->
         <div class="flex flex-wrap gap-2 justify-center fade-up" style="animation-delay:0.3s">
-            <button onclick="filterProducts('all',this)" class="filter-btn active-filter px-5 py-2 rounded-full text-xs font-semibold btn-gold">Tümü</button>
+            <button onclick="filterProducts('all',this)" class="filter-btn active-f btn-gold px-5 py-2 rounded-full text-xs font-semibold">Tümü</button>
             <button onclick="filterProducts('randevu',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">📅 Randevu</button>
             <button onclick="filterProducts('tanitim',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🌐 Tanıtım</button>
             <button onclick="filterProducts('menu',this)" class="filter-btn px-5 py-2 rounded-full text-xs font-semibold glass text-white/40 hover:text-[#D4A853] transition-colors">🍽️ Menü</button>
@@ -148,152 +133,180 @@
 
 <!-- ÜRÜNLER -->
 <section class="pb-32">
-    <div class="max-w-4xl mx-auto px-6 space-y-4" id="productsContainer">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="productsGrid">
 
-        <!-- 1. BarberBook -->
-        <div class="product-card reveal" data-cat="randevu">
-            <div class="top-line"></div>
-            <div class="p-6 cursor-pointer flex items-center justify-between gap-4" onclick="toggleCard(this)">
-                <div class="flex items-center gap-4 min-w-0">
-                    <span class="text-2xl flex-shrink-0">💈</span>
-                    <div class="min-w-0">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-base font-bold text-white">Berber Randevu Sistemi</h3>
-                            <span class="text-[10px] text-[#D4A853]/60 font-semibold uppercase tracking-widest">BarberBook</span>
-                        </div>
-                        <p class="text-xs text-white/20 mt-0.5 truncate">Online randevu · Müsait saat · Admin panel</p>
-                    </div>
+            <!-- 1. BarberBook -->
+            <a href="urunler/barberbook.html" class="product-card p-7 group reveal" data-cat="randevu">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">💈</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">BarberBook</span>
                 </div>
-                <div class="flex items-center gap-3 flex-shrink-0">
-                    <span class="text-white/30 text-sm font-semibold hidden sm:block">5.000₺<span class="text-white/15">/ay</span></span>
-                    <div class="w-8 h-8 glass rounded-lg flex items-center justify-center accordion-icon">
-                        <svg class="w-4 h-4 text-[#D4A853]/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Berber Randevu Sistemi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Online randevu, müsait saat takibi ve admin panel ile işletmenizi dijitale taşıyın.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div>
+                        <span class="text-white/35 text-sm font-semibold">5.000₺</span>
+                        <span class="text-white/15 text-xs">/ay'dan</span>
                     </div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </div>
-            </div>
-            <div class="accordion-body">
-                <div class="px-6 pb-6 border-t border-white/[0.03] pt-5">
-                    <p class="text-sm text-white/25 leading-relaxed mb-6">Berber dükkanınız için profesyonel web sitesi ve randevu yönetim sistemi. Müşterileriniz müsait saatleri görerek randevu alır, siz admin panelden yönetirsiniz.</p>
-                    <div class="overflow-x-auto rounded-2xl border border-white/[0.04] mb-6">
-                        <table class="pkg-table">
-                            <thead><tr>
-                                <th style="min-width:160px">Özellik</th>
-                                <th>Başlangıç · 5.000₺/ay</th>
-                                <th>Orta · 10.000₺/ay</th>
-                                <th>İleri · 20.000₺/ay</th>
-                            </tr></thead>
-                            <tbody>
-                                <tr><td>Profesyonel web sitesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Hizmet & fiyat listesi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Online randevu formu</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Müsait saat sistemi</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Admin panel</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Onay/Red + müşteri maili</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Google Maps & WhatsApp</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Mobil uyumlu & SSL</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Domain bağlama</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Temel SEO</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>İçerik güncelleme desteği</td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Fotoğraf galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Personel tanıtımı</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Personel seçimi (randevuda)</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>E-posta hatırlatma</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Hakkımızda sayfası</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Gelişmiş istatistikler</td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Çoklu şube desteği</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Önce/Sonra galerisi</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Premium SEO</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                                <tr><td>Öncelikli destek</td><td><span class="feature-no">✗</span></td><td><span class="feature-no">✗</span></td><td><span class="feature-yes">✓</span></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button onclick="event.stopPropagation();openOrder('BarberBook - Berber Randevu Sistemi','💈','Başlangıç','5000',false)" class="btn-outline-gold px-4 py-3 rounded-xl text-xs font-bold text-center">Başlangıç · 5.000₺/ay</button>
-                        <button onclick="event.stopPropagation();openOrder('BarberBook - Berber Randevu Sistemi','💈','Orta','10000',false)" class="btn-gold px-4 py-3 rounded-xl text-xs font-bold text-center">⭐ Orta · 10.000₺/ay</button>
-                        <button onclick="event.stopPropagation();openOrder('BarberBook - Berber Randevu Sistemi','💈','İleri','20000',false)" class="btn-outline-gold px-4 py-3 rounded-xl text-xs font-bold text-center">İleri · 20.000₺/ay</button>
-                    </div>
+            </a>
+
+            <!-- 2. MenuQR -->
+            <a href="urunler/menuqr.html" class="product-card p-7 group reveal" data-cat="menu" style="animation-delay:0.05s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">🍽️</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">MenuQR</span>
                 </div>
-            </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Dijital Menü Sistemi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">QR kodlu menü ile kağıt masrafından kurtulun. Anında güncelleme, çoklu dil desteği.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 3. BeautyBook -->
+            <a href="urunler/beautybook.html" class="product-card p-7 group reveal" data-cat="randevu" style="animation-delay:0.1s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">💅</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">BeautyBook</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Güzellik Salonu Sistemi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Online randevu, personel seçimi ve önce/sonra galerisi ile salonunuzu öne çıkarın.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 4. AutoBook -->
+            <a href="urunler/autobook.html" class="product-card p-7 group reveal" data-cat="randevu" style="animation-delay:0.15s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">🚗</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">AutoBook</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Oto Servis Sistemi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Online randevu, araç kayıt ve servis geçmişi ile servisinizi modernleştirin.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 5. GymBook -->
+            <a href="urunler/gymbook.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.2s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">🏋️</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">GymBook</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Spor Salonu Sistemi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Üyelik paketleri, ders programı ve eğitmen tanıtımı ile salonunuzu sergileyin.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 6. LegalSite -->
+            <a href="urunler/legalsite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.25s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">⚖️</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">LegalSite</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Hukuk Bürosu Sitesi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Faaliyet alanları, ekip tanıtımı ve blog ile kurumsal kimliğinizi oluşturun.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 7. DesignFolio -->
+            <a href="urunler/designfolio.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.3s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">🏗️</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">DesignFolio</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Mimar Portfolyo Sitesi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Proje galerisi, önce/sonra görselleri ve online teklif formu ile işlerinizi sergileyin.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 8. StudioSite -->
+            <a href="urunler/studiosite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.35s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">📸</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">StudioSite</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Fotoğrafçı Sitesi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Portfolyo galerisi, paket fiyatları ve randevu formu ile müşteri tabanınızı büyütün.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 9. MasterSite -->
+            <a href="urunler/mastersite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.4s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">🔧</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">MasterSite</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Usta / Tadilat Sitesi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Hizmet tanıtımı, referans galerisi ve online teklif formu ile yeni müşteriler kazanın.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 10. ExpertSite -->
+            <a href="urunler/expertsite.html" class="product-card p-7 group reveal" data-cat="tanitim" style="animation-delay:0.45s">
+                <div class="top-line"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">🧠</span>
+                    <span class="text-[10px] text-[#D4A853]/50 font-semibold uppercase tracking-widest">ExpertSite</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Psikolog / Danışman Sitesi</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Kişisel tanıtım, blog sistemi, seans ücretleri ve online görüşme linki.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-white/[0.04]">
+                    <div><span class="text-white/35 text-sm font-semibold">5.000₺</span><span class="text-white/15 text-xs">/ay'dan</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
+            <!-- 11. CustomSite -->
+            <a href="urunler/customsite.html" class="product-card p-7 group reveal relative" data-cat="ozel" style="animation-delay:0.5s;border-color:rgba(212,168,83,0.1)">
+                <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4A853]/25 to-transparent"></div>
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-2xl">🎨</span>
+                    <span class="gold-badge text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">Premium</span>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-2 group-hover:text-[#D4A853] transition-colors">Özel Tasarım</h3>
+                <p class="text-sm text-white/20 leading-relaxed mb-6">Tamamen size özel, benzersiz tasarım. Sınırsız sayfa, sınırsız olasılık.</p>
+                <div class="flex items-center justify-between pt-5 border-t border-[#D4A853]/10">
+                    <div><span class="text-[#D4A853]/50 text-sm font-semibold">75.000₺</span><span class="text-[#D4A853]/25 text-xs">'den</span></div>
+                    <svg class="w-5 h-5 card-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                </div>
+            </a>
+
         </div>
-
-        <!-- Diğer ürünleri aynı yapıda ekleyeceğim, şimdilik kısa tutuyorum -->
-        <!-- 2-10 arası ürünler aynı şablonda olacak, sadece içerik farklı -->
-
-        <!-- Mesaj sınırı yüzünden diğer 9 ürünü sonraki mesajda vereceğim -->
-        <!-- Ama yapı tamamen aynı, sadece isim/ikon/özellik/fiyat değişecek -->
-
     </div>
 </section>
-
-
-<!-- SİPARİŞ MODAL -->
-<div id="orderModal" class="modal-bg" onclick="closeOrderOutside(event)">
-    <div class="modal-box">
-        <div class="p-6 flex items-center justify-between border-b border-white/[0.04]">
-            <div>
-                <h3 class="text-lg font-bold text-white">Sipariş Oluştur</h3>
-                <p id="modalProductName" class="text-white/30 text-xs mt-0.5"></p>
-            </div>
-            <button onclick="closeOrder()" class="w-8 h-8 glass rounded-lg flex items-center justify-center hover:bg-white/[0.04] transition-colors">
-                <svg class="w-4 h-4 text-white/40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-        </div>
-        <div class="p-6">
-            <!-- Giriş Gerekli -->
-            <div id="loginRequired" class="hidden text-center py-8">
-                <div class="text-3xl mb-4">🔐</div>
-                <h4 class="text-base font-bold text-white mb-2">Giriş yapmanız gerekiyor</h4>
-                <p class="text-white/25 text-sm mb-6">Sipariş vermek için hesabınıza giriş yapın.</p>
-                <div class="flex gap-3 justify-center">
-                    <a href="giris.html" class="btn-outline-gold px-6 py-3 rounded-xl text-sm font-semibold">Giriş</a>
-                    <a href="giris.html?tab=register" class="btn-gold px-6 py-3 rounded-xl text-sm font-bold">Kayıt Ol</a>
-                </div>
-            </div>
-            <!-- Başarı -->
-            <div id="orderSuccess" class="hidden text-center py-8">
-                <div class="text-3xl mb-4">✅</div>
-                <h4 class="text-base font-bold text-white mb-2">Siparişiniz alındı!</h4>
-                <p class="text-white/25 text-sm mb-6">En kısa sürede sizinle iletişime geçeceğiz.</p>
-                <div class="flex gap-3 justify-center">
-                    <a href="panel.html" class="btn-gold px-6 py-3 rounded-xl text-sm font-bold">Panelim →</a>
-                    <a href="https://wa.me/905523845336" target="_blank" class="glass px-6 py-3 rounded-xl text-sm font-semibold text-green-400 hover:bg-white/[0.03] transition-colors">WhatsApp</a>
-                </div>
-            </div>
-            <!-- Hata -->
-            <div id="orderError" class="hidden mb-4 p-4 rounded-xl border border-red-500/20 bg-red-500/5">
-                <p id="orderErrorText" class="text-red-400 text-sm font-semibold"></p>
-            </div>
-            <!-- Form -->
-            <div id="orderFormSection">
-                <div class="glass rounded-2xl p-4 mb-5 flex items-center justify-between">
-                    <div>
-                        <div class="text-[10px] text-[#D4A853]/60 font-semibold uppercase tracking-widest">Seçilen Paket</div>
-                        <div id="selectedPkgDisplay" class="font-bold text-white text-sm mt-0.5"></div>
-                    </div>
-                    <div class="text-right">
-                        <div id="selectedPriceDisplay" class="text-xl font-black text-[#D4A853]"></div>
-                        <div id="selectedPeriod" class="text-[10px] text-white/20">/ay</div>
-                    </div>
-                </div>
-                <form id="orderForm" class="space-y-4">
-                    <div>
-                        <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest block mb-1.5">İşletme Adı <span class="text-red-400">*</span></label>
-                        <input type="text" id="orderBusiness" required placeholder="İşletmenizin adı" class="input-field">
-                        <p id="businessError" class="hidden text-red-400 text-xs mt-1">Lütfen işletme adını girin.</p>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest block mb-1.5">Not <span class="text-white/15 font-normal">(opsiyonel)</span></label>
-                        <textarea id="orderNote" rows="3" placeholder="Özel istekleriniz..." class="input-field" style="resize:none"></textarea>
-                    </div>
-                    <button type="submit" id="orderSubmitBtn" class="w-full btn-gold px-6 py-4 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
-                        <span id="orderBtnText">Sipariş Gönder</span>
-                        <svg id="orderBtnLoader" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <!-- FOOTER -->
@@ -301,9 +314,7 @@
     <div class="max-w-6xl mx-auto px-6">
         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center">
-                    <span class="text-[#0C1222] font-black text-[10px]">D</span>
-                </div>
+                <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center"><span class="text-[#0C1222] font-black text-[10px]">D</span></div>
                 <span class="text-white/40 font-semibold text-xs">DijitalPazar</span>
             </div>
             <p class="text-white/10 text-xs">© 2024 DijitalPazar</p>
@@ -328,21 +339,12 @@
 </div>
 
 
-<!-- FIREBASE + EMAILJS -->
+<!-- FIREBASE -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
     const app = initializeApp({apiKey:"AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",authDomain:"dijital-pazar-3cc34.firebaseapp.com",projectId:"dijital-pazar-3cc34",storageBucket:"dijital-pazar-3cc34.firebasestorage.app",messagingSenderId:"519713206128",appId:"1:519713206128:web:4d1f541d1b469eeb8069b5"});
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // EmailJS init
-    emailjs.init("0A5ullxFfIzpla5vd");
-
-    onAuthStateChanged(auth, (user) => {
-        window._currentUser = user;
+    onAuthStateChanged(getAuth(app), (user) => {
         const ha = document.getElementById('headerAuth');
         const ma = document.getElementById('mobileAuthButtons');
         if (user) {
@@ -353,203 +355,30 @@
             if(ma) ma.innerHTML = `<a href="giris.html" class="mobile-link block text-center text-white/50 px-4 py-3 rounded-xl hover:bg-white/[0.02] font-medium text-sm">Giriş</a><a href="giris.html?tab=register" class="mobile-link block text-center btn-gold px-4 py-3 rounded-xl font-bold text-sm">Başlayın</a>`;
         }
     });
-
-    // Sipariş gönder
-    window._submitOrder = async function() {
-        const user = window._currentUser;
-        if (!user) return;
-
-        const bi = document.getElementById('orderBusiness');
-        const be = document.getElementById('businessError');
-        const business = bi.value.trim();
-
-        if (!business) {
-            bi.classList.add('error');
-            be.classList.remove('hidden');
-            bi.focus();
-            return;
-        }
-        bi.classList.remove('error');
-        be.classList.add('hidden');
-
-        const btn = document.getElementById('orderSubmitBtn');
-        const txt = document.getElementById('orderBtnText');
-        const ldr = document.getElementById('orderBtnLoader');
-        btn.disabled = true; txt.textContent = 'Gönderiliyor...'; ldr.classList.remove('hidden');
-        document.getElementById('orderError').classList.add('hidden');
-
-        try {
-            // Kullanıcı bilgilerini çek
-            let customerName = user.email;
-            let customerPhone = '';
-            let accountType = 'bireysel';
-            try {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const ud = userDoc.data();
-                    customerName = ud.fullName || ud.companyName || user.email;
-                    customerPhone = ud.phone || '';
-                    accountType = ud.accountType || 'bireysel';
-                }
-            } catch(e) { console.log('User doc error:', e); }
-
-            // Firebase'e kaydet
-            await addDoc(collection(db, "orders"), {
-                userId: user.uid,
-                userEmail: user.email,
-                productName: window._currentProduct,
-                productIcon: window._currentIcon,
-                packageName: window._selectedPackage,
-                price: window._selectedPrice,
-                isCustom: window._isCustom || false,
-                businessName: business,
-                note: document.getElementById('orderNote').value.trim() || '',
-                status: 'pending',
-                createdAt: serverTimestamp()
-            });
-
-            // Sana mail gönder
-            try {
-                await emailjs.send('service_t65vpam', 'template_h00jarb', {
-                    business_name: business,
-                    customer_name: customerName,
-                    customer_email: user.email,
-                    customer_phone: customerPhone,
-                    product_name: window._currentProduct,
-                    package_name: window._selectedPackage,
-                    price: window._selectedPrice + '₺' + (window._isCustom ? ' (tek seferlik)' : '/ay'),
-                    account_type: accountType,
-                    note: document.getElementById('orderNote').value.trim() || 'Yok',
-                    date: new Date().toLocaleString('tr-TR')
-                });
-                console.log('Mail gönderildi!');
-            } catch(mailErr) {
-                console.log('Mail gönderilemedi:', mailErr);
-            }
-
-            document.getElementById('orderFormSection').classList.add('hidden');
-            document.getElementById('orderSuccess').classList.remove('hidden');
-
-        } catch(err) {
-            console.error(err);
-            document.getElementById('orderErrorText').textContent = 'Bir hata oluştu. WhatsApp üzerinden iletişime geçebilirsiniz.';
-            document.getElementById('orderError').classList.remove('hidden');
-        } finally {
-            btn.disabled = false; txt.textContent = 'Sipariş Gönder'; ldr.classList.add('hidden');
-        }
-    };
 </script>
 
 <script>
-    window._currentProduct = '';
-    window._currentIcon = '📦';
-    window._selectedPackage = '';
-    window._selectedPrice = '';
-    window._isCustom = false;
-
-    function openOrder(product, icon, pkg, price, isCustom) {
-        window._currentProduct = product;
-        window._currentIcon = icon;
-        window._selectedPackage = pkg;
-        window._selectedPrice = price;
-        window._isCustom = isCustom || false;
-
-        const f = parseInt(price).toLocaleString('tr-TR');
-        document.getElementById('modalProductName').textContent = product;
-        document.getElementById('selectedPkgDisplay').textContent = pkg + ' Paketi';
-        document.getElementById('selectedPriceDisplay').textContent = f + '₺';
-        document.getElementById('selectedPeriod').textContent = isCustom ? 'tek seferlik' : '/ay';
-
-        document.getElementById('orderSuccess').classList.add('hidden');
-        document.getElementById('orderError').classList.add('hidden');
-        document.getElementById('orderForm').reset();
-        document.getElementById('orderBusiness').classList.remove('error');
-        document.getElementById('businessError').classList.add('hidden');
-
-        if (!window._currentUser) {
-            document.getElementById('loginRequired').classList.remove('hidden');
-            document.getElementById('orderFormSection').classList.add('hidden');
-        } else {
-            document.getElementById('loginRequired').classList.add('hidden');
-            document.getElementById('orderFormSection').classList.remove('hidden');
-
-            // Kurumsal hesapsa işletme adını otomatik doldur
-            if (window._currentUser) {
-                import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js").then(({getFirestore, doc, getDoc}) => {
-                    const db = getFirestore();
-                    getDoc(doc(db, "users", window._currentUser.uid)).then(snap => {
-                        if (snap.exists()) {
-                            const d = snap.data();
-                            if (d.accountType === 'kurumsal' && d.companyName) {
-                                document.getElementById('orderBusiness').value = d.companyName;
-                            }
-                        }
-                    }).catch(() => {});
-                });
-            }
-        }
-
-        document.getElementById('orderModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeOrder() {
-        document.getElementById('orderModal').classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    function closeOrderOutside(e) { if (e.target === document.getElementById('orderModal')) closeOrder(); }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOrder(); });
-
-    document.getElementById('orderForm').addEventListener('submit', e => {
-        e.preventDefault();
-        window._submitOrder();
-    });
-
-    document.getElementById('orderBusiness').addEventListener('input', function() {
-        if (this.value.trim()) {
-            this.classList.remove('error');
-            document.getElementById('businessError').classList.add('hidden');
-        }
-    });
-
-    // Accordion
-    function toggleCard(header) {
-        const card = header.parentElement;
-        const body = card.querySelector('.accordion-body');
-        const isOpen = card.classList.contains('is-open');
-
-        document.querySelectorAll('.product-card').forEach(c => {
-            c.classList.remove('is-open');
-            const b = c.querySelector('.accordion-body');
-            if (b) b.style.maxHeight = '0px';
-        });
-
-        if (!isOpen) {
-            card.classList.add('is-open');
-            body.style.maxHeight = body.scrollHeight + 'px';
-            setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
-        }
-    }
-
-    document.querySelectorAll('.accordion-body').forEach(b => b.style.maxHeight = '0px');
-
     // Filtre
     function filterProducts(cat, btn) {
         document.querySelectorAll('.filter-btn').forEach(b => {
-            b.classList.remove('active-filter', 'btn-gold');
+            b.classList.remove('active-f', 'btn-gold');
             b.classList.add('glass', 'text-white/40');
         });
-        btn.classList.add('active-filter', 'btn-gold');
+        btn.classList.add('active-f', 'btn-gold');
         btn.classList.remove('glass', 'text-white/40');
 
         document.querySelectorAll('.product-card').forEach(card => {
             if (cat === 'all' || card.dataset.cat === cat) {
                 card.style.display = '';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.4s, transform 0.4s';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 10);
             } else {
                 card.style.display = 'none';
-                card.classList.remove('is-open');
-                const b = card.querySelector('.accordion-body');
-                if (b) b.style.maxHeight = '0px';
             }
         });
     }
@@ -570,7 +399,7 @@
         }
     });
 
-    // Mobile Menu
+    // Mobile
     document.getElementById('mobileToggle').addEventListener('click', () => {
         document.getElementById('mobileMenu').classList.toggle('hidden');
         document.getElementById('menuOpen').classList.toggle('hidden');
