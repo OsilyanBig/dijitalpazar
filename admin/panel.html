@@ -3,543 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | XXX Yazılım</title>
+    <title>Admin Panel | DijitalPazar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Plus Jakarta Sans','sans-serif']},colors:{dark:'#0A0E27'}}}}</script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif']},colors:{dark:'#0C1222',gold:'#D4A853'}}}}</script>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Plus Jakarta Sans',sans-serif}
-        .btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);transition:all 0.3s}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 25px -5px rgba(79,70,229,0.4)}
-        .tab-btn{padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;border:none;outline:none;transition:all 0.2s;white-space:nowrap}
-        .tab-btn.active{background:linear-gradient(135deg,#4F46E5,#7C3AED);color:white;box-shadow:0 4px 15px rgba(79,70,229,0.3)}
-        .tab-btn:not(.active){background:#F1F5F9;color:#64748B}.tab-btn:not(.active):hover{background:#E2E8F0}
-        .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700}
-        .input-sm{padding:8px 12px;border-radius:8px;background:#F8FAFC;border:1.5px solid #E2E8F0;font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:all 0.2s}
-        .input-sm:focus{border-color:#4F46E5;box-shadow:0 0 0 3px rgba(79,70,229,0.1)}
-        .card{background:white;border-radius:16px;border:1px solid #E2E8F0;padding:16px;transition:all 0.2s}
-        .card:hover{border-color:#C7D2FE;box-shadow:0 4px 20px -4px rgba(0,0,0,0.08)}
-        .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',sans-serif;background:#0C1222;color:#fff;overflow-x:hidden}
+        ::selection{background:rgba(212,168,83,0.3)}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#D4A853,#B8860B);border-radius:10px}
+        .text-gradient-gold{background:linear-gradient(135deg,#D4A853,#F5D88E,#D4A853);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .btn-gold{background:linear-gradient(135deg,#D4A853,#C4973D);color:#0C1222;font-weight:700;border:none;cursor:pointer;transition:all 0.3s}
+        .btn-gold:hover{box-shadow:0 15px 40px -10px rgba(212,168,83,0.4);transform:translateY(-1px)}
+        .glass{background:rgba(255,255,255,0.02);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.04)}
+        .gold-badge{background:linear-gradient(135deg,rgba(212,168,83,0.12),rgba(212,168,83,0.04));border:1px solid rgba(212,168,83,0.18);color:#D4A853}
+        .tab-btn{padding:8px 16px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;border:none;outline:none;transition:all 0.2s;white-space:nowrap}
+        .tab-btn.active{background:linear-gradient(135deg,#D4A853,#C4973D);color:#0C1222}
+        .tab-btn:not(.active){background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.04)}
+        .tab-btn:not(.active):hover{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5)}
+        .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:100px;font-size:10px;font-weight:700}
+        .input-sm{padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);font-size:12px;font-family:'Inter',sans-serif;outline:none;color:#fff;transition:all 0.2s}
+        .input-sm:focus{border-color:rgba(212,168,83,0.3)}
+        .card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:16px;padding:16px;transition:all 0.2s}
+        .card:hover{border-color:rgba(255,255,255,0.06);background:rgba(255,255,255,0.03)}
+        .modal-bg{position:fixed;inset:0;background:rgba(12,18,34,0.8);backdrop-filter:blur(10px);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
         .modal-bg.show{display:flex}
-        .modal-box{background:white;border-radius:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
-        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
+        .modal-box{background:#101935;border:1px solid rgba(255,255,255,0.06);border-radius:20px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto}
+        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(212,168,83,0.15);border:1px solid rgba(212,168,83,0.2);color:#D4A853;padding:10px 20px;border-radius:12px;font-size:12px;font-weight:600;z-index:9999;transition:opacity 0.3s}
         @keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}.fade-up{animation:fadeUp 0.4s ease forwards}
-        .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:white;padding:12px 24px;border-radius:16px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.2);transition:opacity 0.3s}
+        @keyframes spin{to{transform:rotate(360deg)}}.animate-spin{animation:spin 1s linear infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4,0,.6,1) infinite}
     </style>
 </head>
-<body class="bg-[#F1F5F9] text-gray-900 antialiased">
+<body class="antialiased">
 
-<!-- Loading -->
-<div id="loadingScreen" class="fixed inset-0 bg-dark z-[9999] flex items-center justify-center transition-opacity duration-300">
+<div id="loadingScreen" class="fixed inset-0 bg-[#0C1222] z-[9999] flex items-center justify-center transition-opacity duration-300">
     <div class="text-center">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mx-auto mb-3">
-            <span class="text-white font-black text-xl">X</span>
-        </div>
-        <p class="text-white/50 text-sm">Yetki kontrol ediliyor...</p>
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center mx-auto mb-3"><span class="text-[#0C1222] font-black text-sm">D</span></div>
+        <p class="text-white/20 text-xs">Yetki kontrol ediliyor...</p>
     </div>
 </div>
 
-<!-- Header -->
-<header class="fixed top-0 left-0 right-0 z-50 bg-dark/95 backdrop-blur-xl border-b border-white/5 py-3">
-    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-12">
+<header class="fixed top-0 left-0 right-0 z-50 py-3" style="background:rgba(12,18,34,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.03)">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-10">
         <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
-                <span class="text-white font-black text-sm">X</span>
-            </div>
-            <span class="text-white font-bold text-sm">Admin Panel</span>
-            <span class="bg-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded-full">YÖNETİCİ</span>
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center"><span class="text-[#0C1222] font-black text-xs">D</span></div>
+            <span class="text-white/60 font-bold text-sm">Admin</span>
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400/60">YÖNETİCİ</span>
         </div>
         <div class="flex items-center gap-3">
-            <a href="../index.html" class="text-white/40 text-xs hover:text-white/70">Siteye Git</a>
-            <button onclick="doLogout()" class="bg-red-500/10 text-red-400 hover:bg-red-500/20 px-3 py-1.5 rounded-lg text-xs font-semibold">Çıkış</button>
+            <a href="../index.html" class="text-white/20 text-xs hover:text-white/40 transition-colors">Siteye Git</a>
+            <button onclick="doLogout()" class="text-red-400/40 text-xs font-semibold hover:text-red-400 transition-colors">Çıkış</button>
         </div>
     </div>
 </header>
 
-
-<!-- Main -->
-<main class="pt-24 pb-10 min-h-screen">
+<main class="pt-20 pb-10 min-h-screen">
     <div class="max-w-7xl mx-auto px-4">
 
-        <!-- Stats -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 fade-up">
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-3xl font-black text-indigo-600" id="statOrders">-</div>
-                <div class="text-xs text-gray-500 font-semibold mt-1">Toplam Sipariş</div>
-            </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-3xl font-black text-amber-600" id="statPending">-</div>
-                <div class="text-xs text-gray-500 font-semibold mt-1">Bekleyen</div>
-            </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-3xl font-black text-green-600" id="statSites">-</div>
-                <div class="text-xs text-gray-500 font-semibold mt-1">Aktif Site</div>
-            </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-3xl font-black text-purple-600" id="statUsers">-</div>
-                <div class="text-xs text-gray-500 font-semibold mt-1">Müşteri</div>
-            </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6 fade-up">
+            <div class="glass rounded-xl p-4"><div class="text-2xl font-black text-[#D4A853]" id="statOrders">-</div><div class="text-[10px] text-white/20 font-medium mt-1">Sipariş</div></div>
+            <div class="glass rounded-xl p-4"><div class="text-2xl font-black text-amber-400/60" id="statPending">-</div><div class="text-[10px] text-white/20 font-medium mt-1">Bekleyen</div></div>
+            <div class="glass rounded-xl p-4"><div class="text-2xl font-black text-emerald-400/60" id="statSites">-</div><div class="text-[10px] text-white/20 font-medium mt-1">Aktif Site</div></div>
+            <div class="glass rounded-xl p-4"><div class="text-2xl font-black text-indigo-400/60" id="statUsers">-</div><div class="text-[10px] text-white/20 font-medium mt-1">Müşteri</div></div>
         </div>
 
-        <!-- Tabs -->
-        <div class="flex gap-2 mb-6 overflow-x-auto pb-2 fade-up">
+        <div class="flex gap-2 mb-5 overflow-x-auto pb-2 fade-up">
             <button onclick="switchTab('orders')" class="tab-btn active" id="tabOrders">📦 Siparişler</button>
             <button onclick="switchTab('sites')" class="tab-btn" id="tabSites">🌐 Siteler</button>
             <button onclick="switchTab('payments')" class="tab-btn" id="tabPayments">💳 Ödemeler</button>
             <button onclick="switchTab('customers')" class="tab-btn" id="tabCustomers">👥 Müşteriler</button>
         </div>
 
-
-        <!-- SİPARİŞLER -->
-        <div id="sectionOrders">
-            <div id="ordersContent" class="space-y-3"></div>
-        </div>
-
-        <!-- SİTELER -->
-        <div id="sectionSites" class="hidden">
-            <div id="sitesContent" class="space-y-3"></div>
-        </div>
-
-        <!-- ÖDEMELER -->
-        <div id="sectionPayments" class="hidden">
-            <div id="paymentsContent" class="space-y-3"></div>
-        </div>
-
-        <!-- MÜŞTERİLER -->
-        <div id="sectionCustomers" class="hidden">
-            <div id="customersContent" class="space-y-3"></div>
-        </div>
-
+        <div id="sectionOrders"><div id="ordersContent" class="space-y-3"></div></div>
+        <div id="sectionSites" class="hidden"><div id="sitesContent" class="space-y-3"></div></div>
+        <div id="sectionPayments" class="hidden"><div id="paymentsContent" class="space-y-3"></div></div>
+        <div id="sectionCustomers" class="hidden"><div id="customersContent" class="space-y-3"></div></div>
     </div>
 </main>
 
-
-<!-- TESLİM MODAL -->
 <div id="deliverModal" class="modal-bg" onclick="if(event.target===this)closeDeliver()">
     <div class="modal-box">
-        <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-5 rounded-t-2xl">
-            <h3 class="text-white font-bold text-lg">✅ Siparişi Teslim Et</h3>
-            <p id="deliverInfo" class="text-white/70 text-xs mt-1"></p>
-        </div>
-        <div class="p-6 space-y-4">
-            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <p class="text-amber-700 text-sm font-semibold">⚠️ Teslim edildikten sonra:</p>
-                <ul class="text-amber-600 text-xs mt-1 space-y-1">
-                    <li>• Müşteri panelinde site görünecek</li>
-                    <li>• 14 günlük trial başlayacak</li>
-                    <li>• Ödeme kaydı oluşturulacak</li>
-                </ul>
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 uppercase block mb-1">Site Adı *</label>
-                <input type="text" id="dSiteName" placeholder="Ahmet'in Berber Salonu" class="input-sm w-full">
-            </div>
-            <div>
-                <label class="text-xs font-bold text-gray-500 uppercase block mb-1">Site URL *</label>
-                <input type="url" id="dSiteUrl" placeholder="https://ahmet-berber.vercel.app" class="input-sm w-full">
-            </div>
-            <div id="deliverErr" class="hidden p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-semibold"></div>
-            <button onclick="doDeliver()" id="deliverBtn" class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700 transition-colors">
-                Teslim Et & Trial Başlat
-            </button>
+        <div class="p-5 border-b border-white/[0.04]"><h3 class="text-sm font-bold text-white">✅ Siparişi Teslim Et</h3><p id="deliverInfo" class="text-white/20 text-[10px] mt-1"></p></div>
+        <div class="p-5 space-y-4">
+            <div class="glass rounded-xl p-3"><p class="text-amber-400/50 text-[10px] font-semibold">Teslim edildiğinde müşteri panelinde site görünecek ve ödeme süreci başlayacak.</p></div>
+            <div><label class="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-1">Site Adı *</label><input type="text" id="dSiteName" placeholder="Ahmet'in Berber Salonu" class="input-sm w-full"></div>
+            <div><label class="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-1">Site URL *</label><input type="url" id="dSiteUrl" placeholder="https://ahmet-berber.vercel.app" class="input-sm w-full"></div>
+            <div><label class="text-[10px] font-bold text-white/20 uppercase tracking-widest block mb-1">Bakım Ücreti (CustomSite için)</label><input type="number" id="dMaintenancePrice" placeholder="5000" class="input-sm w-full"></div>
+            <div id="deliverErr" class="hidden p-3 rounded-xl border border-red-500/20 bg-red-500/5 text-red-400/60 text-[10px] font-semibold"></div>
+            <button onclick="doDeliver()" id="deliverBtn" class="w-full btn-gold py-3 rounded-xl text-xs font-bold">Teslim Et</button>
         </div>
     </div>
 </div>
 
-
-<!-- FIREBASE -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import {
-        getFirestore, doc, getDoc, getDocs, updateDoc, addDoc,
-        collection, query, where, serverTimestamp, Timestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import{getFirestore,doc,getDoc,getDocs,updateDoc,addDoc,collection,query,where,serverTimestamp,Timestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    const app = initializeApp({
-        apiKey: "AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",
-        authDomain: "dijital-pazar-3cc34.firebaseapp.com",
-        projectId: "dijital-pazar-3cc34",
-        storageBucket: "dijital-pazar-3cc34.firebasestorage.app",
-        messagingSenderId: "519713206128",
-        appId: "1:519713206128:web:4d1f541d1b469eeb8069b5"
-    });
+    const app=initializeApp({apiKey:"AIzaSyBZgHuXY6njck4Kqn_rnCoX67Ssw6b9ig4",authDomain:"dijital-pazar-3cc34.firebaseapp.com",projectId:"dijital-pazar-3cc34",storageBucket:"dijital-pazar-3cc34.firebasestorage.app",messagingSenderId:"519713206128",appId:"1:519713206128:web:4d1f541d1b469eeb8069b5"});
+    const auth=getAuth(app),db=getFirestore(app);
 
-    const auth = getAuth(app);
-    const db   = getFirestore(app);
+    let allOrders=[],allSites=[],allPayments=[],allCustomers=[];
+    let deliverOrderId=null,deliverOrderData=null;
 
-    // Global data
-    let allOrders = [], allSites = [], allPayments = [], allCustomers = [];
-    let deliverOrderId = null, deliverOrderData = null;
-
-    // Admin kontrolü
-    onAuthStateChanged(auth, async (user) => {
-        if (!user) { location.href = 'giris.html'; return; }
-        const snap = await getDoc(doc(db, "users", user.uid));
-        if (!snap.exists() || snap.data().role !== 'admin') {
-            await signOut(auth); location.href = 'giris.html'; return;
-        }
+    onAuthStateChanged(auth,async(user)=>{
+        if(!user){location.href='giris.html';return;}
+        const snap=await getDoc(doc(db,"users",user.uid));
+        if(!snap.exists()||snap.data().role!=='admin'){await signOut(auth);location.href='giris.html';return;}
         await loadAll();
-        document.getElementById('loadingScreen').style.opacity = '0';
-        setTimeout(() => document.getElementById('loadingScreen').style.display = 'none', 300);
+        const l=document.getElementById('loadingScreen');l.style.opacity='0';setTimeout(()=>l.style.display='none',300);
     });
 
-    async function loadAll() {
-        await Promise.all([loadOrders(), loadSites(), loadPayments(), loadCustomers()]);
-    }
+    async function loadAll(){await Promise.all([loadOrders(),loadSites(),loadPayments(),loadCustomers()]);}
 
-    // ===== SİPARİŞLER =====
-    async function loadOrders() {
-        const snap = await getDocs(collection(db, "orders"));
-        allOrders = [];
-        snap.forEach(d => allOrders.push({ id: d.id, ...d.data() }));
-        allOrders.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-        document.getElementById('statOrders').textContent = allOrders.length;
-        document.getElementById('statPending').textContent = allOrders.filter(o => o.status === 'pending' || o.status === 'processing').length;
-
+    async function loadOrders(){
+        const snap=await getDocs(collection(db,"orders"));
+        allOrders=[];snap.forEach(d=>allOrders.push({id:d.id,...d.data()}));
+        allOrders.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+        document.getElementById('statOrders').textContent=allOrders.length;
+        document.getElementById('statPending').textContent=allOrders.filter(o=>o.status==='pending'||o.status==='processing').length;
         renderOrders();
     }
 
-    function renderOrders() {
-        const el = document.getElementById('ordersContent');
-        if (allOrders.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Sipariş yok</div>'; return; }
-
-        const statusOpts = {
-            pending:    { label: '⏳ Talep Alındı',  bg: 'bg-yellow-100 text-yellow-700' },
-            processing: { label: '⚙️ Hazırlanıyor',  bg: 'bg-blue-100 text-blue-700' },
-            delivered:  { label: '✅ Teslim Edildi', bg: 'bg-green-100 text-green-700' },
-            cancelled:  { label: '❌ İptal Edildi',  bg: 'bg-gray-100 text-gray-600' }
-        };
-
-        let html = '';
-        allOrders.forEach(o => {
-            const s = statusOpts[o.status] || statusOpts.pending;
-            const date = o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }) : '';
-
-            html += `
-            <div class="card">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
-                    <!-- Bilgi -->
-                    <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <div class="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">${o.productIcon || '📦'}</div>
-                        <div class="min-w-0">
-                            <div class="font-bold text-sm text-gray-900 truncate">${o.productName || 'Ürün'}</div>
-                            <div class="text-xs text-gray-400 truncate">🏢 ${o.businessName || '-'} · ${o.userEmail || ''} · ${date}</div>
-                            <div class="text-xs text-gray-400">${o.packageName || ''} Paketi · <strong>${parseInt(o.price || 0).toLocaleString('tr-TR')}₺${o.isCustom ? '' : '/ay'}</strong></div>
-                            ${o.note ? `<div class="text-xs text-gray-300 mt-1">📝 ${o.note}</div>` : ''}
-                        </div>
-                    </div>
-
-                    <!-- Durum + Aksiyonlar -->
-                    <div class="flex items-center gap-2 flex-wrap flex-shrink-0">
-                        <!-- Durum Seçici -->
-                        <select onchange="changeOrderStatus('${o.id}', this.value)" class="input-sm text-xs font-bold ${s.bg}" style="min-width:140px">
-                            <option value="pending"    ${o.status === 'pending' ? 'selected' : ''}>⏳ Talep Alındı</option>
-                            <option value="processing" ${o.status === 'processing' ? 'selected' : ''}>⚙️ Hazırlanıyor</option>
-                            <option value="delivered"  ${o.status === 'delivered' ? 'selected' : ''} disabled>✅ Teslim Edildi</option>
-                            <option value="cancelled"  ${o.status === 'cancelled' ? 'selected' : ''}>❌ İptal</option>
-                        </select>
-
-                        ${o.status === 'processing' ? `
-                        <button onclick='openDeliverModal("${o.id}")' class="bg-green-500 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 transition-colors flex items-center gap-1">
-                            ✅ Teslim Et
-                        </button>` : ''}
-                    </div>
+    function renderOrders(){
+        const el=document.getElementById('ordersContent');
+        if(!allOrders.length){el.innerHTML='<div class="glass rounded-xl p-8 text-center text-white/15 text-xs">Sipariş yok</div>';return;}
+        const sm={pending:{l:'Talep Alındı',c:'bg-yellow-500/10 text-yellow-400/60'},processing:{l:'Hazırlanıyor',c:'bg-blue-500/10 text-blue-400/60'},delivered:{l:'Teslim Edildi',c:'bg-emerald-500/10 text-emerald-400/60'},cancelled:{l:'İptal',c:'bg-white/5 text-white/20'}};
+        let h='';
+        allOrders.forEach(o=>{
+            const s=sm[o.status]||sm.pending;
+            const date=o.createdAt?new Date(o.createdAt.seconds*1000).toLocaleDateString('tr-TR',{day:'numeric',month:'short'}):'-';
+            h+=`<div class="card"><div class="flex flex-col lg:flex-row lg:items-center gap-3">
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="w-9 h-9 glass rounded-lg flex items-center justify-center text-lg flex-shrink-0">${o.productIcon||'📦'}</div>
+                    <div class="min-w-0"><div class="font-bold text-white/50 text-xs truncate">${o.productName||'Ürün'}</div><div class="text-[10px] text-white/15 truncate">🏢 ${o.businessName||'-'} · ${o.userEmail||''} · ${date}</div><div class="text-[10px] text-white/15">${o.packageName||''} · <strong>${parseInt(o.price||0).toLocaleString('tr-TR')}₺${o.isCustom?'':'/ay'}</strong></div>${o.note?`<div class="text-[9px] text-white/10 mt-1">📝 ${o.note}</div>`:''}</div>
                 </div>
-            </div>`;
+                <div class="flex items-center gap-2 flex-wrap flex-shrink-0">
+                    <select onchange="changeOrderStatus('${o.id}',this.value)" class="input-sm text-[10px] font-bold ${s.c}" style="min-width:130px;background:rgba(255,255,255,0.03)">
+                        <option value="pending" ${o.status==='pending'?'selected':''}>⏳ Talep Alındı</option>
+                        <option value="processing" ${o.status==='processing'?'selected':''}>⚙️ Hazırlanıyor</option>
+                        <option value="delivered" ${o.status==='delivered'?'selected':''} disabled>✅ Teslim Edildi</option>
+                        <option value="cancelled" ${o.status==='cancelled'?'selected':''}>❌ İptal</option>
+                    </select>
+                    ${o.status==='processing'?`<button onclick='openDeliverModal("${o.id}")' class="btn-gold px-3 py-1.5 rounded-lg text-[10px]">✅ Teslim Et</button>`:''}
+                </div>
+            </div></div>`;
         });
-        el.innerHTML = html;
+        el.innerHTML=h;
     }
 
-    // Sipariş durumu değiştir (teslim hariç)
-    window.changeOrderStatus = async function(id, newStatus) {
-        if (newStatus === 'delivered') return; // Teslim modaldan yapılır
-        try {
-            await updateDoc(doc(db, "orders", id), { status: newStatus, updatedAt: serverTimestamp() });
-            toast('✅ Sipariş durumu güncellendi');
-            await loadOrders();
-        } catch (e) { alert('Hata: ' + e.message); }
+    window.changeOrderStatus=async function(id,s){
+        if(s==='delivered')return;
+        try{await updateDoc(doc(db,"orders",id),{status:s,updatedAt:serverTimestamp()});toast('Sipariş güncellendi');await loadOrders();}catch(e){alert('Hata: '+e.message);}
     };
 
-    // Teslim modal aç
-    window.openDeliverModal = function(orderId) {
-        const order = allOrders.find(o => o.id === orderId);
-        if (!order) return;
-        deliverOrderId   = orderId;
-        deliverOrderData = order;
-
-        document.getElementById('deliverInfo').textContent = `${order.productName} · ${order.businessName || ''} · ${order.userEmail || ''}`;
-        document.getElementById('dSiteName').value = order.businessName || '';
-        document.getElementById('dSiteUrl').value  = '';
+    window.openDeliverModal=function(id){
+        const o=allOrders.find(x=>x.id===id);if(!o)return;
+        deliverOrderId=id;deliverOrderData=o;
+        document.getElementById('deliverInfo').textContent=`${o.productName} · ${o.businessName||''} · ${o.userEmail||''}`;
+        document.getElementById('dSiteName').value=o.businessName||'';
+        document.getElementById('dSiteUrl').value='';
+        document.getElementById('dMaintenancePrice').value=o.isCustom?'5000':'';
         document.getElementById('deliverErr').classList.add('hidden');
-
         document.getElementById('deliverModal').classList.add('show');
     };
 
-    window.closeDeliver = function() {
-        document.getElementById('deliverModal').classList.remove('show');
+    window.closeDeliver=function(){document.getElementById('deliverModal').classList.remove('show');};
+
+    window.doDeliver=async function(){
+        const siteName=document.getElementById('dSiteName').value.trim();
+        const siteUrl=document.getElementById('dSiteUrl').value.trim();
+        const maintenancePrice=document.getElementById('dMaintenancePrice').value.trim();
+        const errEl=document.getElementById('deliverErr');
+        if(!siteName||!siteUrl){errEl.textContent='Site adı ve URL zorunludur.';errEl.classList.remove('hidden');return;}
+        const btn=document.getElementById('deliverBtn');btn.disabled=true;btn.textContent='İşleniyor...';errEl.classList.add('hidden');
+        const o=deliverOrderData;const now=new Date();
+        // İlk sipariş mi kontrol et
+        const existingOrders=allOrders.filter(x=>x.userId===o.userId&&x.status==='delivered');
+        const isFirstOrder=existingOrders.length===0;
+        const trialEnd=isFirstOrder?new Date(now.getTime()+14*24*60*60*1000):new Date(now.getTime()+3*24*60*60*1000);
+        try{
+            await updateDoc(doc(db,"orders",deliverOrderId),{status:'delivered',deliveredAt:serverTimestamp()});
+            // Site oluştur
+            const siteData={userId:o.userId,userEmail:o.userEmail,orderId:deliverOrderId,siteName:siteName,siteUrl:siteUrl,icon:o.productIcon||'🌐',productName:o.productName,packageName:o.packageName,price:o.price,isCustom:o.isCustom||false,status:'trial',trialStart:serverTimestamp(),trialEnd:Timestamp.fromDate(trialEnd),createdAt:serverTimestamp()};
+            if(o.isCustom&&maintenancePrice){siteData.maintenancePrice=maintenancePrice;siteData.maintenanceAccepted=null;}
+            await addDoc(collection(db,"sites"),siteData);
+            // Ödeme oluştur
+            await addDoc(collection(db,"payments"),{userId:o.userId,userEmail:o.userEmail,orderId:deliverOrderId,amount:o.price,description:isFirstOrder?'14 Gün Ücretsiz Deneme - '+o.productName:'İlk Ödeme (3 gün) - '+o.productName,status:isFirstOrder?'trial':'unpaid',dueDate:Timestamp.fromDate(trialEnd),createdAt:serverTimestamp()});
+            closeDeliver();toast('Sipariş teslim edildi!');await loadAll();
+        }catch(e){console.error(e);errEl.textContent='Hata: '+e.message;errEl.classList.remove('hidden');}
+        finally{btn.disabled=false;btn.textContent='Teslim Et';}
     };
 
-    // Teslim et
-    window.doDeliver = async function() {
-        const siteName = document.getElementById('dSiteName').value.trim();
-        const siteUrl  = document.getElementById('dSiteUrl').value.trim();
-        const errEl    = document.getElementById('deliverErr');
-
-        if (!siteName || !siteUrl) {
-            errEl.textContent = '❌ Site adı ve URL zorunludur!';
-            errEl.classList.remove('hidden');
-            return;
-        }
-
-        const btn = document.getElementById('deliverBtn');
-        btn.disabled = true;
-        btn.textContent = 'İşleniyor...';
-        errEl.classList.add('hidden');
-
-        const order    = deliverOrderData;
-        const now      = new Date();
-        const trialEnd = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
-
-        try {
-            // 1. Sipariş → delivered
-            await updateDoc(doc(db, "orders", deliverOrderId), {
-                status: 'delivered',
-                deliveredAt: serverTimestamp()
-            });
-
-            // 2. Sites → oluştur
-            await addDoc(collection(db, "sites"), {
-                userId:      order.userId,
-                userEmail:   order.userEmail,
-                orderId:     deliverOrderId,
-                siteName:    siteName,
-                siteUrl:     siteUrl,
-                icon:        order.productIcon || '🌐',
-                productName: order.productName,
-                packageName: order.packageName,
-                price:       order.price,
-                isCustom:    order.isCustom || false,
-                status:      'trial',
-                trialStart:  serverTimestamp(),
-                trialEnd:    Timestamp.fromDate(trialEnd),
-                createdAt:   serverTimestamp()
-            });
-
-            // 3. Payments → trial kaydı
-            await addDoc(collection(db, "payments"), {
-                userId:      order.userId,
-                userEmail:   order.userEmail,
-                orderId:     deliverOrderId,
-                amount:      order.price,
-                description: '14 Gün Ücretsiz Deneme - ' + order.productName,
-                status:      'trial',
-                dueDate:     Timestamp.fromDate(trialEnd),
-                createdAt:   serverTimestamp()
-            });
-
-            closeDeliver();
-            toast('✅ Sipariş teslim edildi! Trial başlatıldı.');
-            await loadAll();
-
-        } catch (e) {
-            console.error(e);
-            errEl.textContent = '❌ Hata: ' + e.message;
-            errEl.classList.remove('hidden');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = 'Teslim Et & Trial Başlat';
-        }
-    };
-
-
-    // ===== SİTELER =====
-    async function loadSites() {
-        const snap = await getDocs(collection(db, "sites"));
-        allSites = [];
-        snap.forEach(d => allSites.push({ id: d.id, ...d.data() }));
-        allSites.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-        document.getElementById('statSites').textContent = allSites.filter(s => s.status === 'active' || s.status === 'trial').length;
-
-        const el = document.getElementById('sitesContent');
-        if (allSites.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Site yok</div>'; return; }
-
-        const statusOpts = {
-            trial:       { label: '🎯 Deneme',  bg: 'bg-indigo-100 text-indigo-700' },
-            active:      { label: '🟢 Aktif',   bg: 'bg-green-100 text-green-700' },
-            maintenance: { label: '🔧 Bakımda', bg: 'bg-amber-100 text-amber-700' },
-            suspended:   { label: '⛔ Askıda',  bg: 'bg-red-100 text-red-700' },
-            cancelled:   { label: '❌ Kapalı',  bg: 'bg-gray-100 text-gray-600' }
-        };
-
-        let html = '';
-        allSites.forEach(s => {
-            const st = statusOpts[s.status] || statusOpts.trial;
-            html += `
-            <div class="card">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
-                    <div class="flex items-center gap-3 flex-1 min-w-0">
-                        <div class="w-11 h-11 bg-indigo-50 rounded-xl flex items-center justify-center text-xl flex-shrink-0">${s.icon || '🌐'}</div>
-                        <div class="min-w-0">
-                            <div class="font-bold text-sm text-gray-900">${s.siteName || 'Site'}</div>
-                            <div class="text-xs text-gray-400">${s.productName || ''} · ${s.userEmail || ''}</div>
-                            ${s.siteUrl ? `<a href="${s.siteUrl}" target="_blank" class="text-indigo-500 text-xs hover:underline break-all">${s.siteUrl}</a>` : ''}
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 flex-shrink-0">
-                        <span class="font-bold text-sm">${parseInt(s.price || 0).toLocaleString('tr-TR')}₺</span>
-                        <select onchange="changeSiteStatus('${s.id}', this.value)" class="input-sm text-xs font-bold ${st.bg}" style="min-width:130px">
-                            <option value="trial"       ${s.status === 'trial' ? 'selected' : ''}>🎯 Deneme</option>
-                            <option value="active"      ${s.status === 'active' ? 'selected' : ''}>🟢 Aktif</option>
-                            <option value="maintenance" ${s.status === 'maintenance' ? 'selected' : ''}>🔧 Bakımda</option>
-                            <option value="suspended"   ${s.status === 'suspended' ? 'selected' : ''}>⛔ Askıda</option>
-                            <option value="cancelled"   ${s.status === 'cancelled' ? 'selected' : ''}>❌ Kapalı</option>
-                        </select>
-                    </div>
+    async function loadSites(){
+        const snap=await getDocs(collection(db,"sites"));
+        allSites=[];snap.forEach(d=>allSites.push({id:d.id,...d.data()}));
+        allSites.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+        document.getElementById('statSites').textContent=allSites.filter(s=>s.status==='active'||s.status==='trial').length;
+        const el=document.getElementById('sitesContent');
+        if(!allSites.length){el.innerHTML='<div class="glass rounded-xl p-8 text-center text-white/15 text-xs">Site yok</div>';return;}
+        let h='';
+        allSites.forEach(s=>{
+            h+=`<div class="card"><div class="flex flex-col lg:flex-row lg:items-center gap-3">
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="w-9 h-9 glass rounded-lg flex items-center justify-center text-lg flex-shrink-0">${s.icon||'🌐'}</div>
+                    <div class="min-w-0"><div class="font-bold text-white/50 text-xs">${s.siteName||'Site'}</div><div class="text-[10px] text-white/15">${s.productName||''} · ${s.userEmail||''}</div>${s.siteUrl?`<a href="${s.siteUrl}" target="_blank" class="text-[#D4A853]/40 text-[10px] hover:text-[#D4A853]/60 break-all">${s.siteUrl}</a>`:''}</div>
                 </div>
-            </div>`;
-        });
-        el.innerHTML = html;
-    }
-
-    window.changeSiteStatus = async function(id, newStatus) {
-        try {
-            await updateDoc(doc(db, "sites", id), { status: newStatus, updatedAt: serverTimestamp() });
-            toast('✅ Site durumu güncellendi');
-            await loadSites();
-        } catch (e) { alert('Hata: ' + e.message); }
-    };
-
-
-    // ===== ÖDEMELER =====
-    async function loadPayments() {
-        const snap = await getDocs(collection(db, "payments"));
-        allPayments = [];
-        snap.forEach(d => allPayments.push({ id: d.id, ...d.data() }));
-        allPayments.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-
-        const el = document.getElementById('paymentsContent');
-        if (allPayments.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Ödeme kaydı yok</div>'; return; }
-
-        const statusOpts = {
-            trial:  { label: '🎁 Deneme',   bg: 'bg-indigo-100 text-indigo-700' },
-            unpaid: { label: '❌ Ödenmedi', bg: 'bg-red-100 text-red-700' },
-            paid:   { label: '✅ Ödendi',   bg: 'bg-green-100 text-green-700' },
-            overdue:{ label: '⚠️ Gecikmiş', bg: 'bg-orange-100 text-orange-700' }
-        };
-
-        let html = '';
-        allPayments.forEach(p => {
-            const ps  = statusOpts[p.status] || statusOpts.unpaid;
-            const due = p.dueDate ? p.dueDate.toDate().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
-
-            html += `
-            <div class="card">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-4">
-                    <div class="flex-1 min-w-0">
-                        <div class="font-bold text-sm text-gray-900">${p.description || 'Ödeme'}</div>
-                        <div class="text-xs text-gray-400">${p.userEmail || ''} · Son tarih: ${due}</div>
-                    </div>
-                    <div class="flex items-center gap-2 flex-shrink-0">
-                        <span class="font-bold text-sm">${parseInt(p.amount || 0).toLocaleString('tr-TR')}₺</span>
-                        <select onchange="changePaymentStatus('${p.id}', this.value)" class="input-sm text-xs font-bold ${ps.bg}" style="min-width:130px">
-                            <option value="trial"  ${p.status === 'trial' ? 'selected' : ''}>🎁 Deneme</option>
-                            <option value="unpaid" ${p.status === 'unpaid' ? 'selected' : ''}>❌ Ödenmedi</option>
-                            <option value="paid"   ${p.status === 'paid' ? 'selected' : ''}>✅ Ödendi</option>
-                            <option value="overdue" ${p.status === 'overdue' ? 'selected' : ''}>⚠️ Gecikmiş</option>
-                        </select>
-                    </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="font-bold text-white/30 text-xs">${parseInt(s.price||0).toLocaleString('tr-TR')}₺</span>
+                    <select onchange="changeSiteStatus('${s.id}',this.value)" class="input-sm text-[10px] font-bold" style="min-width:120px;background:rgba(255,255,255,0.03)">
+                        <option value="trial" ${s.status==='trial'?'selected':''}>🎯 Deneme</option>
+                        <option value="active" ${s.status==='active'?'selected':''}>🟢 Aktif</option>
+                        <option value="maintenance" ${s.status==='maintenance'?'selected':''}>🔧 Bakımda</option>
+                        <option value="suspended" ${s.status==='suspended'?'selected':''}>⛔ Askıda</option>
+                        <option value="cancelled" ${s.status==='cancelled'?'selected':''}>❌ Kapalı</option>
+                    </select>
                 </div>
-            </div>`;
+            </div></div>`;
         });
-        el.innerHTML = html;
+        el.innerHTML=h;
     }
 
-    window.changePaymentStatus = async function(id, newStatus) {
-        try {
-            await updateDoc(doc(db, "payments", id), { status: newStatus, updatedAt: serverTimestamp() });
-            toast('✅ Ödeme durumu güncellendi');
-            await loadPayments();
-        } catch (e) { alert('Hata: ' + e.message); }
+    window.changeSiteStatus=async function(id,s){
+        try{await updateDoc(doc(db,"sites",id),{status:s,updatedAt:serverTimestamp()});toast('Site güncellendi');await loadSites();}catch(e){alert('Hata: '+e.message);}
     };
 
-
-    // ===== MÜŞTERİLER =====
-    async function loadCustomers() {
-        const snap = await getDocs(query(collection(db, "users"), where("role", "==", "customer")));
-        allCustomers = [];
-        snap.forEach(d => allCustomers.push({ id: d.id, ...d.data() }));
-
-        document.getElementById('statUsers').textContent = allCustomers.length;
-
-        const el = document.getElementById('customersContent');
-        if (allCustomers.length === 0) { el.innerHTML = '<div class="card text-center text-gray-400 py-8">Müşteri yok</div>'; return; }
-
-        let html = '';
-        allCustomers.forEach(c => {
-            const date = c.createdAt ? c.createdAt.toDate().toLocaleDateString('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
-            const orderCount = allOrders.filter(o => o.userId === c.id).length;
-            const siteCount  = allSites.filter(s => s.userId === c.id).length;
-
-            html += `
-            <div class="card">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <span class="text-white font-bold text-sm">${(c.firstName || '?').charAt(0).toUpperCase()}</span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="font-bold text-sm text-gray-900">${c.fullName || '-'}</div>
-                        <div class="text-xs text-gray-400">${c.email || ''} · ${c.phone || ''}</div>
-                    </div>
-                    <div class="flex items-center gap-3 flex-shrink-0 text-xs">
-                        <div class="text-center">
-                            <div class="font-bold text-gray-900">${orderCount}</div>
-                            <div class="text-gray-400">sipariş</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-bold text-gray-900">${siteCount}</div>
-                            <div class="text-gray-400">site</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-bold text-gray-400">${date}</div>
-                            <div class="text-gray-400">kayıt</div>
-                        </div>
-                    </div>
+    async function loadPayments(){
+        const snap=await getDocs(collection(db,"payments"));
+        allPayments=[];snap.forEach(d=>allPayments.push({id:d.id,...d.data()}));
+        allPayments.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+        const el=document.getElementById('paymentsContent');
+        if(!allPayments.length){el.innerHTML='<div class="glass rounded-xl p-8 text-center text-white/15 text-xs">Ödeme kaydı yok</div>';return;}
+        let h='';
+        allPayments.forEach(p=>{
+            const due=p.dueDate?p.dueDate.toDate().toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'}):'-';
+            h+=`<div class="card"><div class="flex flex-col lg:flex-row lg:items-center gap-3">
+                <div class="flex-1 min-w-0"><div class="font-bold text-white/50 text-xs">${p.description||'Ödeme'}</div><div class="text-[10px] text-white/15">${p.userEmail||''} · Son: ${due}</div></div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="font-bold text-white/30 text-xs">${parseInt(p.amount||0).toLocaleString('tr-TR')}₺</span>
+                    <select onchange="changePaymentStatus('${p.id}',this.value)" class="input-sm text-[10px] font-bold" style="min-width:120px;background:rgba(255,255,255,0.03)">
+                        <option value="trial" ${p.status==='trial'?'selected':''}>🎁 Deneme</option>
+                        <option value="unpaid" ${p.status==='unpaid'?'selected':''}>❌ Ödenmedi</option>
+                        <option value="paid" ${p.status==='paid'?'selected':''}>✅ Ödendi</option>
+                        <option value="overdue" ${p.status==='overdue'?'selected':''}>⚠️ Gecikmiş</option>
+                    </select>
                 </div>
-            </div>`;
+            </div></div>`;
         });
-        el.innerHTML = html;
+        el.innerHTML=h;
     }
 
-
-    // Logout
-    window.doLogout = async function() {
-        await signOut(auth);
-        location.href = 'giris.html';
+    window.changePaymentStatus=async function(id,s){
+        try{await updateDoc(doc(db,"payments",id),{status:s,updatedAt:serverTimestamp()});toast('Ödeme güncellendi');await loadPayments();}catch(e){alert('Hata: '+e.message);}
     };
 
-    // Toast
-    function toast(msg) {
-        const t = document.createElement('div');
-        t.className = 'toast';
-        t.textContent = msg;
-        document.body.appendChild(t);
-        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2500);
+    async function loadCustomers(){
+        const snap=await getDocs(query(collection(db,"users"),where("role","==","customer")));
+        allCustomers=[];snap.forEach(d=>allCustomers.push({id:d.id,...d.data()}));
+        document.getElementById('statUsers').textContent=allCustomers.length;
+        const el=document.getElementById('customersContent');
+        if(!allCustomers.length){el.innerHTML='<div class="glass rounded-xl p-8 text-center text-white/15 text-xs">Müşteri yok</div>';return;}
+        let h='';
+        allCustomers.forEach(c=>{
+            const date=c.createdAt?c.createdAt.toDate().toLocaleDateString('tr-TR',{day:'numeric',month:'short'}):'-';
+            const oc=allOrders.filter(o=>o.userId===c.id).length;
+            const sc=allSites.filter(s=>s.userId===c.id).length;
+            h+=`<div class="card"><div class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-br from-amber-500/20 to-yellow-600/10 rounded-lg flex items-center justify-center flex-shrink-0"><span class="text-[#D4A853]/60 font-bold text-xs">${(c.firstName||'?').charAt(0).toUpperCase()}</span></div>
+                <div class="flex-1 min-w-0"><div class="font-bold text-white/50 text-xs">${c.fullName||'-'}${c.companyName?' · '+c.companyName:''}</div><div class="text-[10px] text-white/15">${c.email||''} · ${c.phone||''}</div></div>
+                <div class="flex items-center gap-4 flex-shrink-0 text-[10px] text-white/20">
+                    <div class="text-center"><div class="font-bold text-white/40">${oc}</div><div>sipariş</div></div>
+                    <div class="text-center"><div class="font-bold text-white/40">${sc}</div><div>site</div></div>
+                    <div class="text-white/10">${date}</div>
+                </div>
+            </div></div>`;
+        });
+        el.innerHTML=h;
     }
-    window.toast = toast;
+
+    window.doLogout=async function(){await signOut(auth);location.href='giris.html';};
+    function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},2500);}
+    window.toast=toast;
 </script>
 
 <script>
-    function switchTab(tab) {
-        ['orders', 'sites', 'payments', 'customers'].forEach(t => {
-            const sec = document.getElementById('section' + t.charAt(0).toUpperCase() + t.slice(1));
-            const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-            if (sec) sec.classList.add('hidden');
-            if (btn) btn.classList.remove('active');
+    function switchTab(tab){
+        ['orders','sites','payments','customers'].forEach(t=>{
+            const s=document.getElementById('section'+t.charAt(0).toUpperCase()+t.slice(1));
+            const b=document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1));
+            if(s)s.classList.add('hidden');if(b)b.classList.remove('active');
         });
-        document.getElementById('section' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
-        document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+        document.getElementById('section'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.remove('hidden');
+        document.getElementById('tab'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
     }
 </script>
 </body>
